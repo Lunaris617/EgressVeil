@@ -80,8 +80,7 @@ for chain in openclash openclash_output openclash_mangle openclash_mangle_output
 done
 if [ "$STAGE" = final-egress ]; then
     shape=$(nft list chain inet fw4 openclash | sed '/ua3fi:/d')
-    printf '%s\n' "$shape" | grep -q 'ip daddr @china_ip_route ip daddr != @china_ip_route_pass.*return' || fail 'Changed China classifier'
-    printf '%s\n' "$shape" | grep -q 'tcp dport 443 redirect to :7892' || fail 'Changed Clash TCP redirect'
+    printf '%s\n' "$shape" | grep -q 'ip protocol tcp redirect to :7892' || fail 'Changed Clash TCP redirect'
     redirects=$(printf '%s\n' "$shape" | grep -c 'redirect to :7892' || :)
     [ "$redirects" = 2 ] || fail 'Unexpected additional Clash redirect'
     printf '%s\n' "$shape" | grep -F "$FAKEIP_CIDR" | grep -q 'redirect to :7892' || fail 'Changed fake-IP CIDR'
@@ -218,9 +217,8 @@ add rule inet fw4 ua3fi_pre meta l4proto != tcp return
 # LAN TCP53 retains the existing later DNS REDIRECT; this is not a WAN bypass.
 add rule inet fw4 ua3fi_pre tcp dport 53 return
 add rule inet fw4 ua3fi_pre ip daddr $FAKEIP_CIDR return
-add rule inet fw4 ua3fi_pre tcp dport 443 ip daddr != @china_ip_route return
-add rule inet fw4 ua3fi_pre tcp dport 443 ip daddr @china_ip_route_pass return
-add rule inet fw4 ua3fi_pre meta l4proto tcp meta mark set 0x1cc counter accept
+add rule inet fw4 ua3fi_pre meta l4proto tcp ip daddr @localnetwork meta mark set 0x1cc counter accept
+add rule inet fw4 ua3fi_pre meta l4proto tcp return
 add chain inet fw4 ua3fi_out { type route hook output priority -149; policy accept; }
 add rule inet fw4 ua3fi_out meta nfproto != ipv4 return
 add rule inet fw4 ua3fi_out meta l4proto != tcp return

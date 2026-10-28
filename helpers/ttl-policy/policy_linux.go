@@ -340,12 +340,13 @@ func execute(op string) (map[string]any, error) {
 	defer f.Close()
 	if op == "remove" {
 		e = guard.Remove(nft)
+		if e == nil { e = restoreOwnedFeature() }
 		if e == nil {
 			_ = os.Remove(stateDir + "/status.json")
 			_ = os.Remove(stateDir + "/status.new")
 		}
 		r["removed"] = e == nil
-		r["feature_restored"] = false
+		r["feature_restored"] = e == nil
 		return r, e
 	}
 	if e = guard.Close(nft); e != nil {
@@ -384,6 +385,7 @@ func execute(op string) (map[string]any, error) {
 	if e != nil {
 		return r, e
 	}
+	if e = rememberFeature(p); e != nil { return r, e }
 	if e = setFeature(); e != nil {
 		return r, e
 	}

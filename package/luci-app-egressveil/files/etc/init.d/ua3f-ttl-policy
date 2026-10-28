@@ -5,6 +5,7 @@ STOP=01
 POLICY=/usr/libexec/ua3f-integration/ttl-policy
 start() {
     [ -f /etc/egressveil/activated ] || [ -f /var/run/egressveil.pending ] || return 0
+    [ "$(uci -q get egressveil.main.ttl_enabled)" = 1 ] || { "$POLICY" remove; return; }
     "$POLICY" barrier || return 1
     "$POLICY" apply
 }
@@ -12,4 +13,4 @@ boot() { start; }
 reload() { start; }
 # Keep the empty native TCP gate during service stop/shutdown. Explicit reviewed
 # uninstall uses ttl-policy remove; it never restores the feature automatically.
-stop() { "$POLICY" barrier; }
+stop() { if [ "$(uci -q get egressveil.main.ttl_enabled)" = 1 ]; then "$POLICY" barrier; else "$POLICY" remove; fi; }

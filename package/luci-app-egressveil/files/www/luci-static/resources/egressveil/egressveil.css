@@ -1,0 +1,49 @@
+/* SPDX-License-Identifier: GPL-3.0-only */
+.ev-app { --ev-ink:#18293f; --ev-muted:#6a7a90; --ev-line:#e3eaf2; --ev-accent:#2868ed; color:var(--ev-ink); }
+.ev-app > h2,.ev-app > .cbi-map-descr { display:none; }
+.ev-app .cbi-section { border:0; padding:0; background:transparent; box-shadow:none; }
+.ev-app .cbi-section-node { padding:0; border:0; background:transparent; }
+.ev-hero { display:flex; justify-content:space-between; align-items:center; gap:20px; margin:0 0 22px; padding:28px 30px; border:1px solid #dce7fa; border-radius:18px; background:linear-gradient(115deg,#f0f6ff,#f6fbfc); }
+.ev-eyebrow { color:var(--ev-accent); font-size:11px; font-weight:800; letter-spacing:2.2px; margin-bottom:9px; }
+.ev-hero h2 { color:var(--ev-ink); font-size:25px; font-weight:750; line-height:1.35; margin:0 0 9px; border:0; padding:0; }
+.ev-hero p { color:var(--ev-muted); font-size:13px; line-height:1.7; margin:0; }
+.ev-tag { flex-shrink:0; background:#fff; border:1px solid #dce7f8; border-radius:30px; padding:8px 13px; color:#47658c; font-size:11px; }
+.ev-grid { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,1fr); grid-template-areas:'general general' 'proxy ua' 'proxy ttl' 'network runtime'; gap:18px; }
+.ev-card { min-width:0; border:1px solid var(--ev-line); border-radius:16px; padding:22px 24px; background:#fff; box-shadow:0 4px 18px #20385b06; }
+.ev-general { grid-area:general; display:flex; align-items:center; gap:24px; }
+.ev-proxy { grid-area:proxy; overflow:hidden; }.ev-ua { grid-area:ua; }.ev-ttl { grid-area:ttl; }.ev-network { grid-area:network; }.ev-runtime { grid-area:runtime; }
+.ev-card-header { display:flex!important; align-items:center; gap:12px; margin-bottom:21px; background:none!important; box-shadow:none!important; border:0!important; padding:0!important; position:static!important; height:auto!important; min-height:0!important; }
+.ev-card-heading { min-width:0; }.ev-card-heading h3 { margin:0 0 5px; padding:0; border:0; font-size:16px; line-height:1.4; font-weight:700; color:var(--ev-ink); }
+.ev-card-heading p { margin:0; font-size:12px; line-height:1.6; color:var(--ev-muted); }
+.ev-icon { display:flex; align-items:center; justify-content:center; width:39px; height:39px; flex-shrink:0; border-radius:11px; background:#edf3ff; color:var(--ev-accent); font:700 12px system-ui,sans-serif; }
+.ev-ua .ev-icon { background:#eaf8f3; color:#168366; }.ev-ttl .ev-icon { background:#fff5e6; color:#ac711a; }.ev-runtime .ev-icon { background:#ecf7f3; color:#168366; }
+.ev-app .ev-card .cbi-value { display:block!important; margin:0 0 16px; padding:0; min-height:0; border:0; background:transparent; }
+.ev-app .ev-card .cbi-value:last-child { margin-bottom:0; }
+.ev-app .ev-card .cbi-value-title { display:block!important; float:none!important; width:100%!important; padding:0; margin:0 0 8px; text-align:left; font-size:12px; line-height:1.5; font-weight:600; color:#465970; }
+.ev-app .ev-card .cbi-value-field { display:block!important; width:100%!important; margin:0!important; padding:0; min-width:0; }
+.ev-app .ev-card input[type=text],.ev-app .ev-card input[type=password],.ev-app .ev-card input[type=number],.ev-app .ev-card select { box-sizing:border-box; width:100%; max-width:100%; min-height:39px; border:1px solid #dbe3ed; border-radius:9px; background:#fbfcfe; color:var(--ev-ink); padding:8px 11px; box-shadow:none; }
+.ev-app .ev-card input:focus,.ev-app .ev-card select:focus { outline:2px solid #2868ed22; border-color:#83a6f4; }
+.ev-app .ev-card .control-group { display:flex; max-width:100%; }
+.ev-app .ev-card .control-group input { min-width:0; }
+.ev-app .ev-card .cbi-value-description { margin:7px 0 0; padding:0; color:var(--ev-muted); font-size:11px; line-height:1.65; }
+.ev-app .ev-card .ev-feature-toggle { margin-bottom:19px; padding:12px 14px; background:#f6f8fc; border:1px solid #e9eef6; border-radius:11px; }
+.ev-app .ev-card .ev-feature-toggle > .cbi-value-title { display:none!important; }
+.ev-toggle-wrap { display:flex; align-items:center; justify-content:space-between; gap:12px; min-height:28px; }
+.ev-toggle-state { font-size:12px; font-weight:600; color:#6a7a90; }
+.ev-toggle-wrap[data-state='1'] .ev-toggle-state { color:#18846a; }
+.ev-switch { position:relative; width:46px; height:26px; border:0; border-radius:20px; background:#c8d2e0; padding:0; cursor:pointer; flex-shrink:0; box-shadow:inset 0 1px 2px #24365112; transition:background .18s; }
+.ev-switch-thumb { position:absolute; width:20px; height:20px; top:3px; left:3px; border-radius:50%; background:white; box-shadow:0 1px 4px #26395133; transition:transform .18s; }
+.ev-toggle-wrap[data-state='1'] .ev-switch { background:#2c75ef; }
+.ev-toggle-wrap[data-state='1'] .ev-switch-thumb { transform:translateX(20px); }
+.ev-switch:focus-visible,.ev-choice:focus-visible { outline:3px solid #6ea0ff77; outline-offset:3px; }
+.ev-choice-group { display:flex; gap:5px; }
+.ev-choice { cursor:pointer; border:1px solid #dae3f0; border-radius:7px; background:white; color:#496078; padding:5px 11px; font-size:11px; }
+.ev-choice:hover { border-color:#83a6f4; color:var(--ev-accent); background:#edf3ff; }
+.ev-app .ev-source-input,[hidden].ev-switch,[hidden].ev-choice-group { display:none!important; }
+.ev-general .ev-card-header { margin:0; flex:1; }.ev-general .ev-feature-toggle { margin:0!important; width:170px; }
+.ev-runtime .cbi-value-field { color:#345774; font-size:12px; line-height:1.7; overflow-wrap:anywhere; }
+.ev-runtime .cbi-value { border-bottom:1px solid #edf1f6!important; padding-bottom:12px!important; }
+.ev-runtime .cbi-value:last-child { border:0!important; padding-bottom:0!important; }
+@media(max-width:900px) { .ev-grid { grid-template-columns:minmax(0,1fr); grid-template-areas:'general' 'proxy' 'ua' 'ttl' 'runtime' 'network'; gap:14px; }.ev-hero { padding:23px; }.ev-hero h2 { font-size:22px; }.ev-tag { display:none; }.ev-card { padding:20px; } }
+@media(max-width:600px) { .ev-general { display:block; }.ev-general .ev-feature-toggle { width:auto; margin-top:16px!important; }.ev-app .ev-card .cbi-value-description { overflow-wrap:anywhere; } }
+@media(prefers-reduced-motion:reduce) { .ev-switch,.ev-switch-thumb { transition:none; } }

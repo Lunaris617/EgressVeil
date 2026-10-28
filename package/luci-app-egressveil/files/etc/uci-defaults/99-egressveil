@@ -1,6 +1,6 @@
 #!/bin/sh
 # No authentication, subscription fetch, firewall mutation or service start.
-for svc in egressveil ua3f ua3f-early-guard ua3f-ttl-policy ua3f-bridge-policy; do
+for svc in egressveil egressveil-controller ua3f ua3f-early-guard ua3f-ttl-policy ua3f-bridge-policy; do
  [ ! -x /etc/init.d/$svc ] || /etc/init.d/$svc enable
 done
 uci -q set firewall.egressveil=include
@@ -14,7 +14,21 @@ if [ -f /etc/config/ucitrack ]; then
  uci -q set "ucitrack.$id.init=ua3f"
  uci -q commit ucitrack
 fi
-[ -f /etc/egressveil/activated ] && exit 0
+# An old saved profile has no configured key. Retain its former feature
+# choices even when the suite was paused; fresh installs explicitly have 0.
+if [ -z "$(uci -q get egressveil.main.configured)" ]; then
+ uci -q set egressveil.main.configured=1
+ uci -q set egressveil.main.proxy_enabled=1
+ uci -q set egressveil.main.ttl_enabled=1
+ uci -q set egressveil.main.proxy_mode=rule
+ uci -q commit egressveil
+ umask 077
+ mkdir -p /etc/egressveil
+ chmod 700 /etc/egressveil
+ : > /etc/egressveil/migrate-v02
+fi
+[ ! -f /etc/egressveil/activated ] || exit 0
+
 uci -q set openclash.config.enable=0
 uci -q set openclash.config.proxy_mode=rule
 uci -q commit openclash

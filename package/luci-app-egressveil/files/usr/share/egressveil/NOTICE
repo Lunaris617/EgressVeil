@@ -15,8 +15,8 @@ License: GPLv3. See LICENSES/UA3F-GPL-3.0.txt.
 OpenClash: Copyright (c) 2019-2026 vernesong
 https://github.com/vernesong/OpenClash
 Base commit: e553e82e01c697aefbe1555261a503f425e00ccd (0.48.002).
-Engine retained; standalone LuCI frontend omitted; integration hooks, defaults
-and startup gate modified. Original MIT license and notice are preserved in
+Original LuCI overview, settings, subscriptions and configuration management
+retained; shared routing controls and package upgrades coordinated by EgressVeil. Original MIT license and notice are preserved in
 LICENSES/OpenClash-MIT.txt. These MIT portions remain under their original
 license; the combined integration is distributed under GPLv3.
 
@@ -27,3 +27,17 @@ source archive under sources/. See LICENSES/Mihomo-GPL-3.0.txt.
 
 Go vendored dependencies retain their own license and copyright files under
 core/vendor and helpers/*/vendor. License notices must not be removed.
+
+Metacubexd: Copyright (c) 2023 MetaCubeX; MIT.
+https://github.com/MetaCubeX/metacubexd/tree/v1.273.1
+Bundled release compressed-dist.tgz SHA256:
+a178e00b67acabcda2dcef00afa90be6a7bb261e466a67dad58c8478d9553603
+See LICENSES/Metacubexd-MIT.txt. No build-time dashboard download is required.
+
+Zashboard: Zephyruso and contributors; MIT.
+https://github.com/Zephyruso/zashboard
+Existing bundled static snapshot retained; exact files recorded in ASSETS.json.
+See LICENSES/Zashboard-MIT.txt.
+
+The upstream luci.openclash Lua helper retains its Apache-2.0 header.
+Bundled upstream web libraries retain their notices in the distributed assets.

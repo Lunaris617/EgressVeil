@@ -7,3 +7,4 @@ package/luci-app-egressveil/files/etc/openclash/core/clash_meta binary
 package/luci-app-egressveil/files/usr/libexec/ua3f-integration/ttl-policy binary
 package/luci-app-egressveil/files/usr/libexec/ua3f-integration/ethtool-feature binary
 package/luci-app-egressveil/files/usr/libexec/ua3f-bridge-policy/bridge-audit binary
+package/luci-app-egressveil/files/usr/libexec/egressveil/controller binary

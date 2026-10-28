@@ -3,7 +3,9 @@
 set -eu
 . /etc/ua3f-integration.conf
 attempt=0
-while [ "$attempt" -lt 30 ]; do
+limit=30
+[ "${1:-}" != --check ] || limit=1
+while [ "$attempt" -lt "$limit" ]; do
     [ "$(uci -q get ua3f.enabled.enabled)" = 1 ] || exit 0
     # start_service returns before procd publishes its new instance; no PID is
     # a retry condition rather than a set -e failure.
@@ -35,10 +37,16 @@ while [ "$attempt" -lt 30 ]; do
         fi
         # ua3fi_v9: verify both paths before releasing the explicit enable barrier.
         /usr/libexec/ua3f-bridge-policy/bridge-policy ready >/dev/null 2>&1 || ready=0
-        /usr/libexec/ua3f-integration/ttl-policy check >/dev/null 2>&1 || ready=0
+        if [ "$(uci -q get egressveil.main.ttl_enabled)" = 1 ]; then
+          /usr/libexec/ua3f-integration/ttl-policy check >/dev/null 2>&1 || ready=0
+        fi
         if [ "$ready" = 1 ]; then
-            nft list chain netdev ua3fi_ttl_last egress | grep -q 'ip ttl set 64' || exit 1
+            if [ "$(uci -q get egressveil.main.ttl_enabled)" = 1 ]; then
+             ttl=$(uci -q get egressveil.main.ttl)
+             nft list chain netdev ua3fi_ttl_last egress | grep -q "ip ttl set $ttl " || exit 1
+            fi
             /usr/libexec/ua3f-integration/firewall check
+            [ "${1:-}" != --check ] || exit 0
             exec /usr/libexec/ua3f-integration/runtime unprotect
         fi
     ;; esac

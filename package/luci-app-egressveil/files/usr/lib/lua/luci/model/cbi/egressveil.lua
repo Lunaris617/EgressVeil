@@ -1,69 +1,95 @@
 -- SPDX-License-Identifier: GPL-3.0-only
 local fs=require "nixio.fs"
 local sys=require "luci.sys"
-local json=require "luci.jsonc"
 local util=require "luci.util"
-local m=Map("egressveil","EgressVeil","统一管理严格 HTTP UA、OpenClash/Mihomo 规则分流与 IPv4 TTL。未填写订阅时不接管网络；IPv6 路由、多 LAN 物理口及未知桥接结构会拒绝激活。")
-local s=m:section(NamedSection,"main","suite","出口策略")
-local enabled=s:option(Flag,"enabled","启用 EgressVeil")
+local uci=require("luci.model.uci").cursor()
+local m=Map("egressveil","EgressVeil","按需选择代理、明文 HTTP UA 和 IPv4 TTL。流量接管由 EgressVeil 自动配置。首次使用请完成三项选择；没有订阅也可使用。")
+m:append(Template("egressveil/style"))
+local s=m:section(NamedSection,"main","suite","配置引导与出口设置")
+local enabled=s:option(Flag,"enabled","运行 EgressVeil")
 enabled.rmempty=false
+local function choice(key,title,yes,no)
+ local o=s:option(ListValue,key,title)
+ o:value("","请选择");o:value("0",no);o:value("1",yes);o.rmempty=false
+ function o.validate(self,v) if v~="0" and v~="1" then return nil,"请明确选择开启或关闭。" end return v end
+ return o
+end
+choice("proxy_enabled","代理","使用代理","暂不配置，全部直连")
+choice("ua_enabled","明文 HTTP UA","开启改写","保留原始 UA")
+choice("ttl_enabled","IPv4 TTL","开启改写","保留原始 TTL")
 local feed=s:option(Value,"feed","节点订阅链接")
 feed.password=true;feed.rmempty=true
+feed.description="可留空或后续更换。快速订阅每小时刷新；完整配置订阅可在订阅管理中导入、手动或定时更新。"
 function feed.validate(self,v)
- if not v or v=="" then return v end
- if #v>4096 or v:find("[%z\1-\32\127]") or not v:match("^https?://[^#]+$") then return nil,"请输入有效 HTTP(S) 订阅地址。" end
+ if not v or v=="" then return "" end
+ if #v>4096 or v:find("[%z\1-\32\127]") or not v:match("^https?://[^#]+$") then return nil,"请输入 HTTP(S) 订阅地址。" end
  return v
 end
-local selector=s:option(ListValue,"selector","代理节点／策略")
-selector.default="自动选择";selector.rmempty=false
-selector:value("自动选择","自动选择（延迟探测）")
-local ok,nodes=pcall(json.parse,sys.exec("/usr/bin/ruby /usr/libexec/egressveil/config.rb selectors 2>/dev/null"))
-if ok and type(nodes)=="table" and type(nodes.choices)=="table" then
- for _,v in ipairs(nodes.choices) do if v~="自动选择" then selector:value(v,v) end end
+local refresh=s:option(Button,"_refresh_feed","快速订阅")
+refresh.inputtitle="立即更新";refresh.inputstyle="apply"
+function refresh.write()
+ local code=sys.call("ruby /usr/libexec/egressveil/config.rb refresh >/dev/null 2>&1")
+ m.message=code==0 and "快速订阅已更新。" or "当前核心未就绪或未使用快速订阅，请在订阅管理或 Metacubexd 中更新相应提供商。"
 end
-selector.description="首次激活使用自动选择；激活后刷新本页即可选择具体节点。国内直连，国际 UDP/QUIC 同样按规则与所选节点能力处理。"
-local interval=s:option(Value,"interval","探测周期（秒）")
-interval.default="30";interval.datatype="range(15,300)";interval.rmempty=false
-local ua_enabled=s:option(Flag,"ua_enabled","改写明文 HTTP User-Agent")
-ua_enabled.default="1";ua_enabled.rmempty=false
+local profile=s:option(ListValue,"proxy_config","代理配置文件")
+profile:value("","未选择（填写订阅后自动生成）")
+for p in fs.glob("/etc/openclash/config/*") do
+ if (p:match("%.yaml$") or p:match("%.yml$")) and not p:match("egressveil%-direct%.yaml$") then profile:value(p,fs.basename(p)) end
+end
+profile.rmempty=true
+local mode=s:option(ListValue,"proxy_mode","代理策略")
+mode:value("rule","规则");mode:value("global","全局");mode.default="rule";mode.rmempty=false
+mode.description="代理关闭时全部直连；开启后使用此策略。策略组和具体节点在 Metacubexd 中选择。"
 local ua=s:option(Value,"ua","统一 User-Agent")
 ua.default="FFF";ua.rmempty=false
 function ua.validate(self,v)
- if not v or #v==0 or #v>256 or v:find("[%z\1-\31\127]") then return nil,"UA 必须为 1–256 字节且不能包含控制字符。" end
- return v
+ if not v or #v==0 or #v>256 or v:find("[%z\1-\31\127]") then return nil,"请输入 1–256 字节的 UA，不支持控制字符。" end return v
 end
-local ttl=s:option(ListValue,"ttl","WAN 出站 IPv4 TTL")
-ttl:value("64","64（严格配置，包含 GRO 防绕过保护）")
-ttl.default="64";ttl.rmempty=false
-function ttl.validate(self,v) if v~="64" then return nil,"当前严格配置只支持 TTL=64。" end return v end
-ttl.description="TTL 由本套件独立维护。停用 HTTP UA 改写仍保留 TTL 和代理分流；关闭整个套件才撤销其接管。"
+ua.description="覆盖 HTTP/1 与明文 HTTP/2（h2c）。HTTPS 不解密；正则改写不在首版支持范围内。"
+local ttl=s:option(Value,"ttl","WAN 出站 IPv4 TTL")
+ttl.default="64";ttl.datatype="range(1,255)";ttl.rmempty=false
+ttl.description="仅在 TTL 改写开启时生效。IPv6 不属于首版支持范围。"
+local interval=s:option(Value,"interval","自动选择探测间隔（秒）")
+interval.description="用于快速订阅生成的自动选择组；导入配置的策略组由原配置管理。"
+interval.default="30";interval.datatype="range(15,300)";interval.rmempty=false
 local lan=s:option(Value,"lan","LAN 逻辑接口")
 lan.default="lan";lan.datatype="uciname";lan.rmempty=false
 local wan=s:option(Value,"wan","WAN 逻辑接口")
 wan.default="wan";wan.datatype="uciname";wan.rmempty=false
-local level=s:option(ListValue,"log_level","核心日志级别")
+local level=s:option(ListValue,"log_level","UA3F 日志级别")
 for _,v in ipairs({"ERROR","WARN","INFO","DEBUG"}) do level:value(v) end
 level.default="WARN";level.rmempty=false
-local result=s:option(DummyValue,"_state","最近执行结果")
-function result.cfgvalue() return fs.readfile("/var/run/egressveil/result") or "尚未激活；保存并应用后刷新本页。" end
 local function running(name)
  local services=util.ubus("service","list",{name=name}) or {}
- for _,instance in pairs((services[name] or {}).instances or {}) do
-  if instance.running==true and tonumber(instance.pid) then return true end
- end
+ for _,instance in pairs((services[name] or {}).instances or {}) do if instance.running==true and tonumber(instance.pid) then return true end end
  return false
 end
-local live=s:option(DummyValue,"_runtime","当前进程状态")
-function live.cfgvalue()
- return "UA3F："..(running("ua3f") and "运行中" or "未运行").."；Mihomo："..(running("openclash") and "运行中" or "未运行")
+local state=s:option(DummyValue,"_state","应用结果")
+function state.cfgvalue() return fs.readfile("/var/run/egressveil/result") or "尚未应用" end
+local health=s:option(DummyValue,"_health","当前就绪状态")
+function health.cfgvalue()
+ if uci:get("egressveil","main","enabled")~="1" then return "已暂停" end
+ if sys.call("ruby /usr/libexec/egressveil/config.rb health --quick >/dev/null 2>&1")~=0 then return "核心未就绪，请检查应用结果与日志" end
+ if uci:get("egressveil","main","ua_enabled")=="1" and sys.call("/usr/libexec/ua3f-integration/wait-ready --check >/dev/null 2>&1")~=0 then return "UA 接管未就绪，保护保留" end
+ if uci:get("egressveil","main","ttl_enabled")=="1" and sys.call("/usr/libexec/ua3f-integration/ttl-policy check >/dev/null 2>&1")~=0 then return "TTL 保护未就绪" end
+ return "接管已就绪"
 end
-local live_ttl=s:option(DummyValue,"_ttl_runtime","当前 TTL 出口规则")
-function live_ttl.cfgvalue()
- return sys.call("nft list chain netdev ua3fi_ttl_last egress 2>/dev/null | grep -q 'ip ttl set 64'")==0 and "TTL=64 规则在位" or "规则未安装／未就绪"
+local live=s:option(DummyValue,"_runtime","实际进程")
+function live.cfgvalue() return "Mihomo："..(running("openclash") and "运行中" or "未运行").."；UA3F："..(running("ua3f") and "运行中" or "未运行").."；控制入口："..(running("egressveil-controller") and "运行中" or "未运行") end
+local rule=s:option(DummyValue,"_ttl_runtime","实际 TTL 规则")
+function rule.cfgvalue()
+ local n=tonumber(uci:get("egressveil","main","ttl"))
+ if not n then return "未配置" end
+ return sys.call("nft list chain netdev ua3fi_ttl_last egress 2>/dev/null | grep -q 'ip ttl set "..n.." '")==0 and "TTL="..n.." 规则已安装" or "未安装"
 end
-local policy=s:option(DummyValue,"_policy","当前固定工作流")
-function policy.cfgvalue() return "规则模式 · 国内直连 · 国际按节点选择 · fake-ip · HTTP/1/h2c 严格引擎 · HTTPS 不解密 · IPv4 TTL=64" end
+local apply_generation
+function m.on_before_commit(self)
+ self.uci:set("egressveil","main","configured","1")
+ apply_generation=(fs.readfile("/proc/sys/kernel/random/uuid") or ""):match("^([a-f0-9-]+)")
+ if apply_generation then self.uci:set("egressveil","main","apply_generation",apply_generation) end
+end
 function m.on_after_commit()
- sys.call("umask 077; mkdir -p /var/run/egressveil; chmod 700 /var/run/egressveil; (/usr/libexec/egressveil/setup apply >/var/run/egressveil/setup.log 2>&1) </dev/null &")
+ if not apply_generation then return end
+ sys.call("umask 077; mkdir -p /var/run/egressveil; chmod 700 /var/run/egressveil; (/usr/libexec/egressveil/ui-apply "..apply_generation.." >/var/run/egressveil/setup.log 2>&1) </dev/null &")
 end
 return m

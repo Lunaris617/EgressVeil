@@ -87,7 +87,7 @@ yml_auth_get()
    if [ -z "$username" ] || [ -z "$password" ]; then
       return
    else
-      LOG_TIP "You have seted the authentication of SOCKS5/HTTP(S) proxy with【$username:$password】..."
+      LOG_TIP "SOCKS5/HTTP(S) proxy authentication enabled"
       echo "  - $username:$password" >>/tmp/yaml_openclash_auth
    fi
 }

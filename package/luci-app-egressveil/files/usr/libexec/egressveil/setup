@@ -83,6 +83,14 @@ EOF
 }
 ttl_egress() {
  . /etc/ua3f-integration.conf
+ if [ "$(uci -q get egressveil.main.ttl_enabled)" != 1 ]; then
+  /usr/libexec/ua3f-integration/ttl-policy remove >/dev/null 2>&1 || return 1
+  if nft list table netdev ua3fi_ttl_last 2>/dev/null | grep -q 'ua3fi:ttl-last'; then nft delete table netdev ua3fi_ttl_last; fi
+  return 0
+ fi
+ ttl=$(uci -q get egressveil.main.ttl)
+ case "$ttl" in ''|*[!0-9]*) return 1;; esac
+ [ "$ttl" -ge 1 ] && [ "$ttl" -le 255 ] || return 1
  if nft list table netdev ua3fi_ttl_last >/dev/null 2>&1; then
   nft list table netdev ua3fi_ttl_last | grep -q 'ua3fi:ttl-last' || return 1
   remove='delete table netdev ua3fi_ttl_last'
@@ -91,7 +99,7 @@ ttl_egress() {
 $remove
 add table netdev ua3fi_ttl_last { comment "ua3fi:ttl-last"; }
 add chain netdev ua3fi_ttl_last egress { type filter hook egress device "$WAN_IFACE" priority 1000; policy accept; }
-add rule netdev ua3fi_ttl_last egress ether type ip counter ip ttl set 64 comment "ua3fi:ttl-last"
+add rule netdev ua3fi_ttl_last egress ether type ip counter ip ttl set $ttl comment "ua3fi:ttl-last"
 EOF
  nft -c -f "$RUN/ttl.nft"
  nft -f "$RUN/ttl.nft"
@@ -107,7 +115,7 @@ collisions() {
  done
 }
 prepare() {
- resolve
+ resolve || return 1
  # All changes below are suite-owned or the reviewed bridge sysctl baseline.
  if [ -f /etc/init.d/dockerd ]; then
   ruby "$ROOT/docker-init.rb" || return 1
@@ -115,8 +123,8 @@ prepare() {
  modprobe br_netfilter 2>/dev/null || :
  sysctl -q -w net.bridge.bridge-nf-call-ip6tables=1 >/dev/null
  ip link set "$LAN_IFACE" type bridge nf_call_iptables 0
- seed
- ttl_egress
+ seed || return 1
+ ttl_egress || return 1
 }
 TX=$STATE/transaction
 restore_transaction() {
@@ -126,6 +134,7 @@ restore_transaction() {
  fi
  cp "$TX/openclash" /etc/config/openclash
  cp "$TX/ua3f" /etc/config/ua3f
+ [ ! -f "$TX/egressveil" ] || cp "$TX/egressveil" /etc/config/egressveil
  if [ -f "$TX/source" ]; then
   cp "$TX/source" /etc/openclash/config/ua3fi.yaml
  else rm -f /etc/openclash/config/ua3fi.yaml; fi
@@ -135,12 +144,22 @@ restore_transaction() {
  rm -f /var/run/egressveil.pending
  if [ "$was" = 1 ] && [ "${1:-}" != boot ]; then
   "$0" prepare >/dev/null 2>&1 || :
-  /etc/init.d/ua3f start >/dev/null 2>&1 || :
+  /etc/init.d/egressveil-controller start >/dev/null 2>&1 || :
+  /etc/init.d/ua3f restart >/dev/null 2>&1 || :
   /etc/init.d/openclash restart >/dev/null 2>&1 || :
  fi
  echo 'PREVIOUS_CONFIGURATION_RESTORED' > "$RUN/result"
 }
 case "${1:-}" in
+reload) exec "$0" apply;;
+mode)
+ case "${2:-}" in rule|global|direct) ;; *) exit 2;; esac
+ # Snapshot applied choices before changing desired state.
+ [ ! -f "$STATE/applied-uci" ] || cp "$STATE/applied-uci" "$RUN/mode-previous"
+ if [ "$2" = direct ]; then uci -q set egressveil.main.proxy_enabled=0; else uci -q set "egressveil.main.proxy_mode=$2"; uci -q set egressveil.main.proxy_enabled=1; fi
+ uci -q commit egressveil
+ exec "$0" apply
+ ;;
 recover)
  if [ -d "$RUN/apply.lock" ]; then
   owner=$(cat "$RUN/apply.lock/owner" 2>/dev/null || :)
@@ -168,7 +187,12 @@ apply)
   mkdir "$lock" || exit 1
  fi
  printf '%s\n' "$$" > "$lock/owner"
- trap 'code=$?; if [ "$code" != 0 ]; then restore_transaction || :; fi; rm -f "$lock/owner"; rmdir "$lock"; exit "$code"' EXIT
+ trap 'code=$?; if [ "$code" != 0 ]; then
+  if [ -d "$TX" ]; then restore_transaction || :; else
+   if [ -f "$STATE/activated" ] && [ -f "$STATE/applied-uci" ]; then cp "$STATE/applied-uci" /etc/config/egressveil; fi
+   echo "APPLY_FAILED_PREVIOUS_STATE_RETAINED" > "$RUN/result"
+  fi
+ fi; rm -f "$lock/owner"; rmdir "$lock"; exit "$code"' EXIT
  trap 'exit 1' HUP INT TERM
  [ "$(uci -q get egressveil.main.enabled)" = 1 ] || { "$0" disable; exit 0; }
  ruby "$ROOT/config.rb" validate
@@ -181,6 +205,7 @@ apply)
  printf '%s\n' "$was_active" > "$TX/active"
  cp /etc/config/openclash "$TX/openclash"
  cp /etc/config/ua3f "$TX/ua3f"
+ if [ -f "$STATE/applied-uci" ]; then cp "$STATE/applied-uci" "$TX/egressveil"; else cp /etc/config/egressveil "$TX/egressveil"; fi
  [ ! -f /etc/openclash/config/ua3fi.yaml ] || cp /etc/openclash/config/ua3fi.yaml "$TX/source"
  [ ! -f "$STATE/last-feed" ] || cp "$STATE/last-feed" "$TX/feed"
  if [ "$was_active" = 0 ]; then
@@ -198,19 +223,45 @@ apply)
  uci -q set "ua3f.main.log_level=$(uci -q get egressveil.main.log_level)"
  uci -q commit ua3f
  uci -q set openclash.config.enable=1
- uci -q set openclash.config.proxy_mode=rule
+ mode=$(uci -q get egressveil.main.proxy_mode || echo rule)
+ case "$mode" in rule|global|direct) ;; *) exit 1;; esac
+ source=$(uci -q get openclash.config.config_path || :)
+ if [ "$(uci -q get egressveil.main.proxy_enabled)" != 1 ]; then
+  if [ -n "$source" ] && [ "$source" != /etc/openclash/config/egressveil-direct.yaml ]; then
+   uci -q set "egressveil.main.proxy_config=$source"
+  fi
+  source=/etc/openclash/config/egressveil-direct.yaml
+  mode=direct
+ else
+  selected=$(uci -q get egressveil.main.proxy_config || :)
+  [ -z "$selected" ] || source=$selected
+  if [ "$source" = /etc/openclash/config/egressveil-direct.yaml ] || [ -z "$source" ]; then
+   source=$(uci -q get egressveil.main.proxy_config || echo /etc/openclash/config/ua3fi.yaml)
+  fi
+  # A changed quick-setup subscription deliberately selects its managed profile.
+  feed=$(uci -q get egressveil.main.feed || :)
+  if [ -n "$feed" ] && { [ ! -f "$STATE/last-feed" ] || [ "$feed" != "$(cat "$STATE/last-feed")" ]; }; then source=/etc/openclash/config/ua3fi.yaml; fi
+ fi
+ uci -q set "openclash.config.proxy_mode=$mode"
+ uci -q set openclash.config.operation_mode=fake-ip
+ uci -q set openclash.config.en_mode=fake-ip
+ uci -q set openclash.config.cn_port=9090
+ uci -q set openclash.config.ipv6_enable=0
+ uci -q set openclash.config.ipv6_dns=0
  uci -q set openclash.config.log_level=warning
- uci -q set openclash.config.china_ip_route=1
+ uci -q set openclash.config.china_ip_route=0
  uci -q set openclash.config.disable_udp_quic=0
  uci -q set openclash.config.router_self_proxy=1
  uci -q set openclash.config.dashboard_password="$(cat "$STATE/controller.key")"
- uci -q set openclash.config.config_path=/etc/openclash/config/ua3fi.yaml
+ uci -q set "openclash.config.config_path=$source"
+ uci -q commit egressveil
  uci -q commit openclash
  /etc/init.d/ua3f-bridge-policy restart
- /etc/init.d/ua3f-ttl-policy start || :
+ if [ "$(uci -q get egressveil.main.ttl_enabled)" = 1 ]; then /etc/init.d/ua3f-ttl-policy start; fi
  /etc/init.d/ua3f restart
  mkdir -p /etc/crontabs
  [ -f /etc/crontabs/root ] || (umask 077; : > /etc/crontabs/root)
+ /etc/init.d/egressveil-controller start
  /etc/init.d/openclash restart
  result=1
  for attempt in 1 2 3; do
@@ -220,7 +271,9 @@ apply)
  if [ "$result" = 0 ]; then
   : > "$STATE/activated"
   chmod 600 "$STATE/activated"
-  uci -q get egressveil.main.feed > "$STATE/last-feed"
+  cp /etc/config/egressveil "$STATE/applied-uci"
+  rm -f "$STATE/migrate-v02"
+  uci -q get egressveil.main.feed > "$STATE/last-feed" || :
   chmod 600 "$STATE/last-feed"
   rm -rf "$TX"
   rm -f /var/run/egressveil.pending
@@ -237,6 +290,11 @@ apply)
 disable)
  uci -q set openclash.config.enable=0;uci -q commit openclash
  uci -q set ua3f.enabled.enabled=0;uci -q commit ua3f
+ # Remove ingress before stopping either listener.
+ /usr/libexec/ua3f-integration/firewall off >/dev/null 2>&1 || :
+ /usr/libexec/ua3f-integration/runtime detach || :
+ /usr/libexec/ua3f-integration/runtime unbypass || :
+ /etc/init.d/egressveil-controller stop || :
  /etc/init.d/openclash stop || :
  /etc/init.d/ua3f stop || :
  /usr/libexec/ua3f-integration/firewall off >/dev/null 2>&1 || :

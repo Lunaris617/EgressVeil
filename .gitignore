@@ -14,6 +14,7 @@ __pycache__/
 .DS_Store
 /dist/
 /tests/udp_echo_client
+/tests/ttl_probe_linux
 /tests/results/
 /build/
 .env

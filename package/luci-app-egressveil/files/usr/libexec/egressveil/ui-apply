@@ -1,0 +1,14 @@
+#!/bin/sh
+# LuCI compatibility forms can invoke their hook before rpcd persists changes.
+# Wait for this form submission, rather than applying the previous UCI state.
+set -eu
+generation=${1:-}
+case "$generation" in ''|*[!a-f0-9-]*) exit 2;; esac
+for attempt in $(seq 1 30); do
+ if [ "$(uci -q get egressveil.main.apply_generation || :)" = "$generation" ] && [ ! -d /var/run/egressveil/apply.lock ]; then
+  exec /usr/libexec/egressveil/setup apply
+ fi
+ sleep 1
+done
+logger -t egressveil 'Form submission was not committed; activation skipped'
+exit 1

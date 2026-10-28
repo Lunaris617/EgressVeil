@@ -3808,6 +3808,7 @@ start_service()
    # Offline suite: credentials/config alone are not a committed activation.
    [ -f /etc/egressveil/activated ] || [ -f /var/run/egressveil.pending ] || return 0
 
+   ruby /usr/libexec/egressveil/config.rb runtime-contract || { LOG_OUT "EgressVeil: incompatible settings; see configuration guide"; return 1; }
    enable=$(uci_get_config "enable")
    [ "$enable" != "1" ] && LOG_WARN "OpenClash Now Disabled, Need Start From Luci Page, Exit..." && exit 0
 

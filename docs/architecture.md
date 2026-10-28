@@ -1,38 +1,50 @@
-# 架构与功能删减
+# 工作原理
 
-EgressVeil 是一个固件软件包和一个 LuCI 入口，不是把代理核心、HTTP 解析器与内核规则硬塞成一个进程。
+EgressVeil 保留 OpenClash 的配置与仪表盘，统一处理 UA3F、TTL 和透明接管的生命周期。
 
 ```text
-LuCI EgressVeil → /etc/config/egressveil → 统一配置与事务控制
-                 ├─ ua3f procd：双 TPROXY + 严格 HTTP 引擎
-                 ├─ OpenClash/Mihomo：fake-ip、DNS、规则及节点/UDP
-                 └─ 桥/GRO/TTL：就绪审计、出口规则与故障保护
+LuCI 引导 / OpenClash 设置 / Metacubexd
+                   │
+         配置事务与能力检查
+                   │
+    ┌──────────────┼──────────────┐
+ OpenClash       UA3F          TTL 策略
+ 域名 / 规则     严格 HTTP      WAN egress
+ 节点 / UDP      双入口          GRO 就绪保护
 ```
 
-保留内部 `ua3f-integration` 路径、`ua3fi_*` 规则名和已验证的 mark，避免品牌重命名同时改变网络语义。用户只操作 EgressVeil 页面；独立 UA3F/OpenClash 前台和分别升级入口不安装。
+## 配置归属
 
-## UA3F 交付核心
+`/etc/config/egressveil` 保存整体启用、引导状态、proxy_enabled、ua_enabled、ttl_enabled、UA、TTL、代理策略和逻辑接口。首次三项开关没有默认选择；TTL 默认 64，仅在开启时生效。
 
-基于先前定制的 UA3F 3.7.0 严格 HTTP 引擎，协议解析源码保留。新的 Linux 入口只监听 1080/1081，按连接固定使用 `0xc9` / `0x1cb`；维持 GID 65534、防自环和原有 procd 监督。
+OpenClash 管理订阅、节点、策略组、规则与兼容设置。快速订阅生成 `ua3fi.yaml`，纯直连使用独立 `egressveil-direct.yaml`；切换直连不会覆盖代理源文件。修改快速订阅链接会重新生成其托管配置，UA/TTL 修改不会。导入配置不要求固定策略组名称、唯一 url-test 或固定 MATCH 目标。
 
-保留：HTTP/1.0、HTTP/1.1、连接复用、明文 HTTP/2 prior-knowledge/h2c、HPACK/多流、透明非 HTTP/TLS，以及透明流内的 HTTP CONNECT/SOCKS 握手识别。
+原 `openclash` LuCI 路径保留，用于兼容原界面。菜单显示 EgressVeil。共享的接管、端口和升级操作受限制；原防火墙脚本编辑入口移除，避免覆盖整合钩子。定制源码与配置仍可自行维护。
 
-不交付：原版多模式 CLI、独立 HTTP/SOCKS 服务、REDIRECT/NFQUEUE、独立管理 API、旧白名单/目的缓存引擎、正则和部分替换、自定义正文/URL规则、MitM 证书、L3 TTL/IPID/TCP时间戳/窗口伪装、QUIC 拒绝、BPF offload、Desync 及旧统计前台。TTL 交由整体策略维护，避免双重写入。
+## 流量路径
 
-源码仅 `core/internal/strict`、透明 socket 传输和精简启动程序。严格引擎识别到 HTTP 后解析失败关闭连接；不能回退成未经改写的明文。每条拨号的 mark 不共享可变状态。日志不记录请求正文、认证材料或目标地址。
+- fake-IP TCP 先进入 Mihomo，恢复域名并选择 DIRECT 或节点。之后已确定目标的 TCP 通过 UA 出口入口 1081；关闭 UA 时撤销该入口接管。
+- 真实 IP 明文 HTTP 可通过 UA 入口 1080，再以固定标记交给 Mihomo；公网 TCP 的出口由其模式与规则决定。
+- LAN UDP 通过统一 TPROXY 入口 7895 交给 Mihomo。代理关闭时 DIRECT；开启时按规则及节点的 UDP 能力处理。
+- LAN 内部、管理、本机回复、必要本地服务和防环流量保留精确豁免。发往 WAN 私网目标的兼容直连路径与 LAN 内部通信分开处理。
+- UA 入口拨号标记按连接固定。1080 使用 0xc9 桥接；最终连接使用 0x1cb，避免再次接管。其他既有策略标记和表号保留。
 
-## 代理和 DNS
+UA 引擎保留 HTTP/1、h2c、HPACK、多流及已有隧道识别。识别为 HTTP 后解析失败关闭连接，不回退原样明文放行。TLS 透明传输，不安装证书、不做 MitM。已移除旧多模式、独立管理 API、正则/正文/URL替换、NFQUEUE、BPF、IPID 和时间戳伪装。
 
-fake-ip TCP 先由 Clash 恢复域名并选择 DIRECT/节点，后续 TCP 进入最终出口处理。UDP 经统一入口交给 Mihomo，按规则 DIRECT 或代理，不全局强制直连。国际 DNS 使用跟随自动代理策略的 DoH；国内/节点启动解析保留 DIRECT 引导。
+## 控制接口
 
-`Switch` 支持自动选择及手动节点。provider 每小时刷新；探测默认 30 秒，容差 100ms。订阅内的节点证书设置按核心支持读取，不固化某一节点指纹。
+控制网关监听选定 LAN 地址的 9090；Mihomo 仅监听 127.0.0.1:9091。认证密钥保存在设备私有目录。
 
-OpenClash 的临时配置与最终配置均按精确路径及 root 所有权校验。普通和快速启动都会在核心运行前执行策略规范化；失败禁止启动。健康检查进一步逐项比较实际生成 DNS 与源策略，不只查询进程存活。
+查询、连接统计、WebSocket 和节点选择转发到核心。模式切换进入配置事务；DIRECT 关闭代理并保留此前策略，rule/global 恢复代理。只允许重新加载当前配置；禁止绕过检查载入任意路径、升级或替换核心。内置仪表盘按同源访问，控制 API 不开放通配跨域。
 
-## TTL 与生命周期
+普通和快速启动均在最终配置启动前检查绑定、保留端口、IPv4 与 fake-IP 合约。原配置 DNS 默认保持权威；用户明确开启 OpenClash 自定义 DNS 时使用其覆写。纯直连配置移除代理组和提供商，并使用直连解析。
 
-严格配置固定 IPv4 TTL=64：保留原 TCP/GRO 就绪保护，WAN netdev egress 执行统一 TTL。停用 UA 仍保留 TTL/分流；整体关闭才撤销整体接管。IPv6 不属于此实现的保护范围，有 IPv6 默认路由时拒绝激活。
+## 生命周期
 
-首次激活使用私有事务备份；失败恢复，成功提交 activated。初始无订阅不接管。已启用核心崩溃时规则保留，procd 重启。正常系统 shutdown 保留用户启用选择，避免把重启当作主动关闭。
+每次应用先验证、备份，再切换；失败恢复上一份可用配置及服务状态。重复安装规则不累积。LuCI 引导用提交标识等待本次 UCI 落盘，再执行后台应用，避免读取旧开关值。
 
-桥接采用原有已审查模型：LAN per-bridge=0、IPv4 global=0、已审查 Docker 桥=1；未知结构保留隔离并拒绝就绪。GRO 仅关闭 rx-gro-list，保留普通 GRO。保留对 offload、XDP/TC 等的只读绕过审计，不启用 BPF 伪装。
+主动关闭 UA 保留正常分流；已启用 UA 意外退出时保护保留，由 procd 恢复。整体暂停先撤销接管再停止监听，保留三个功能选择。重启保留整体启用状态；旧 EgressVeil 0.1 配置通过迁移标识完成一次适配。
+
+TTL 值支持 1–255，在 WAN netdev egress 修改 IPv4。TTL 关闭撤销所属写入和保护；rx-gro-list 仅在身份与状态仍匹配时恢复此前值。普通 GRO 保留。TPROXY 所需桥接策略独立于 TTL：关闭 TTL 不恢复会破坏接管的全局桥过滤设置。
+
+硬件和桥接模型仍按已验证范围检查。未知结构拒绝就绪，不通过放宽 Docker 或其他桥隔离继续启动。

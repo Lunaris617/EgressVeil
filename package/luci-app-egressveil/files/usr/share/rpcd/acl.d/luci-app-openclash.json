@@ -1,11 +1,19 @@
 {
-	"luci-app-openclash": {
-		"description": "Grant UCI access for luci-app-openclash",
-		"read": {
-			"uci": [ "openclash" ]
-		},
-		"write": {
-			"uci": [ "openclash" ]
-		}
-	}
+  "luci-app-openclash": {
+    "description": "Grant UCI access for luci-app-openclash",
+    "read": {
+      "uci": [
+        "openclash",
+        "egressveil",
+        "ua3f"
+      ]
+    },
+    "write": {
+      "uci": [
+        "openclash",
+        "egressveil",
+        "ua3f"
+      ]
+    }
+  }
 }
