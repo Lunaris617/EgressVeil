@@ -204,8 +204,8 @@
     },
     {
       "path": "package/luci-app-egressveil/files/usr/lib/lua/luci/model/cbi/egressveil.lua",
-      "bytes": 3449,
-      "sha256": "4b328676c838f75842a51625abf7a934cb7c48a1062c73e7234f3a90fc00e82e"
+      "bytes": 4244,
+      "sha256": "977b667d1aa2b0b3edf34b72f225e2464b2b52a9bae51c5802ef18eb673b48ac"
     },
     {
       "path": "package/luci-app-egressveil/files/usr/libexec/egressveil/boot-retry",
