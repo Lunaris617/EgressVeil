@@ -1,0 +1,135 @@
+#!/bin/sh
+# Shield already-TPROXYed TCP inside the real iptables DNS/Docker NAT chain.
+# Never flushes a chain or edits another service's rules.
+set -eu
+. /etc/ua3f-integration.conf
+case "$LAN_IFACE" in ''|*[!a-zA-Z0-9_.:-]*) exit 2;; esac
+root=/etc/ua3f-integration
+marker=$root/dns-nat-owned
+comment=ua3fi:dns-tproxy-guard
+temporary=ua3fi:dns-tproxy-guard-staging
+lan_comment=ua3fi:lan-dns-local
+lan_temporary=ua3fi:lan-dns-local-staging
+lan_rule() {
+    lan_op=$1
+    lan_tag=$2
+    case "$lan_op" in
+        -C|-D) set -- -t mangle "$lan_op" UA3F;;
+        -I) set -- -t mangle -I UA3F 1;;
+        *) return 2;;
+    esac
+    iptables "$@" -i "$LAN_IFACE" -p tcp --dport 53 -m comment --comment "$lan_tag" -j RETURN
+}
+lan_delete() {
+    while lan_rule -C "$1" >/dev/null 2>&1; do lan_rule -D "$1"; done
+}
+lan_ready() {
+    lan_rule -C "$lan_comment" >/dev/null 2>&1 || return 1
+    first_lan=$(iptables -t mangle -S UA3F | awk '/^-A / {print; exit}')
+    printf '%s\n' "$first_lan" | grep -Fq "$lan_comment" && ! printf '%s\n' "$first_lan" | grep -Fq "$lan_temporary"
+}
+rule() {
+    guard_op=$1
+    guard_mark=$2
+    guard_tag=$3
+    case "$guard_op" in
+        -C|-D) set -- -t nat "$guard_op" PREROUTING;;
+        -I) set -- -t nat -I PREROUTING 1;;
+        *) return 2;;
+    esac
+    set -- "$@" -p tcp
+    # Original LAN 1ca:53 was DNATed to local DNS after the old UA hook.
+    # Preserve that behavior; router-originated WAN TCP53 now uses 1cc.
+    if [ "$guard_mark" = 0x1ca ]; then set -- "$@" ! --dport 53; fi
+    iptables "$@" -m mark --mark "$guard_mark/0xffffffff" -m comment --comment "$guard_tag" -j RETURN
+}
+has_rule() {
+    rule -C "$1" "$2" >/dev/null 2>&1
+}
+insert_rule() {
+    rule -I "$1" "$2"
+}
+delete_rules() {
+    while has_rule "$1" "$2"; do
+        rule -D "$1" "$2"
+    done
+}
+ownership() {
+    # NAT may not exist yet at S18. Read-only check must not create it.
+    rules=$(iptables -t nat -S PREROUTING 2>/dev/null || :)
+    if printf '%s\n' "$rules" | grep -Fq "$comment" && [ ! -f "$marker" ]; then
+        echo 'DNS NAT guard ownership collision' >&2
+        return 1
+    fi
+    lan_rules=$(iptables -t mangle -S UA3F 2>/dev/null || :)
+    if printf '%s\n' "$lan_rules" | grep -Fq "$lan_comment" && [ ! -f "$marker" ]; then
+        echo 'LAN DNS guard ownership collision' >&2
+        return 1
+    fi
+}
+nat_ready() {
+    has_rule 0x1ca "$comment" && has_rule 0x1cc "$comment" || return 1
+    first=$(iptables -t nat -S PREROUTING | awk '/^-A / {n++; if (n<=2) print}')
+    [ "$(printf '%s\n' "$first" | grep -Fc "$comment")" = 2 ] || return 1
+    # -C above validates complete exact expressions; prefix check validates order.
+    printf '%s\n' "$first" | grep -Eq -- '--mark 0x1ca(/0xffffffff)? ' || return 1
+    printf '%s\n' "$first" | grep -Eq -- '--mark 0x1cc(/0xffffffff)? ' || return 1
+    ! printf '%s\n' "$first" | grep -Fq "$temporary"
+}
+ready() {
+    [ -f "$marker" ] && lan_ready && nat_ready
+}
+case "${1:-}" in
+check)
+    ownership
+    ;;
+ready)
+    ownership
+    ready
+    ;;
+ensure)
+    ownership
+    mkdir -p "$root"
+    umask 077
+    : > "$marker"
+    if ! iptables -t nat -S PREROUTING >/dev/null 2>&1; then
+        # iptables-nft initializes its own standard NAT base chains. Creating
+        # then deleting our empty regular chain is needed only on early boot.
+        ! iptables -t nat -S UA3FI_DNS_INIT >/dev/null 2>&1 || exit 1
+        iptables -t nat -N UA3FI_DNS_INIT
+        iptables -t nat -X UA3FI_DNS_INIT
+    fi
+    # S18 may run before runtime restores the legacy chain. Do not block core
+    # registration; normal reconciliation supplies this before full readiness.
+    if iptables -t mangle -S UA3F >/dev/null 2>&1; then
+        if ! lan_ready; then
+            lan_rule -I "$lan_temporary"
+            lan_delete "$lan_comment"
+            lan_rule -I "$lan_comment"
+        fi
+        lan_delete "$lan_temporary"
+    fi
+    if ! nat_ready; then
+        # Keep both marks covered even when reload placed DNS REDIRECT first.
+        # Temporary rules survive interrupted reconciliation and are owned too.
+        for mark in 0x1ca 0x1cc; do insert_rule "$mark" "$temporary"; done
+        for mark in 0x1ca 0x1cc; do delete_rules "$mark" "$comment"; done
+        for mark in 0x1ca 0x1cc; do insert_rule "$mark" "$comment"; done
+    fi
+    for mark in 0x1ca 0x1cc; do delete_rules "$mark" "$temporary"; done
+    # NAT delivery must be ready at bootstrap; LAN readiness follows UA3F restore.
+    nat_ready
+    ;;
+off)
+    ownership
+    [ -f "$marker" ] || exit 0
+    for mark in 0x1ca 0x1cc; do
+        delete_rules "$mark" "$comment"
+        delete_rules "$mark" "$temporary"
+    done
+    lan_delete "$lan_comment"
+    lan_delete "$lan_temporary"
+    rm -f "$marker"
+    ;;
+*) echo 'Usage: dns-nat-guard check|ready|ensure|off' >&2; exit 2;;
+esac

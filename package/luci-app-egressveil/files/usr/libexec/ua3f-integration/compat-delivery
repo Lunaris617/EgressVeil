@@ -1,0 +1,69 @@
+#!/bin/sh
+# Existing xt_TPROXY delivery; no nft_tproxy expression or new kernel module.
+set -eu
+root=/etc/ua3f-integration
+marker=$root/compat-owned
+target=UA3FI_TARGET
+hook=UA3FI_HOOK
+has_target() { iptables -t mangle -S "$target" >/dev/null 2>&1; }
+has_hook() { nft list chain ip mangle "$hook" >/dev/null 2>&1; }
+ownership() {
+    if { has_target || has_hook; } && [ ! -f "$marker" ]; then
+        echo 'Compatibility delivery name collision' >&2
+        exit 1
+    fi
+}
+case "${1:-}" in
+check|ready)
+    ownership
+    # Read-only: a new hook is not created just to syntax-check classifiers.
+    [ -d /sys/module/xt_TPROXY ] || grep -q '^TPROXY$' /proc/net/ip_tables_targets
+    if [ "$1" = ready ]; then
+        # Unlike preflight check, readiness requires the complete live path.
+        # This query never creates, repairs, or attaches any rule.
+        [ -f "$marker" ] && has_target && has_hook
+        hook_rules=$(nft list chain ip mangle "$hook")
+        printf '%s\n' "$hook_rules" | grep -Eq 'hook prerouting priority (-148|mangle[[:space:]]*\+[[:space:]]*2); policy accept;'
+        printf '%s\n' "$hook_rules" | grep -Eq '^[[:space:]]*jump UA3FI_TARGET([[:space:]]|$)'
+        printf '%s\n' "$hook_rules" | grep -Eq 'meta mark.*0x0*1cc.*0x0*1cd.*drop'
+        [ "$(iptables -t mangle -S "$target" | awk '/^-A / {n++} END {print n+0}')" = 2 ]
+    fi
+    if has_target; then
+        iptables -t mangle -C "$target" -p tcp -m mark --mark 0x1cc -j TPROXY --on-port 1081 --on-ip 127.0.0.1 --tproxy-mark 0x1cc/0xffffffff
+        iptables -t mangle -C "$target" -p udp -m mark --mark 0x1cd -j TPROXY --on-port 7895 --on-ip 127.0.0.1 --tproxy-mark 0x1cd/0xffffffff
+    fi
+    ;;
+ensure)
+    ownership
+    mkdir -p "$root"
+    : > "$marker"
+    has_target || iptables -t mangle -N "$target"
+    iptables -t mangle -C "$target" -p tcp -m mark --mark 0x1cc -j TPROXY --on-port 1081 --on-ip 127.0.0.1 --tproxy-mark 0x1cc/0xffffffff 2>/dev/null || iptables -t mangle -A "$target" -p tcp -m mark --mark 0x1cc -j TPROXY --on-port 1081 --on-ip 127.0.0.1 --tproxy-mark 0x1cc/0xffffffff
+    iptables -t mangle -C "$target" -p udp -m mark --mark 0x1cd -j TPROXY --on-port 7895 --on-ip 127.0.0.1 --tproxy-mark 0x1cd/0xffffffff 2>/dev/null || iptables -t mangle -A "$target" -p udp -m mark --mark 0x1cd -j TPROXY --on-port 7895 --on-ip 127.0.0.1 --tproxy-mark 0x1cd/0xffffffff
+    tmp=$(mktemp /tmp/ua3fi-compat.XXXXXX)
+    trap 'rm -f "$tmp"' EXIT HUP INT TERM
+    if has_hook; then
+        printf 'flush chain ip mangle %s\ndelete chain ip mangle %s\n' "$hook" "$hook" > "$tmp"
+    fi
+    cat >> "$tmp" <<EOF
+add chain ip mangle $hook { type filter hook prerouting priority -148; policy accept; }
+add rule ip mangle $hook jump $target
+add rule ip mangle $hook meta mark { 0x1cc, 0x1cd } counter drop
+EOF
+    nft -c -f "$tmp"
+    nft -f "$tmp"
+    ;;
+off)
+    [ -f "$marker" ] || exit 0
+    if has_hook; then
+        nft flush chain ip mangle "$hook"
+        nft delete chain ip mangle "$hook"
+    fi
+    if has_target; then
+        iptables -t mangle -F "$target"
+        iptables -t mangle -X "$target"
+    fi
+    rm -f "$marker"
+    ;;
+*) echo 'Usage: compat-delivery ensure|check|ready|off' >&2; exit 2;;
+esac

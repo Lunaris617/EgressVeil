@@ -1,0 +1,13 @@
+#!/bin/sh
+# firewall4 script include, invoked after fw4 rules have loaded. OpenClash may
+# not yet be ready: leave the independent guard in place until its own hook.
+[ -f /etc/egressveil/activated ] || [ -f /var/run/egressveil.pending ] || exit 0
+if [ "$(uci -q get ua3f.enabled.enabled)" = 1 ]; then
+    /usr/libexec/ua3f-integration/runtime restore || exit 1
+else
+    /usr/libexec/ua3f-integration/runtime bypass || exit 1
+fi
+if nft list chain inet fw4 openclash >/dev/null 2>&1; then
+    exec /usr/libexec/ua3f-integration/clash-hook
+fi
+logger -t ua3f-integration 'Waiting for OpenClash after fw4 reload; independent guard active'

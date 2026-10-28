@@ -1,0 +1,8 @@
+#!/bin/sh
+set -eu
+[ "${1:-}" = /usr/bin/dockerd ] || exit 2
+ROOT=/usr/libexec/ua3f-bridge-policy
+"$ROOT/bridge-policy" barrier dockerd-start
+# exec retains this PID, including procd automatic respawn launches.
+"$ROOT/bridge-policy" schedule "$$"
+exec "$@"

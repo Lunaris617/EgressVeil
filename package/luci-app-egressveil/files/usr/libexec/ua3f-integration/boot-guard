@@ -1,0 +1,90 @@
+#!/bin/sh
+set -eu
+. /etc/ua3f-integration.conf
+case "${1:-}" in
+off)
+    if [ -f /etc/ua3f-integration/bootguard-owned ] && nft list table inet ua3fi_bootguard >/dev/null 2>&1; then
+        nft delete table inet ua3fi_bootguard
+    fi
+    exit 0
+    ;;
+on) ;;
+*) exit 2;;
+esac
+enabled=$(uci -q get ua3f.enabled.enabled || :)
+if [ "$enabled" != 1 ] && [ "$STAGE" = final-egress ]; then STAGE=udp; fi
+case "$STAGE" in udp|final-egress) ;; *) exit 0;; esac
+case "$LAN_IFACE:$WAN_IFACE" in *[!a-zA-Z0-9_.:-]*) exit 2;; esac
+tmp=$(mktemp /tmp/ua3fi-bootguard.XXXXXX)
+trap 'rm -f "$tmp"' EXIT HUP INT TERM
+if nft list table inet ua3fi_bootguard >/dev/null 2>&1; then
+    [ -f /etc/ua3f-integration/bootguard-owned ] || exit 1
+    printf 'delete table inet ua3fi_bootguard\n' >> "$tmp"
+fi
+cat >> "$tmp" <<EOF
+add table inet ua3fi_bootguard
+add chain inet ua3fi_bootguard forward { type filter hook forward priority -11; policy accept; }
+add rule inet ua3fi_bootguard forward meta nfproto != ipv4 return
+add rule inet ua3fi_bootguard forward iifname != "$LAN_IFACE" return
+add rule inet ua3fi_bootguard forward oifname != "$WAN_IFACE" return
+add rule inet ua3fi_bootguard forward ip daddr { 0.0.0.0/8, 127.0.0.0/8, 169.254.0.0/16, 224.0.0.0/4, 240.0.0.0/4 } return
+EOF
+for cidr in $MANAGEMENT_CIDRS; do
+    printf '%s\n' "$cidr" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+(/[0-9]+)?$'
+    printf 'add rule inet ua3fi_bootguard forward ip daddr %s return\n' "$cidr" >> "$tmp"
+done
+cat >> "$tmp" <<EOF
+add rule inet ua3fi_bootguard forward udp dport { 53, 67, 68, 123 } return
+add rule inet ua3fi_bootguard forward meta l4proto udp counter drop
+EOF
+if [ "$STAGE" = final-egress ]; then
+    # Bootstrap final TCP routing independently of fw4/OpenClash chain
+    # availability. This lets START95 listeners serve START99 downloads.
+    if [ ! -f /etc/ua3f-integration/table458-owned ]; then
+        [ -z "$(ip -4 route show table 458 2>/dev/null)" ] || exit 1
+        ! ip -4 rule show | grep -Eq '(^10458:|^10459:|fwmark 0x1cc|fwmark 0x1cd|lookup 458)' || exit 1
+        mkdir -p /etc/ua3f-integration
+        : > /etc/ua3f-integration/table458-owned
+    fi
+    ip -4 route replace local default dev lo table 458
+    ip -4 rule show | grep -q '^10458:.*fwmark 0x1cc.*lookup 458' || ip -4 rule add pref 10458 fwmark 0x1cc/0xffffffff lookup 458
+    cat >> "$tmp" <<EOF
+add rule inet ua3fi_bootguard forward meta l4proto tcp counter drop
+add chain inet ua3fi_bootguard route_output { type route hook output priority -149; policy accept; }
+add rule inet ua3fi_bootguard route_output meta nfproto != ipv4 return
+add rule inet ua3fi_bootguard route_output meta l4proto != tcp return
+add rule inet ua3fi_bootguard route_output oifname != "$WAN_IFACE" return
+add rule inet ua3fi_bootguard route_output meta mark { 0xc9, 0x1cb, 0x1cc } return
+add rule inet ua3fi_bootguard route_output ct direction reply return
+add rule inet ua3fi_bootguard route_output ip daddr $FAKEIP_CIDR return
+add rule inet ua3fi_bootguard route_output ip daddr { 0.0.0.0/8, 127.0.0.0/8, 169.254.0.0/16, 224.0.0.0/4, 240.0.0.0/4 } return
+EOF
+    for cidr in $MANAGEMENT_CIDRS; do
+        printf 'add rule inet ua3fi_bootguard route_output ip daddr %s return\n' "$cidr" >> "$tmp"
+    done
+    cat >> "$tmp" <<EOF
+add rule inet ua3fi_bootguard route_output meta mark set 0x1cc counter
+add chain inet ua3fi_bootguard prerouting { type filter hook prerouting priority -149; policy accept; }
+add rule inet ua3fi_bootguard prerouting iifname "lo" meta nfproto ipv4 meta l4proto tcp meta mark 0x1cc counter accept
+# output is only the chain name: POSTROUTING reads the final routed device.
+add chain inet ua3fi_bootguard output { type filter hook postrouting priority 111; policy accept; }
+add rule inet ua3fi_bootguard output meta nfproto != ipv4 return
+add rule inet ua3fi_bootguard output oifname != "$WAN_IFACE" return
+add rule inet ua3fi_bootguard output meta l4proto != tcp return
+add rule inet ua3fi_bootguard output ct direction reply return
+add rule inet ua3fi_bootguard output meta mark 0x1cb return
+add rule inet ua3fi_bootguard output ip daddr { 0.0.0.0/8, 127.0.0.0/8, 169.254.0.0/16, 224.0.0.0/4, 240.0.0.0/4 } return
+EOF
+    for cidr in $MANAGEMENT_CIDRS; do
+        printf 'add rule inet ua3fi_bootguard output ip daddr %s return\n' "$cidr" >> "$tmp"
+    done
+    printf 'add rule inet ua3fi_bootguard output counter drop\n' >> "$tmp"
+fi
+nft -c -f "$tmp"
+mkdir -p /etc/ua3f-integration
+: > /etc/ua3f-integration/bootguard-owned
+/usr/libexec/ua3f-integration/compat-delivery ensure
+if [ "$STAGE" = final-egress ]; then
+    /usr/libexec/ua3f-integration/dns-nat-guard ensure
+fi
+nft -f "$tmp"

@@ -1,0 +1,7 @@
+#!/bin/sh
+set -e
+. /lib/functions.sh
+config_load ua3f
+config_get ua main ua FFF
+config_get log_level main log_level WARN
+exec /usr/bin/ua3f --ua "$ua" --log-level "$log_level"

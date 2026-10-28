@@ -1,0 +1,124 @@
+#!/bin/sh
+# Exact reviewed topology only. No other service's firewall is modified.
+set -eu
+ROOT=/usr/libexec/ua3f-bridge-policy
+STATE=/var/run/ua3f-bridge-policy
+mkdir -p "$STATE"
+chmod 700 "$STATE"
+read_boot() { cat /proc/sys/kernel/random/boot_id; }
+unlock() { rm -f "$STATE/lock/owner"; rmdir "$STATE/lock"; trap - EXIT HUP INT TERM; }
+lock() {
+    count=0
+    until mkdir "$STATE/lock" 2>/dev/null; do
+        owner=$(cat "$STATE/lock/owner" 2>/dev/null || :)
+        case "$owner" in ''|*[!0-9]*) ;; *)
+            if ! kill -0 "$owner" 2>/dev/null; then
+                rm -f "$STATE/lock/owner"
+                rmdir "$STATE/lock" 2>/dev/null || :
+            fi;;
+        esac
+        count=$((count+1)); [ "$count" -lt 10 ] || exit 1; sleep 1
+    done
+    printf '%s\n' "$$" > "$STATE/lock/owner"
+    trap 'rm -f "$STATE/lock/owner"; rmdir "$STATE/lock" 2>/dev/null || :' EXIT
+    trap 'exit 1' HUP INT TERM
+}
+barrier() {
+    lock
+    # Restore the original effective IPv4 isolation before lifecycle mutation.
+    rm -f "$STATE/ready"
+    cat /proc/sys/kernel/random/uuid > "$STATE/cycle"
+    read_boot > "$STATE/boot"
+    printf '%s\n' "$1" > "$STATE/reason"
+    printf '1\n' > /proc/sys/net/bridge/bridge-nf-call-iptables
+    [ "$(cat /proc/sys/net/bridge/bridge-nf-call-iptables)" = 1 ]
+    unlock
+}
+case "${1:-}" in
+barrier)
+    case "${2:-}" in boot|dockerd-start|dockerd-reload|dockerd-stop|network|unknown|rollback) ;; *) exit 2;; esac
+    barrier "$2"
+    ;;
+ready)
+    [ -f "$STATE/ready" ] && [ "$(cat "$STATE/boot")" = "$(read_boot)" ]
+    [ "$(cat "$STATE/ready")" = "$(cat "$STATE/cycle")" ]
+    exec "$ROOT/bridge-audit" --mode ready
+    ;;
+status) exec "$ROOT/bridge-audit" --mode ready;;
+schedule)
+    case "${2:-}" in ''|*[!0-9]*) exit 2;; esac
+    [ -s "$STATE/cycle" ]
+    token=$(cat "$STATE/cycle")
+    "$0" worker "$2" "$token" </dev/null >/dev/null 2>&1 &
+    ;;
+schedule-current)
+    pid=$("$ROOT/bridge-audit" --mode pid) || exit 1
+    exec "$0" schedule "$pid"
+    ;;
+schedule-stopped) exec "$0" schedule 0;;
+worker)
+    case "${2:-}" in ''|*[!0-9]*) exit 2;; esac
+    pid=$2 token=${3:-}
+    [ -n "$token" ] || exit 2
+    if [ "$pid" = 0 ]; then set -- --require-stopped; else set -- --pid "$pid"; fi
+    sleep 2
+    attempt=0
+    while [ "$attempt" -lt 60 ]; do
+        [ -f "$STATE/cycle" ] && [ "$(cat "$STATE/cycle")" = "$token" ] || exit 0
+        if "$ROOT/bridge-audit" --mode known "$@" >/dev/null; then
+            lock
+            [ "$(cat "$STATE/cycle")" = "$token" ] || { unlock; exit 0; }
+            # Audit again inside the lock; no unknown bridge is ever assigned
+            # a flag or used as a reason to lower the global bit.
+            if ! "$ROOT/bridge-audit" --mode known "$@" > "$STATE/audit.$$.tmp"; then unlock; exit 1; fi
+            if [ -e /sys/class/net/docker0/bridge/nf_call_iptables ]; then
+                ip link set docker0 type bridge nf_call_iptables 1
+                [ "$(cat /sys/class/net/docker0/bridge/nf_call_iptables)" = 1 ]
+            fi
+            printf '0\n' > /proc/sys/net/bridge/bridge-nf-call-iptables
+            if "$ROOT/bridge-audit" --mode ready "$@" > "$STATE/audit.$$.tmp"; then
+                mv "$STATE/audit.$$.tmp" "$STATE/audit.json"
+                printf '%s\n' "$token" > "$STATE/ready"
+                printf 'ready\n' > "$STATE/reason"
+                unlock
+                logger -t ua3f-bridge-policy 'Known topology ready; Docker IPv4 bridge filtering preserved'
+                exit 0
+            fi
+            printf '1\n' > /proc/sys/net/bridge/bridge-nf-call-iptables
+            rm -f "$STATE/ready"
+            printf 'post-apply-audit-failed\n' > "$STATE/reason"
+            unlock
+            exit 1
+        fi
+        attempt=$((attempt+1))
+        sleep 1
+    done
+    logger -t ua3f-bridge-policy 'Bridge policy not ready; original global isolation retained; revalidation required'
+    exit 1
+    ;;
+monitor)
+    # An unknown observation first restores isolation. Recover only after the
+    # complete known-topology audit passes again; never relax unknown topology.
+    while :; do
+        if [ -f "$STATE/ready" ] && ! "$ROOT/bridge-audit" --mode ready > "$STATE/monitor.$$.tmp"; then
+            barrier unknown
+            mv "$STATE/monitor.$$.tmp" "$STATE/audit.json"
+            logger -t ua3f-bridge-policy 'Topology or Docker policy changed; UA bridge path blocked pending revalidation'
+        fi
+        if [ ! -f "$STATE/ready" ] &&
+           [ "$(cat "$STATE/reason" 2>/dev/null || :)" = unknown ] &&
+           "$ROOT/bridge-audit" --mode known >/dev/null 2>&1; then
+            # Worker repeats the complete audit under its lock before changing
+            # Docker's per-bridge flag and then the global flag. Synchronous
+            # invocation avoids accumulating workers on transient failures.
+            pid=$("$ROOT/bridge-audit" --mode pid 2>/dev/null || :)
+            case "$pid" in ''|*[!0-9]*) ;; *)
+                token=$(cat "$STATE/cycle")
+                "$0" worker "$pid" "$token" || :
+            ;; esac
+        fi
+        sleep 2
+    done
+    ;;
+*) echo 'bridge-policy barrier REASON|ready|status|schedule PID|schedule-current|monitor' >&2; exit 2;;
+esac

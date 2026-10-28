@@ -1,0 +1,62 @@
+#!/bin/sh /etc/rc.common
+USE_PROCD=1
+START=95
+STOP=10
+
+# ua3fi_boot_ensure: ordinary start is attempted first; retry only this boot.
+boot() {
+    [ -f /etc/egressveil/activated ] || [ -f /var/run/egressveil.pending ] || return 0
+    start || logger -t ua3f-integration 'Initial boot start deferred; bounded readiness retry follows'
+    nohup /usr/libexec/egressveil/boot-retry </dev/null >/dev/null 2>&1 &
+}
+
+start_service() {
+    [ -f /etc/egressveil/activated ] || [ -f /var/run/egressveil.pending ] || return 0
+    local enabled
+    config_load ua3f
+    config_get_bool enabled enabled enabled 0
+    [ "$enabled" = 1 ] || {
+        /usr/libexec/ua3f-integration/runtime bypass || return 1
+        /usr/libexec/ua3f-integration/firewall reconcile || return 1
+        /usr/libexec/ua3f-integration/runtime detach
+        [ "${UA3F_KEEP_MIGRATION_GUARD:-0}" = 1 ] || /usr/libexec/ua3f-integration/runtime unprotect
+        return
+    }
+    local reenable=0
+    if /usr/libexec/ua3f-integration/runtime has-bypass >/dev/null 2>&1; then
+        /usr/libexec/ua3f-integration/runtime protect || return 1
+        /usr/libexec/ua3f-integration/runtime unbypass || return 1
+        reenable=1
+    fi
+    # Establish fail-closed ingress before starting the process. A respawn
+    # executes only launch; process death never tears down interception.
+    /usr/libexec/ua3f-integration/runtime restore || return 1
+    /usr/libexec/ua3f-integration/boot-guard on || return 1
+    # Start listeners before OpenClash's START99. The boot guard has a
+    # self-contained OUTPUT->1081 route, so subscription TCP can progress
+    # without waiting for the full OpenClash classifier to exist.
+    /usr/libexec/ua3f-integration/firewall reconcile || logger -t ua3f-integration 'Starting core under early guard; waiting for OpenClash reconciliation'
+    procd_open_instance ua3f
+    procd_set_param command /usr/libexec/ua3f-integration/launch
+    procd_set_param respawn 3600 5 5
+    procd_set_param limits nofile="65535 65535"
+    procd_set_param stdout 1
+    procd_set_param stderr 1
+    procd_close_instance
+    if [ "$reenable" = 1 ]; then
+        /usr/libexec/ua3f-integration/wait-ready >/dev/null 2>&1 &
+    fi
+}
+
+stop_service() {
+    # Normal stop/restart while enabled retains the protected ingress.
+    # Saving LuCI Enabled=0 is the explicit user off path.
+    [ "$(uci -q get ua3f.enabled.enabled)" = 1 ] && return 0
+    /usr/libexec/ua3f-integration/runtime bypass || return 1
+    /usr/libexec/ua3f-integration/firewall reconcile || return 1
+    /usr/libexec/ua3f-integration/runtime detach
+    [ "${UA3F_KEEP_MIGRATION_GUARD:-0}" = 1 ] || /usr/libexec/ua3f-integration/runtime unprotect
+}
+
+reload_service() { stop; start; }
+service_triggers() { procd_add_reload_trigger ua3f; }

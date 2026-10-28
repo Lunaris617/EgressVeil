@@ -1,0 +1,29 @@
+EgressVeil
+Copyright (c) 2026 Lunaris617 and contributors.
+Project integration and new code: GNU General Public License version 3 only.
+
+This is a derivative integration, not an official UA3F, OpenClash or Mihomo
+release. Original authors retain copyright in their respective contributions.
+
+UA3F: SunBK201 and UA3F contributors
+https://github.com/SunBK201/UA3F
+Base version: 3.7.0; retained custom strict HTTP/1/h2c engine, reduced Linux
+TPROXY entry path. Removed legacy modes, MitM, NFQUEUE, standalone API,
+regex/body/URL rewriting and L3/BPF/desync machinery from the delivered core.
+License: GPLv3. See LICENSES/UA3F-GPL-3.0.txt.
+
+OpenClash: Copyright (c) 2019-2026 vernesong
+https://github.com/vernesong/OpenClash
+Base commit: e553e82e01c697aefbe1555261a503f425e00ccd (0.48.002).
+Engine retained; standalone LuCI frontend omitted; integration hooks, defaults
+and startup gate modified. Original MIT license and notice are preserved in
+LICENSES/OpenClash-MIT.txt. These MIT portions remain under their original
+license; the combined integration is distributed under GPLv3.
+
+Mihomo: MetaCubeX and Mihomo contributors
+https://github.com/MetaCubeX/mihomo/tree/v1.19.32
+Fixed x86_64 v1.19.32 with_gvisor binary. GPLv3, with the corresponding upstream
+source archive under sources/. See LICENSES/Mihomo-GPL-3.0.txt.
+
+Go vendored dependencies retain their own license and copyright files under
+core/vendor and helpers/*/vendor. License notices must not be removed.

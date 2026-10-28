@@ -1,0 +1,36 @@
+#!/bin/sh
+set -eu
+# Install as a call before exit 0 in OpenClash's existing custom firewall
+# script. It is an event hook, never a periodic rule-rewriting daemon.
+. /etc/ua3f-integration.conf
+enabled=$(uci -q get ua3f.enabled.enabled || :)
+tmp=$(mktemp /tmp/ua3fi-normalize.XXXXXX)
+trap 'rm -f "$tmp"' EXIT HUP INT TERM
+shape=$(nft -a list chain inet fw4 openclash)
+# Limit normalization to the exact old loopfix responsibility. Keep every
+# non-7892 rule and require the original local/reply/China semantics.
+printf '%s\n' "$shape" | grep -q 'ip daddr @localnetwork.*return'
+printf '%s\n' "$shape" | grep -q 'ct direction reply.*return'
+printf '%s\n' "$shape" | grep -q 'ip daddr @china_ip_route ip daddr != @china_ip_route_pass.*return'
+fake_count=$(printf '%s\n' "$shape" | grep -F "$FAKEIP_CIDR" | grep -c 'redirect to :7892' || :)
+[ "$fake_count" = 1 ] || { logger -t ua3f-integration 'Unexpected fake-IP classifier; guard remains active'; exit 1; }
+printf '%s\n' "$shape" | grep 'redirect to :7892' |
+while IFS= read -r line; do
+    printf '%s\n' "$line" | grep -F "$FAKEIP_CIDR" >/dev/null && continue
+    # Only TCP redirects are in the reviewed migration scope.
+    printf '%s\n' "$line" | grep -Eq '(ip protocol tcp|meta l4proto tcp|tcp dport)' || exit 1
+    handle=$(printf '%s\n' "$line" | sed 's/.*# handle //')
+    printf 'delete rule inet fw4 openclash handle %s\n' "$handle" >> "$tmp"
+done
+# Move the unique non-fake redirect to the chain tail after China bypass.
+printf 'add rule inet fw4 openclash ip protocol tcp tcp dport 443 redirect to :7892\n' >> "$tmp"
+nft -c -f "$tmp"
+nft -f "$tmp"
+if [ "$enabled" != 1 ]; then
+    /usr/libexec/ua3f-integration/runtime bypass
+    exec /usr/libexec/ua3f-integration/firewall reconcile
+fi
+if ! /usr/libexec/ua3f-integration/runtime restore || ! /usr/libexec/ua3f-integration/firewall reconcile; then
+    logger -t ua3f-integration 'Post-reload integration failed; independent guard remains active'
+    exit 1
+fi

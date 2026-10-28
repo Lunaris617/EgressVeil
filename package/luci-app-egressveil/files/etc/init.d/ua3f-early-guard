@@ -1,0 +1,6 @@
+#!/bin/sh /etc/rc.common
+# One-shot early boot barrier; no process or extra procd instance is created.
+START=18
+STOP=01
+start() { [ -f /etc/egressveil/activated ] || [ -f /var/run/egressveil.pending ] || return 0; /usr/libexec/ua3f-integration/boot-guard on; }
+stop() { :; }

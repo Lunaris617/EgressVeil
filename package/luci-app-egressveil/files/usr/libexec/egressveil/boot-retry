@@ -1,0 +1,28 @@
+#!/bin/sh
+set -eu
+[ -f /etc/egressveil/activated ] || [ -f /var/run/egressveil.pending ] || exit 0
+lock=/var/run/egressveil-boot.lock
+mkdir "$lock" 2>/dev/null || exit 0
+trap 'rmdir "$lock"' EXIT
+for attempt in $(seq 1 60); do
+ [ "$(uci -q get egressveil.main.enabled)" = 1 ] || exit 0
+ if /usr/libexec/egressveil/setup prepare >/dev/null 2>&1; then
+  if ! /usr/libexec/ua3f-bridge-policy/bridge-policy ready >/dev/null 2>&1; then
+   /etc/init.d/ua3f-bridge-policy start >/dev/null 2>&1 || :
+  fi
+  if ! /usr/libexec/ua3f-integration/ttl-policy check >/dev/null 2>&1; then
+   /usr/libexec/ua3f-integration/ttl-policy apply >/dev/null 2>&1 || :
+  fi
+  if [ "$(uci -q get ua3f.enabled.enabled)" = 1 ]; then
+   pid=$(ubus call service list '{"name":"ua3f"}' | jsonfilter -e '@.ua3f.instances.ua3f.pid' || :)
+   [ -n "$pid" ] || /etc/init.d/ua3f start >/dev/null 2>&1 || :
+   if /usr/libexec/ua3f-integration/wait-ready >/dev/null 2>&1; then exit 0; fi
+  else
+   /usr/libexec/ua3f-integration/clash-hook >/dev/null 2>&1 || :
+   exit 0
+  fi
+ fi
+ sleep 2
+done
+logger -t egressveil 'Boot readiness timed out; inspect suite status; protection retained'
+exit 1

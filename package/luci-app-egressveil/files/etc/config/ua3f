@@ -1,0 +1,5 @@
+config ua3f 'enabled'
+ option enabled '0'
+config ua3f 'main'
+ option ua 'FFF'
+ option log_level 'WARN'

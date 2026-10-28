@@ -1,0 +1,21 @@
+# Device state, credentials, captures and local build/test outputs never belong here.
+*.pcap
+*.pcapng
+*.log
+*.jsonl
+*.key
+*.pem
+*.crt
+*.p12
+*.bak
+*.test
+*.exe
+__pycache__/
+.DS_Store
+/dist/
+/tests/udp_echo_client
+/tests/results/
+/build/
+.env
+.env.*
+!.env.example

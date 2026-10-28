@@ -1,0 +1,21 @@
+#!/bin/sh /etc/rc.common
+USE_PROCD=1
+START=94
+STOP=9
+start_service() {
+    [ -f /etc/egressveil/activated ] || [ -f /var/run/egressveil.pending ] || return 0
+    /usr/libexec/ua3f-bridge-policy/bridge-policy barrier boot || return 1
+    procd_open_instance bridge-policy
+    procd_set_param command /usr/libexec/ua3f-bridge-policy/bridge-policy monitor
+    procd_set_param respawn 3600 5 5
+    procd_set_param stdout 1
+    procd_set_param stderr 1
+    procd_close_instance
+    # Also supports first installation while the known daemon is running.
+    /usr/libexec/ua3f-bridge-policy/bridge-policy schedule-current || :
+}
+stop_service() { /usr/libexec/ua3f-bridge-policy/bridge-policy barrier rollback; }
+reload_service() {
+    /usr/libexec/ua3f-bridge-policy/bridge-policy barrier network || return 1
+    /usr/libexec/ua3f-bridge-policy/bridge-policy schedule-current
+}

@@ -1,0 +1,258 @@
+#!/bin/sh
+# OpenWrt network.sh intentionally reads optional unset cache variables.
+set -e
+ROOT=/usr/libexec/egressveil
+STATE=/etc/egressveil
+RUN=/var/run/egressveil
+mkdir -p "$STATE" "$RUN"
+chmod 700 "$STATE" "$RUN"
+resolve() {
+ . /lib/functions/network.sh
+ lan=$(uci -q get egressveil.main.lan || echo lan)
+ wan=$(uci -q get egressveil.main.wan || echo wan)
+ case "$lan:$wan" in *[!a-zA-Z0-9_:-]*) return 1;; esac
+ network_get_device LAN_IFACE "$lan" || return 1
+ network_get_device WAN_IFACE "$wan" || return 1
+ [ -d "/sys/class/net/$LAN_IFACE/bridge" ] || return 1
+ ports=$(ls "/sys/class/net/$LAN_IFACE/brif")
+ set -- $ports
+ [ "$#" = 1 ] || { echo 'SINGLE_LAN_PORT_REQUIRED' >&2; return 1; }
+ LAN_PORT=$1
+ case "$LAN_PORT:$WAN_IFACE" in eth0:eth1|eth1:eth0) ;; *) echo 'PHYSICAL_PORT_NAMES_REQUIRE_REVIEW' >&2; return 1;; esac
+ for name in "$LAN_IFACE" "$WAN_IFACE" "$LAN_PORT"; do
+  case "$name" in ''|lo|*[!a-zA-Z0-9_.:-]*) return 1;; esac
+ done
+ [ "$WAN_IFACE" != "$LAN_PORT" ] && [ "$WAN_IFACE" != "$LAN_IFACE" ]
+ driver=$(basename "$(readlink -f "/sys/class/net/$LAN_PORT/device/driver")")
+ case "$driver" in r8169|virtio_net) ;; *) echo 'NIC_DRIVER_REQUIRES_REVIEW' >&2; return 1;; esac
+ # IPv6 is not silently diverted into an IPv4-only transparent path.
+ [ -z "$(ip -6 route show default 2>/dev/null)" ] || { echo 'IPV6_ROUTING_REQUIRES_REVIEW' >&2; return 1; }
+ umask 077
+ cat > /etc/ua3f-integration.conf.new <<EOF
+STAGE=final-egress
+LAN_IFACE=$LAN_IFACE
+LAN_PORT=$LAN_PORT
+WAN_IFACE=$WAN_IFACE
+FAKEIP_CIDR=198.18.0.0/16
+MANAGEMENT_CIDRS=
+CORE=/usr/bin/ua3f
+LEGACY_DIR=/etc/ua3f-integration/legacy
+EOF
+ mv /etc/ua3f-integration.conf.new /etc/ua3f-integration.conf
+}
+seed() {
+ . /etc/ua3f-integration.conf
+ mkdir -p "$LEGACY_DIR"
+ chmod 700 "$LEGACY_DIR"
+ ipset create UA3F_LAN hash:net family inet -exist
+ ipset create UA3F_SKIP_IPSET hash:net family inet -exist
+ ipset flush UA3F_LAN
+ for cidr in 0.0.0.0/8 127.0.0.0/8 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16 169.254.0.0/16 224.0.0.0/4 240.0.0.0/4; do ipset add UA3F_LAN "$cidr" -exist; done
+ ip -4 route show scope link | awk '$1 ~ /^[0-9]/ {print $1}' | while read -r cidr; do ipset add UA3F_LAN "$cidr" -exist; done
+ { ipset save UA3F_LAN; ipset save UA3F_SKIP_IPSET; } > "$LEGACY_DIR/ipset.restore"
+ cat > "$LEGACY_DIR/mangle.restore" <<EOF
+*mangle
+:UA3F - [0:0]
+:UA3F_OUTPUT - [0:0]
+-A PREROUTING -p tcp -j UA3F
+-A OUTPUT -p tcp -j UA3F_OUTPUT
+-A UA3F -i $LAN_IFACE -p tcp --dport 53 -j RETURN
+-A UA3F -m mark --mark 0x1cc -j RETURN
+-A UA3F -m mark --mark 0x1cb -j RETURN
+-A UA3F -p tcp -m multiport --dports 443,8443 -j RETURN
+-A UA3F -m mark --mark 0xc9 -j RETURN
+-A UA3F -m mark --mark 0x162 -j RETURN
+-A UA3F -m conntrack --ctdir REPLY -j RETURN
+-A UA3F -m set --match-set UA3F_LAN dst -j RETURN
+-A UA3F -p tcp -m multiport --dports 22,51080,51090 -j RETURN
+-A UA3F -d 198.18.0.0/15 -j RETURN
+-A UA3F -p tcp -j TPROXY --on-port 1080 --on-ip 127.0.0.1 --tproxy-mark 0x1ca/0xffffffff
+-A UA3F_OUTPUT -m mark --mark 0x1cc -j RETURN
+-A UA3F_OUTPUT -m mark --mark 0x1cb -j RETURN
+-A UA3F_OUTPUT -m owner --gid-owner 65534 -j RETURN
+-A UA3F_OUTPUT -m conntrack --ctdir REPLY -j RETURN
+-A UA3F_OUTPUT -m set --match-set UA3F_LAN dst -j RETURN
+-A UA3F_OUTPUT -m set --match-set UA3F_SKIP_IPSET dst -j RETURN
+-A UA3F_OUTPUT -p tcp -m multiport --dports 22,51080,51090 -j RETURN
+-A UA3F_OUTPUT -m mark --mark 0xc9 -j RETURN
+-A UA3F_OUTPUT -d 198.18.0.0/15 -j RETURN
+-A UA3F_OUTPUT -p tcp -j MARK --set-xmark 0x1c9/0xffffffff
+COMMIT
+EOF
+ chmod 600 "$LEGACY_DIR/"*.restore
+}
+ttl_egress() {
+ . /etc/ua3f-integration.conf
+ if nft list table netdev ua3fi_ttl_last >/dev/null 2>&1; then
+  nft list table netdev ua3fi_ttl_last | grep -q 'ua3fi:ttl-last' || return 1
+  remove='delete table netdev ua3fi_ttl_last'
+ else remove=''; fi
+ cat > "$RUN/ttl.nft" <<EOF
+$remove
+add table netdev ua3fi_ttl_last { comment "ua3fi:ttl-last"; }
+add chain netdev ua3fi_ttl_last egress { type filter hook egress device "$WAN_IFACE" priority 1000; policy accept; }
+add rule netdev ua3fi_ttl_last egress ether type ip counter ip ttl set 64 comment "ua3fi:ttl-last"
+EOF
+ nft -c -f "$RUN/ttl.nft"
+ nft -f "$RUN/ttl.nft"
+}
+collisions() {
+ [ -f "$STATE/activated" ] && return 0
+ for table in 354 457 458; do
+  [ -z "$(ip -4 route show table "$table" 2>/dev/null)" ] || return 1
+ done
+ ! ip -4 rule show | grep -Eq 'fwmark (0x162|0x1c[9a-d])|lookup (354|457|458)( |$)' || return 1
+ for chain in UA3F UA3F_OUTPUT; do
+  ! iptables -t mangle -S "$chain" >/dev/null 2>&1 || return 1
+ done
+}
+prepare() {
+ resolve
+ # All changes below are suite-owned or the reviewed bridge sysctl baseline.
+ if [ -f /etc/init.d/dockerd ]; then
+  ruby "$ROOT/docker-init.rb" || return 1
+ fi
+ modprobe br_netfilter 2>/dev/null || :
+ sysctl -q -w net.bridge.bridge-nf-call-ip6tables=1 >/dev/null
+ ip link set "$LAN_IFACE" type bridge nf_call_iptables 0
+ seed
+ ttl_egress
+}
+TX=$STATE/transaction
+restore_transaction() {
+ [ -d "$TX" ] || return 0
+ if [ "$(cat "$TX/active")" = 0 ]; then
+  "$0" disable >/dev/null 2>&1 || :
+ fi
+ cp "$TX/openclash" /etc/config/openclash
+ cp "$TX/ua3f" /etc/config/ua3f
+ if [ -f "$TX/source" ]; then
+  cp "$TX/source" /etc/openclash/config/ua3fi.yaml
+ else rm -f /etc/openclash/config/ua3fi.yaml; fi
+ [ ! -f "$TX/feed" ] || { uci -q set "egressveil.main.feed=$(cat "$TX/feed")"; uci -q commit egressveil; }
+ was=$(cat "$TX/active")
+ rm -rf "$TX"
+ rm -f /var/run/egressveil.pending
+ if [ "$was" = 1 ] && [ "${1:-}" != boot ]; then
+  "$0" prepare >/dev/null 2>&1 || :
+  /etc/init.d/ua3f start >/dev/null 2>&1 || :
+  /etc/init.d/openclash restart >/dev/null 2>&1 || :
+ fi
+ echo 'PREVIOUS_CONFIGURATION_RESTORED' > "$RUN/result"
+}
+case "${1:-}" in
+recover)
+ if [ -d "$RUN/apply.lock" ]; then
+  owner=$(cat "$RUN/apply.lock/owner" 2>/dev/null || :)
+  case "$owner" in ''|*[!0-9]*) echo 'APPLY_LOCK_REQUIRES_REVIEW' >&2;exit 1;; esac
+  ! kill -0 "$owner" 2>/dev/null || { echo 'APPLY_IN_PROGRESS' >&2;exit 1; }
+  rm -f "$RUN/apply.lock/owner";rmdir "$RUN/apply.lock"
+ fi
+ restore_transaction "${2:-}"
+ ;;
+early)
+ [ -f "$STATE/activated" ] || exit 0
+ . /etc/ua3f-integration.conf
+ case "$WAN_IFACE" in ''|lo|*[!a-zA-Z0-9_.:-]*) exit 1;; esac
+ ttl_egress
+ ;;
+preflight) resolve; ruby "$ROOT/config.rb" validate;;
+prepare) prepare;;
+apply)
+ lock="$RUN/apply.lock"
+ if ! mkdir "$lock" 2>/dev/null; then
+  owner=$(cat "$lock/owner" 2>/dev/null || :)
+  case "$owner" in ''|*[!0-9]*) echo 'APPLY_IN_PROGRESS' >&2;exit 1;; esac
+  ! kill -0 "$owner" 2>/dev/null || { echo 'APPLY_IN_PROGRESS' >&2;exit 1; }
+  rm -f "$lock/owner";rmdir "$lock"
+  mkdir "$lock" || exit 1
+ fi
+ printf '%s\n' "$$" > "$lock/owner"
+ trap 'code=$?; if [ "$code" != 0 ]; then restore_transaction || :; fi; rm -f "$lock/owner"; rmdir "$lock"; exit "$code"' EXIT
+ trap 'exit 1' HUP INT TERM
+ [ "$(uci -q get egressveil.main.enabled)" = 1 ] || { "$0" disable; exit 0; }
+ ruby "$ROOT/config.rb" validate
+ resolve
+ [ ! -d "$TX" ] || { echo 'RECOVERY_REQUIRED' >&2; exit 1; }
+ collisions || { echo 'EXISTING_POLICY_COLLISION' >&2; exit 1; }
+ was_active=0; [ ! -f "$STATE/activated" ] || was_active=1
+ umask 077
+ mkdir "$TX"
+ printf '%s\n' "$was_active" > "$TX/active"
+ cp /etc/config/openclash "$TX/openclash"
+ cp /etc/config/ua3f "$TX/ua3f"
+ [ ! -f /etc/openclash/config/ua3fi.yaml ] || cp /etc/openclash/config/ua3fi.yaml "$TX/source"
+ [ ! -f "$STATE/last-feed" ] || cp "$STATE/last-feed" "$TX/feed"
+ if [ "$was_active" = 0 ]; then
+  : > /var/run/egressveil.pending
+ fi
+ # Preserve the last working source for a rejected subscription update.
+ [ ! -f /etc/openclash/config/ua3fi.yaml ] || cp /etc/openclash/config/ua3fi.yaml "$RUN/previous.yaml"
+ if prepare && ruby "$ROOT/config.rb" generate; then :; else
+  rm -f /var/run/egressveil.pending
+  echo 'PREFLIGHT_FAILED' > "$RUN/result"
+  exit 1
+ fi
+ uci -q set "ua3f.enabled.enabled=$(uci -q get egressveil.main.ua_enabled)"
+ uci -q set "ua3f.main.ua=$(uci -q get egressveil.main.ua)"
+ uci -q set "ua3f.main.log_level=$(uci -q get egressveil.main.log_level)"
+ uci -q commit ua3f
+ uci -q set openclash.config.enable=1
+ uci -q set openclash.config.proxy_mode=rule
+ uci -q set openclash.config.log_level=warning
+ uci -q set openclash.config.china_ip_route=1
+ uci -q set openclash.config.disable_udp_quic=0
+ uci -q set openclash.config.router_self_proxy=1
+ uci -q set openclash.config.dashboard_password="$(cat "$STATE/controller.key")"
+ uci -q set openclash.config.config_path=/etc/openclash/config/ua3fi.yaml
+ uci -q commit openclash
+ /etc/init.d/ua3f-bridge-policy restart
+ /etc/init.d/ua3f-ttl-policy start || :
+ /etc/init.d/ua3f restart
+ mkdir -p /etc/crontabs
+ [ -f /etc/crontabs/root ] || (umask 077; : > /etc/crontabs/root)
+ /etc/init.d/openclash restart
+ result=1
+ for attempt in 1 2 3; do
+  if /usr/libexec/ua3f-integration/wait-ready >/dev/null 2>&1 && ruby "$ROOT/config.rb" health >/dev/null 2>&1 && ruby "$ROOT/config.rb" select >/dev/null 2>&1; then result=0; break; fi
+  sleep 2
+ done
+ if [ "$result" = 0 ]; then
+  : > "$STATE/activated"
+  chmod 600 "$STATE/activated"
+  uci -q get egressveil.main.feed > "$STATE/last-feed"
+  chmod 600 "$STATE/last-feed"
+  rm -rf "$TX"
+  rm -f /var/run/egressveil.pending
+  echo 'READY'  > "$RUN/result"
+ else
+  echo 'ACTIVATION_FAILED' > "$RUN/result"
+  if [ "$was_active" = 0 ]; then "$0" disable; else
+   [ ! -f "$RUN/previous.yaml" ] || cp "$RUN/previous.yaml" /etc/openclash/config/ua3fi.yaml
+   /etc/init.d/openclash restart || :
+  fi
+  exit 1
+ fi
+ ;;
+disable)
+ uci -q set openclash.config.enable=0;uci -q commit openclash
+ uci -q set ua3f.enabled.enabled=0;uci -q commit ua3f
+ /etc/init.d/openclash stop || :
+ /etc/init.d/ua3f stop || :
+ /usr/libexec/ua3f-integration/firewall off >/dev/null 2>&1 || :
+ /usr/libexec/ua3f-integration/boot-guard off >/dev/null 2>&1 || :
+ /usr/libexec/ua3f-integration/runtime detach || :
+ /usr/libexec/ua3f-integration/runtime unbypass || :
+ /usr/libexec/ua3f-integration/runtime unprotect || :
+ /usr/libexec/ua3f-integration/ttl-policy remove >/dev/null 2>&1 || :
+ /etc/init.d/ua3f-bridge-policy stop || :
+ if nft list table netdev ua3fi_ttl_last 2>/dev/null | grep -q 'ua3fi:ttl-last'; then nft delete table netdev ua3fi_ttl_last; fi
+ while iptables -t nat -D OUTPUT -p tcp -m mark --mark 0xc9 -j REDIRECT --to-ports 7892 2>/dev/null; do :; done
+ while ip -4 rule del pref 10457 fwmark 0x1ca/0xffffffff lookup 457 2>/dev/null; do :; done
+ ip -4 route del local default dev lo table 457 2>/dev/null || :
+ rm -f "$STATE/activated" /var/run/egressveil.pending
+ echo 'DISABLED' > "$RUN/result"
+ ;;
+status) ruby "$ROOT/config.rb" status;cat "$RUN/result" 2>/dev/null || :;;
+*) echo 'Usage: setup preflight|prepare|apply|disable|status' >&2;exit 2;;
+esac

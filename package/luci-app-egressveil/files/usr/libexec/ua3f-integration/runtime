@@ -1,0 +1,111 @@
+#!/bin/sh
+set -eu
+. /etc/ua3f-integration.conf
+case "$LEGACY_DIR" in /etc/ua3f-integration/legacy) ;; *) exit 2;; esac
+case "${1:-}" in
+capture)
+    [ ! -e "$LEGACY_DIR/mangle.restore" ] || { echo 'Legacy capture already exists' >&2; exit 1; }
+    umask 077
+    mkdir -p "$LEGACY_DIR"
+    tmp="$LEGACY_DIR/mangle.restore.tmp"
+    iptables-save -t mangle | awk '
+      BEGIN { print "*mangle" }
+      /^:UA3F( |_OUTPUT )/ { print }
+      /^-A UA3F / || /^-A UA3F_OUTPUT / { print }
+      /^-A PREROUTING -p tcp -j UA3F$/ || /^-A OUTPUT -p tcp -j UA3F_OUTPUT$/ { print }
+      END { print "COMMIT" }
+    ' > "$tmp"
+    grep -q '^:UA3F ' "$tmp"
+    grep -q '^:UA3F_OUTPUT ' "$tmp"
+    grep -q 'TPROXY.*on-port 1080' "$tmp"
+    : > "$LEGACY_DIR/ipset.restore.tmp"
+    for name in UA3F_LAN UA3F_SKIP_IPSET; do
+        ipset save "$name" >> "$LEGACY_DIR/ipset.restore.tmp"
+    done
+    mv "$LEGACY_DIR/ipset.restore.tmp" "$LEGACY_DIR/ipset.restore"
+    mv "$tmp" "$LEGACY_DIR/mangle.restore"
+    ;;
+restore)
+    [ -s "$LEGACY_DIR/mangle.restore" ] && [ -s "$LEGACY_DIR/ipset.restore" ]
+    # This bridge used to be recreated by loopfix. It must now be recreated
+    # here on every boot, before enabling the legacy ingress hooks.
+    iptables -t nat -C OUTPUT -p tcp -m mark --mark 0xc9 -j REDIRECT --to-ports 7892 2>/dev/null || iptables -t nat -I OUTPUT 1 -p tcp -m mark --mark 0xc9 -j REDIRECT --to-ports 7892
+    ip -4 route replace local default dev lo table 457
+    ip -4 rule show | grep -q 'fwmark 0x1ca.*lookup 457' || ip -4 rule add pref 10457 fwmark 0x1ca/0xffffffff lookup 457
+    # A healthy existing chain must not be flushed during reload. Missing
+    # either owned chain requires a controlled full reattach from the capture.
+    if iptables -t mangle -S UA3F >/dev/null 2>&1 && iptables -t mangle -S UA3F_OUTPUT >/dev/null 2>&1; then
+        iptables -t mangle -C PREROUTING -p tcp -j UA3F 2>/dev/null || iptables -t mangle -I PREROUTING 1 -p tcp -j UA3F
+        iptables -t mangle -C OUTPUT -p tcp -j UA3F_OUTPUT 2>/dev/null || iptables -t mangle -I OUTPUT 1 -p tcp -j UA3F_OUTPUT
+    else
+        "$0" detach
+        ipset restore -exist < "$LEGACY_DIR/ipset.restore"
+        iptables-restore -n < "$LEGACY_DIR/mangle.restore"
+    fi
+    for chain in UA3F UA3F_OUTPUT; do
+        for mark in 0x1cb 0x1cc; do
+            iptables -t mangle -C "$chain" -m mark --mark "$mark" -j RETURN 2>/dev/null || iptables -t mangle -I "$chain" 1 -m mark --mark "$mark" -j RETURN
+        done
+    done
+    ;;
+protect)
+    # Short migration barrier, armed AFTER the rollback timer and BEFORE
+    # stopping either old service. Do not remove until the new core is ready.
+    ! nft list table inet ua3fi_migration >/dev/null 2>&1 || { echo 'Migration guard already present' >&2; exit 1; }
+    migration_tmp=$(mktemp /tmp/ua3fi-migration.XXXXXX)
+    cat > "$migration_tmp" <<EOF
+add table inet ua3fi_migration
+add chain inet ua3fi_migration forward { type filter hook forward priority -10; policy accept; }
+add rule inet ua3fi_migration forward meta nfproto ipv4 iifname "$LAN_IFACE" oifname "$WAN_IFACE" meta l4proto tcp counter drop
+add chain inet ua3fi_migration output { type filter hook output priority 10; policy accept; }
+add rule inet ua3fi_migration output ct direction reply return
+add rule inet ua3fi_migration output meta nfproto ipv4 oifname "$WAN_IFACE" meta l4proto tcp counter drop
+EOF
+    nft -c -f "$migration_tmp"
+    nft -f "$migration_tmp"
+    rm -f "$migration_tmp"
+    ;;
+unprotect)
+    # Root operator invokes only after service/listener checks. Rollback must
+    # invoke this after restoring the old service too.
+    nft list table inet ua3fi_migration >/dev/null 2>&1 && nft delete table inet ua3fi_migration || :
+    ;;
+detach)
+    while iptables -t mangle -D PREROUTING -p tcp -j UA3F 2>/dev/null; do :; done
+    while iptables -t mangle -D OUTPUT -p tcp -j UA3F_OUTPUT 2>/dev/null; do :; done
+    for chain in UA3F UA3F_OUTPUT; do
+        iptables -t mangle -F "$chain" 2>/dev/null || :
+        iptables -t mangle -X "$chain" 2>/dev/null || :
+    done
+    ;;
+bypass)
+    [ -s "$LEGACY_DIR/mangle.restore" ] && [ -s "$LEGACY_DIR/ipset.restore" ]
+    ipset restore -exist < "$LEGACY_DIR/ipset.restore"
+    # Reuse the complete original decision chain; change only its final
+    # delivery action. This preserves original policy scope when UA is off.
+    if ! iptables -t nat -S UA3F_OFF >/dev/null 2>&1; then
+        bypass_tmp=$(mktemp /tmp/ua3fi-bypass.XXXXXX)
+        awk '
+          BEGIN { print "*nat"; print ":UA3F_OFF - [0:0]"; print "-A UA3F_OFF -p tcp --dport 53 -j RETURN" }
+          /^-A UA3F / {
+            sub(/^-A UA3F /, "-A UA3F_OFF ")
+            if ($0 ~ / -j TPROXY/) { sub(/ -j TPROXY.*/, " -j REDIRECT --to-ports 7892") }
+            print
+          }
+          END { print "COMMIT" }
+        ' "$LEGACY_DIR/mangle.restore" > "$bypass_tmp"
+        iptables-restore -n < "$bypass_tmp"
+        rm -f "$bypass_tmp"
+    fi
+    iptables -t nat -C PREROUTING -i "$LAN_IFACE" -p tcp -j UA3F_OFF 2>/dev/null || iptables -t nat -I PREROUTING 1 -i "$LAN_IFACE" -p tcp -j UA3F_OFF
+    ;;
+has-bypass)
+    iptables -t nat -C PREROUTING -i "$LAN_IFACE" -p tcp -j UA3F_OFF
+    ;;
+unbypass)
+    while iptables -t nat -D PREROUTING -i "$LAN_IFACE" -p tcp -j UA3F_OFF 2>/dev/null; do :; done
+    iptables -t nat -F UA3F_OFF 2>/dev/null || :
+    iptables -t nat -X UA3F_OFF 2>/dev/null || :
+    ;;
+*) echo 'Usage: runtime capture|restore|detach|protect|unprotect|bypass|has-bypass|unbypass' >&2; exit 2;;
+esac

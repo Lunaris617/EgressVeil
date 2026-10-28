@@ -1,0 +1,24 @@
+#!/bin/sh /etc/rc.common
+START=16
+STOP=05
+boot() {
+ /usr/libexec/egressveil/setup recover boot || return 1
+ [ -f /etc/egressveil/activated ] || return 0
+ [ "$(uci -q get egressveil.main.enabled)" = 1 ] || { /usr/libexec/egressveil/setup disable; return 0; }
+ /usr/libexec/egressveil/setup early || logger -t egressveil 'Early WAN TTL not ready; readiness gate must remain closed'
+ /usr/libexec/egressveil/boot-retry </dev/null >/dev/null 2>&1 &
+}
+start() {
+ uci -q set egressveil.main.enabled=1
+ uci -q commit egressveil
+ /usr/libexec/egressveil/setup apply
+}
+reload() { /usr/libexec/egressveil/setup apply; }
+stop() {
+ uci -q set egressveil.main.enabled=0
+ uci -q commit egressveil
+ /usr/libexec/egressveil/setup disable
+}
+# A normal reboot must retain the user's activation choice. Child services
+# already have their own shutdown order and fail-closed barriers.
+shutdown() { :; }

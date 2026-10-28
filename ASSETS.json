@@ -1,0 +1,931 @@
+{
+  "version": "0.1.0-dev",
+  "target": "OpenWrt 25.12 x86/64",
+  "files": [
+    {
+      "path": "package/luci-app-egressveil/files/etc/config/egressveil",
+      "bytes": 228,
+      "sha256": "ce9a5523e8101fa8f93738dc2a4c7da15f0fc5e42f35b47db2f9cececb3bc196"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/etc/config/openclash",
+      "bytes": 7940,
+      "sha256": "0fe5c0069b96708b1a1e0d936c1b8d27dee654301e20df25513dff3e80c6e595"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/etc/config/ua3f",
+      "bytes": 103,
+      "sha256": "18038b93ddcdc4da4987c034e70a1af0530fa8f2a07b7f957ae54fa4e40f56a9"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/etc/hotplug.d/iface/95-egressveil",
+      "bytes": 241,
+      "sha256": "26095d6b84b45c8e2722bbb93f290cafd3f9f23c202025827f9ce224080bece7"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/etc/init.d/egressveil",
+      "bytes": 883,
+      "sha256": "7063c47b6b4586dcfae0b804ab741d966cc7a589c5e16936a4ddc178bfa321bb"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/etc/init.d/openclash",
+      "bytes": 195520,
+      "sha256": "6a9a6af9c991866ac4d2e4e0384d39951ec944d9f78934dc15076c7eef42235e"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/etc/init.d/ua3f",
+      "bytes": 2773,
+      "sha256": "0645313a519bfb68bf195bba486909638b7b8c3e1ea8cdb23082d497afa2c327"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/etc/init.d/ua3f-bridge-policy",
+      "bytes": 870,
+      "sha256": "7a2af8d8ab76333a8cb876749d067298ddfe0f2e2a841c26a4fc40bd7d88bc99"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/etc/init.d/ua3f-early-guard",
+      "bytes": 275,
+      "sha256": "9041d42da808652f17ffec69a4923f7db7533a86fdc5dbc9435ae3691d28fa6e"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/etc/init.d/ua3f-ttl-policy",
+      "bytes": 528,
+      "sha256": "35358e1caa38e49182b71dd8ef588b993aa42fdb1fd654c28115ff4f2e5e3e19"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/etc/openclash/china_ip6_route.ipset",
+      "bytes": 40517,
+      "sha256": "9846c4fb6e0197a4fb17e358e34c3668f4ac072389b7a4484df7d1a5d96d7262"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/etc/openclash/china_ip_route.ipset",
+      "bytes": 93290,
+      "sha256": "a448d8770ac1298fd832135ac093e040293ce528498eedd08a036cfe4be9263a"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/etc/openclash/core/clash_meta",
+      "bytes": 62054526,
+      "sha256": "7a0d59da2e678d56c899a3db996a2ad8963286c4f3634b0451435db248f13fa1"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/etc/openclash/Country.mmdb",
+      "bytes": 266001,
+      "sha256": "96bfcc3fb18011217abf2c9f47b64641db3c40101c7bc79a1e0f3856e7da2f32"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/etc/openclash/custom/openclash_custom_chnroute6_pass.list",
+      "bytes": 32,
+      "sha256": "5834a85d556c407e8015f28a04dd2c42f093d4768e99aea2463ad77e6453de22"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/etc/openclash/custom/openclash_custom_chnroute_pass.list",
+      "bytes": 27,
+      "sha256": "a219cbb16abd550dd639c71264d76be538377c4370b41d749761c6e4035d7f8e"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/etc/openclash/custom/openclash_custom_domain_dns.list",
+      "bytes": 10,
+      "sha256": "4ed36b219ed7b0b408e15454ac8e5b5536738673608a0c563e58318728e920d2"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/etc/openclash/custom/openclash_custom_domain_dns_policy.list",
+      "bytes": 324,
+      "sha256": "0cf8de5e9b1b7fb814d553b988a1164ad6665f367ed1e219955d147e187542a3"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/etc/openclash/custom/openclash_custom_fake_filter.list",
+      "bytes": 2812,
+      "sha256": "399b911ba83af5fe68c5abd95598cf575cbd8a769de686d423de4bdbefa60f04"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/etc/openclash/custom/openclash_custom_fallback_filter.yaml",
+      "bytes": 1122,
+      "sha256": "be4aa1539424b70afaa32639528560bd4209724bd06ba385f93a668a3e739861"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/etc/openclash/custom/openclash_custom_firewall_rules.sh",
+      "bytes": 132,
+      "sha256": "d0a2bda67a866a08aa85f6f457951d82b952607ecaa22762bad37e7441aa013c"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/etc/openclash/custom/openclash_custom_hosts.list",
+      "bytes": 412,
+      "sha256": "5655bec76618474cc4149ac7f2769f1b30f06f282458125183b9f6602268704b"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/etc/openclash/custom/openclash_custom_localnetwork_ipv4.list",
+      "bytes": 443,
+      "sha256": "5cfd703c4a23c7108da5fc0c47b58dae021611ee5b6fadef7aacb61a48570dd4"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/etc/openclash/custom/openclash_custom_localnetwork_ipv6.list",
+      "bytes": 696,
+      "sha256": "87fd7f0bfd6d4add44c6d68fd473156b295417a0d071869d85a584cb89a7a1d8"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/etc/openclash/custom/openclash_custom_overwrite.sh",
+      "bytes": 306,
+      "sha256": "4ba05636f73f2becb985f81d1649615d16fd809e6c1bb86bcb50868d01aaf2c4"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/etc/openclash/custom/openclash_custom_proxy_server_dns_policy.list",
+      "bytes": 344,
+      "sha256": "9819c9aaf5ffcd65e36b7e6baf58ea73ca4fcd616c2943acde05285e1ce68a48"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/etc/openclash/custom/openclash_custom_rules.list",
+      "bytes": 3338,
+      "sha256": "dde584b2b5ff4cafe12b87aef50b56dbf58362601afc8cfee246a4927bcdb907"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/etc/openclash/custom/openclash_custom_rules_2.list",
+      "bytes": 954,
+      "sha256": "ba01a3351d67737475a215f1a8cb094884c41cf6d53fd1cc3a4c861a5ce31d19"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/etc/openclash/custom/openclash_custom_sniffer.yaml",
+      "bytes": 1157,
+      "sha256": "c186251735e05c74abf472c97d63b1e5ef71cbf14199e3778b532e681998ae6a"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/etc/openclash/GeoSite.dat",
+      "bytes": 11147460,
+      "sha256": "e5d2232b6b0fe8eb8f4e7ebe3964fe13e5ff3d4f39065b97d77523eb376b4af9"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/etc/openclash/overwrite/default",
+      "bytes": 20623,
+      "sha256": "0ea7ea35399c8b23790edcc833e22b6d6e95214ee1cea1ddf471d8ea90d33fb2"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/etc/openclash/overwrite/Google_Play",
+      "bytes": 794,
+      "sha256": "1bf3e94036be0479fd6cf2a4258b128332fedf31cd31c1fd660a20110728b39a"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/etc/openclash/overwrite/Tailscale",
+      "bytes": 228,
+      "sha256": "e5b8300bdb6ba1c74427f04535bf887c10fd0ceb27d80e5977bd29b2f2e98e83"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/etc/openclash/overwrite/WiFi_Calling",
+      "bytes": 910,
+      "sha256": "7ecd4d96ff1fef18a50b9af42d9eebaff1c83f2dbd9c85c2902bb94209e645dd"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/etc/openclash/rule_provider/oc-cn-domain.mrs",
+      "bytes": 556732,
+      "sha256": "be926f16330dc672f7226c6f80cd5e37827f70f1338bc6db03caea8c297697df"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/etc/uci-defaults/99-egressveil",
+      "bytes": 791,
+      "sha256": "486824abc6d340ee3bfb01fee8c10c1f72ebbcad453bde0d09f347b105c43045"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/etc/uci-defaults/luci-openclash",
+      "bytes": 11974,
+      "sha256": "99f7913f04c9c3a0783650bbb9c4857a681de756ba92c5526fc74210dcb8ebe0"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/lib/upgrade/keep.d/egressveil",
+      "bytes": 67,
+      "sha256": "81c7afd3c63e7e0142cce8dafa9876f4e0dcecac3e71a633d75e5b08c9549e4d"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/bin/ua3f",
+      "bytes": 4219028,
+      "sha256": "406113bc8b9e865e338eeb6d9784acb9713a6f7e744da159c62d368c8f8d5ac6"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/lib/lua/luci/controller/egressveil.lua",
+      "bytes": 218,
+      "sha256": "cf7d118ef6b38ac7ed07988b2c3082ec88e380d81a06b9dc58e18c4f842ede95"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/lib/lua/luci/model/cbi/egressveil.lua",
+      "bytes": 3449,
+      "sha256": "4b328676c838f75842a51625abf7a934cb7c48a1062c73e7234f3a90fc00e82e"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/libexec/egressveil/boot-retry",
+      "bytes": 1152,
+      "sha256": "862ad742b0501c42fd13c58db85456838f6addeac2e562388c5155821e86e33a"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/libexec/egressveil/config.rb",
+      "bytes": 6124,
+      "sha256": "53caee1aaf88a6d53e0f572d1536424367fb5c169557faf6a1460c978cb6f041"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/libexec/egressveil/docker-init.rb",
+      "bytes": 2196,
+      "sha256": "8d5c0050b3e2015c3fe8fda275a3c8a9d9bbfa076daa17be6789b2cceb43fbc8"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/libexec/egressveil/setup",
+      "bytes": 10676,
+      "sha256": "06bbcd8cfb385a4ec719b0280ae8a5b106a0ce2edb021ae9dca93d3c7e95c76d"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/libexec/ua3f-bridge-policy/bridge-audit",
+      "bytes": 6328468,
+      "sha256": "65286eff0e19db3b380c83f778e2dad90a4725ec57d412c1deb14a1f00357690"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/libexec/ua3f-bridge-policy/bridge-policy",
+      "bytes": 5222,
+      "sha256": "147e5fc3808ea0b3c65b03e2f05e52aee08587bb3a79637098cd8e7b827eb4d7"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/libexec/ua3f-bridge-policy/dockerd-launch",
+      "bytes": 256,
+      "sha256": "894b2f16ba366352a04b40e13c6c6971409ea4e18d6f3d46b3ab3f3d6500cc72"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/libexec/ua3f-integration/boot-guard",
+      "bytes": 4653,
+      "sha256": "c356802c3a9975716c041d9056849f36f7fb82b041b740a54106935ecd912930"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/libexec/ua3f-integration/clash-hook",
+      "bytes": 1970,
+      "sha256": "fef17c0e17889d70fde2fd660792171d1e559dfa0d3768a6c6ddb92d68c59f8a"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/libexec/ua3f-integration/compat-delivery",
+      "bytes": 3209,
+      "sha256": "383658b052f311d6261eae8a9213f73387cc816a71198c55f368988640bc9895"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/libexec/ua3f-integration/dns-nat-guard",
+      "bytes": 4813,
+      "sha256": "f17a97eb020fba54778475d1aa0aaa0bed14fb2d125c84f96acc3577d378bf1a"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/libexec/ua3f-integration/dns-policy.rb",
+      "bytes": 3371,
+      "sha256": "4e1a2d356befb366539b43d513c88e25c6d535099ac0b0da2fcca226c61078e6"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/libexec/ua3f-integration/ethtool-feature",
+      "bytes": 1843384,
+      "sha256": "f65ba4069f40542d00a9c942cb8bbe85d1a8cc9e0baa18fce93c23e8215e0895"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/libexec/ua3f-integration/firewall",
+      "bytes": 12701,
+      "sha256": "90ebc183a1fcd5de631ca3689711eb291ead675b8d8dbb0f3e919c07cefdc49b"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/libexec/ua3f-integration/firewall-reload-hook",
+      "bytes": 634,
+      "sha256": "196b2c6197b7c2bf5ec6db64f748a90e7e1cacb26e74be42a50547f29c233bc8"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/libexec/ua3f-integration/launch",
+      "bytes": 176,
+      "sha256": "861b33ab11de331f55c13b3321cc6d3e5d31b589870c57636e85252d142db82b"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/libexec/ua3f-integration/runtime",
+      "bytes": 5537,
+      "sha256": "3ad99aa2870b0033cf2efb3144c86cc0b16a2dc72c2f5d5cfc363111a4fa18c0"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/libexec/ua3f-integration/ttl-policy",
+      "bytes": 3276948,
+      "sha256": "28e08faaba92999345131fe13431d7d390904b118ccd988a33a034d574ad650a"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/libexec/ua3f-integration/udp-target-policy.rb",
+      "bytes": 522,
+      "sha256": "7032765d0fd9f1fde72792145c68a46bc2cdcfa7f31400499de5ce4cff1f532a"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/libexec/ua3f-integration/wait-ready",
+      "bytes": 2521,
+      "sha256": "4283d754ad20968f56cc2310c43f0addf47aadf26b546094fa87a8ab95809250"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/egressveil/LICENSES/dependencies/01-LICENSE",
+      "bytes": 1453,
+      "sha256": "911f8f5782931320f5b8d1160a76365b83aea6447ee6c04fa6d5591467db9dad"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/egressveil/LICENSES/dependencies/02-LICENSE",
+      "bytes": 10796,
+      "sha256": "04cf148229e562c643203d1ee8c43aae2022e5130e95ceb8ba8357a27c1a9abe"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/egressveil/LICENSES/EgressVeil-GPL-3.0.txt",
+      "bytes": 35149,
+      "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/egressveil/LICENSES/Mihomo-GPL-3.0.txt",
+      "bytes": 35149,
+      "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/egressveil/LICENSES/OpenClash-MIT.txt",
+      "bytes": 1071,
+      "sha256": "bf598f1d704d1a9adbef8eb382b63aee036b500ad11e673f6e5f9e15dda7885d"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/egressveil/LICENSES/UA3F-GPL-3.0.txt",
+      "bytes": 35149,
+      "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/egressveil/NOTICE",
+      "bytes": 1465,
+      "sha256": "826d77cbc89141806d8359fc890c5bc7d5ce83ed99fb0427612e00ee6e3cfe6b"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/egressveil/VERSION",
+      "bytes": 10,
+      "sha256": "c2ef39e09593cca70be98a0fb0ab435b53e2eb3c3d4e812cd7d43794eafa7728"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/log.sh",
+      "bytes": 1115,
+      "sha256": "b59f3a673c0922c666d00d94eb7962c86ee1138ad22e47538facc6cdf885b5c2"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/openclash.sh",
+      "bytes": 16282,
+      "sha256": "64214ab550a69345323fc91a924ed99f9e35c4a658c72dcb862ae1ed17867082"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/openclash_chnroute.sh",
+      "bytes": 4813,
+      "sha256": "ba7c171c7a30f2ef776727f536995a833c67ab1e5ea97ad15b3537e3fbdd343d"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/openclash_core.sh",
+      "bytes": 9315,
+      "sha256": "66d7130b23947a23d255ed2d57f2da0bb3feabbae1fd88af4f81d3de746e6189"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/openclash_curl.sh",
+      "bytes": 11319,
+      "sha256": "f8cfe5f4a5d97d0d40ffbb64373a7c048894653206084297f8fcc0204ac25ddb"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/openclash_custom_domain_dns.sh",
+      "bytes": 1571,
+      "sha256": "4bbc7cd3fcdde20f598495264f6db9c6007b5acb7b760e9d99c03ae8d64323cf"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/openclash_debug.sh",
+      "bytes": 22511,
+      "sha256": "2d23deb1c500a4e53f87f6b8c552f177eac9d336b0a3f9d68e5c9bc9955211d4"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/openclash_debug_dns.lua",
+      "bytes": 2603,
+      "sha256": "4ae0ffd56d8eca72ce2d022d37c9e583da3c4090aed22605ebf5a131faf2bdf9"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/openclash_debug_getcon.lua",
+      "bytes": 3598,
+      "sha256": "006abebb90884c436d6723d5a7914a356fd37ea717ec4cb10105e9ddf9c7010b"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/openclash_download_dashboard.sh",
+      "bytes": 5428,
+      "sha256": "64b87c1172d09c125ab0f12057f0ce698f694931142beeacd80923fcfde2f25f"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/openclash_etag.sh",
+      "bytes": 2360,
+      "sha256": "e939a8f3005877f08b575f1a8b334e4cf117a50c8c53f5be6bbb8c492ea496f7"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/openclash_geo.sh",
+      "bytes": 6998,
+      "sha256": "b0eb374c8868ef06b0673eb14f349dd19dc39fb07228968a3b53bf264e261bdd"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/openclash_get_network.lua",
+      "bytes": 4709,
+      "sha256": "4ef4075c8e02f8f2f9581ab345195cd373e0e0191d013366224ea208df588e0e"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/openclash_history_get.sh",
+      "bytes": 2927,
+      "sha256": "7674a60f78d3b8a91ef81eb3e72e444caf2989732fbf908d325339060a97122d"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/openclash_lgbm.sh",
+      "bytes": 1777,
+      "sha256": "91c169b0d73a918ec6743c681350ef997313bf8b43bfbc46b81680dd416c962f"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/openclash_nginx.sh",
+      "bytes": 1080,
+      "sha256": "60ee071c7a1b6ab7ea34d64825eeb9fadab1ba37e76bb04a0b16cd0523011608"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/openclash_oix_checkin.lua",
+      "bytes": 1793,
+      "sha256": "198990e2c1b4b074027a109fc301523f69b3f8349af42d1980d27c3759e0c6da"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/openclash_ps.sh",
+      "bytes": 2125,
+      "sha256": "9730659a54f097a2c5f2aacf64ddd8f0e7399a6f520cd84ac057b232f6c4427f"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/openclash_streaming_unlock.lua",
+      "bytes": 69386,
+      "sha256": "19b3b4783d0721802ceac83ec22910b82e981ccefbd4a25c6a19b817529f43cf"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/openclash_sub_parser.lua",
+      "bytes": 6373,
+      "sha256": "a9eacd9d75ff15cc81c66d33c3899ad69bf892dc2258b948110819a1de6e7ba1"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/openclash_update.sh",
+      "bytes": 18527,
+      "sha256": "391f14bd749062975a98a10fb7aea3b843cad3544a7b52313ed9d846463dca6c"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/openclash_urlencode.lua",
+      "bytes": 201,
+      "sha256": "5cfd9423778cdfdc9dc9ad292642ef5bdab64710bbcd7f9a1bd51549582a9bba"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/openclash_version.lua",
+      "bytes": 17470,
+      "sha256": "c7da7f4978ea144609b279e54ebb2b5b230c6e895fab3a1ca6e04e5d3e98a738"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/openclash_watchdog.sh",
+      "bytes": 25676,
+      "sha256": "43eb4949cb6ebeaa4a02bdc43a1320f9a6ec19f7a441133e84506d37f6634582"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/res/cdn.list",
+      "bytes": 430,
+      "sha256": "389f4bc1836a29c526a9912b55026f29dcb9a90503e945d97a9799218965f811"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/res/default.yaml",
+      "bytes": 108758,
+      "sha256": "ead88b1776a06af9330d6078412c6a51a41aac51a3e47f84985d48ad0027802e"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/res/sub_ini.list",
+      "bytes": 6829,
+      "sha256": "22dfd72b51cb17fba89d8b742b0b286d259ee653628228addccd6d46a2fbfe05"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ruby.sh",
+      "bytes": 2667,
+      "sha256": "a96a71acb02b204801cbdc1547272b6c5ce97f0204ea8c0632f2cc72e4e1d40e"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/uci.rb",
+      "bytes": 75766,
+      "sha256": "b343bf5718604e77388eef1e8946c685ca23288e9777f90a7b71d7db35ea22ed"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/uci.sh",
+      "bytes": 5113,
+      "sha256": "5808e5b56f742362b939b2ad4986c1b92ff529afaf5c0c3495d4ce32e8966852"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/apple-touch-icon-180x180.png",
+      "bytes": 1188,
+      "sha256": "51c6c0136cc74c59df203f2ef4c70f9074945599a1800ff2dfb07b9a3cc545a3"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/assets/apexcharts.esm-D-nlnKto.js",
+      "bytes": 574463,
+      "sha256": "12d7d7512e6e5085079b62c3236128ac87040ad91a86b1a1ec28b4247765195c"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/assets/Config-9NNS9COU.js",
+      "bytes": 10434,
+      "sha256": "5e63069f0c8c836aee41f3c72111a72aa894cd69b3b8205f8ae9e438b006fb46"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/assets/Config-OnPrERLZ.js",
+      "bytes": 9385,
+      "sha256": "6ac9b5fc2cbcc6e5ab4d7df45ecc6d7d77707c1a68c277aefcf643a4c46cfcfc"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/assets/Connections-CgFIezGO.js",
+      "bytes": 20078,
+      "sha256": "c09548574c90dbd76ce17f5fb956ee6737a796e66c684f7a0ea88f2e5f55e9a2"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/assets/Connections-N_Z6THP_.js",
+      "bytes": 11432,
+      "sha256": "d17c2f6e33e38962bb6199a917b35fe388109dcb6991ff319be3fe894ffccecc"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/assets/DocumentTitle-DG90V81t.js",
+      "bytes": 137,
+      "sha256": "552c16430c79c3be7c2bab42914cb94b4b408cb8b25eec896125219364a33999"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/assets/fira-sans-cyrillic-400-normal-CKu2TFQr.woff2",
+      "bytes": 10788,
+      "sha256": "2ce9f91ccd598790f734442b0a203f4b2e9383ce7789735b4f4e816a7bdc7c53"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/assets/fira-sans-cyrillic-400-normal-D9eUeF-O.woff",
+      "bytes": 8876,
+      "sha256": "285a57077e1f4cd85b851e6ee41b8a9b88e1e3b313b91fa349e1826c6aab5774"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/assets/fira-sans-cyrillic-ext-400-normal-Cycyekte.woff2",
+      "bytes": 17692,
+      "sha256": "34d63f54cb610e0f8abe5e0d62d27841f72b2dd6f18c8043dbe2ff7249df53c3"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/assets/fira-sans-cyrillic-ext-400-normal-Dd5dApAy.woff",
+      "bytes": 15200,
+      "sha256": "5ed4fc62858910285028c6c04df03212a00d66fd336ff8fc41a7ab09cdaacae9"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/assets/fira-sans-greek-400-normal-BFCFncbp.woff2",
+      "bytes": 12780,
+      "sha256": "d4801a135e38149febbfeb805496e60f5734ef2e62df82a48d258e4e3da33b6c"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/assets/fira-sans-greek-400-normal-DQ8sF22y.woff",
+      "bytes": 10896,
+      "sha256": "9961f91e18b6578d41f6ac4d42578c74c33722c35b1b4d915b13fc0d21aaf31b"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/assets/fira-sans-greek-ext-400-normal-ByG7UNQ2.woff2",
+      "bytes": 7964,
+      "sha256": "a7d3e976d604e8ea78878062dc551e1c0c440f1def89086560b891b1f9a4850f"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/assets/fira-sans-greek-ext-400-normal-ClCfNE6D.woff",
+      "bytes": 6972,
+      "sha256": "4274da64701e750463d317ce0aea846a13e6d5cc992bb04135ec6a6efdce5622"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/assets/fira-sans-latin-400-normal-66xCkunx.woff",
+      "bytes": 21876,
+      "sha256": "6c9caf93cb76eab79ae2ae224fb7ba25ef66ca649858635dfb3de9c678b41b4b"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/assets/fira-sans-latin-400-normal-a0AnQzuD.woff2",
+      "bytes": 23872,
+      "sha256": "3e38d8c01fe97529fbf0a086bf958d724b723ca7fc8be77b4ba5745f6259b6ca"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/assets/fira-sans-latin-ext-400-normal-BCUwhuGB.woff",
+      "bytes": 41388,
+      "sha256": "9d0845461f9d9c81cc00d4e636a0a0c0b9f92ebeeec6b5dbdc576f9f66008a71"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/assets/fira-sans-latin-ext-400-normal-BLG_mAEf.woff2",
+      "bytes": 46400,
+      "sha256": "ed4d0b738d93612b44310bf3f2993d2ce220da28f064c2cdda37b2fcbc23662c"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/assets/fira-sans-vietnamese-400-normal-DUVG35gE.woff",
+      "bytes": 6812,
+      "sha256": "b6a5a9f7e0021c43b605fea19aa13e9d42b81ea6344ae51e6d1507c7cb75bce0"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/assets/fira-sans-vietnamese-400-normal-ljDTQFsx.woff2",
+      "bytes": 8500,
+      "sha256": "bce982a23325eeb056cae1deafa4d7da8b3cda739658738f3cd23a67662b2178"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/assets/FiraSans-Regular-BN6hITtY.ttf",
+      "bytes": 440984,
+      "sha256": "3dabf3d48bf4599f95cffd92f99ea426a014d5311f52a5eb5ec3af265e97cd97"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/assets/IconChevronRight-Dm97ewab.js",
+      "bytes": 132,
+      "sha256": "8e8a76525d77c6239b9c959b7c4972b97dd78ff50db3063ca1e150a3872ffee8"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/assets/IconReload--QlVe2wP.js",
+      "bytes": 392,
+      "sha256": "2424dbfad37da344badf4f223b16c17217a60ab49af4a501ea779f5776d15f64"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/assets/IconReload-BSlLPZuq.js",
+      "bytes": 203,
+      "sha256": "fd799fe74acce82855018d3714db7ce3215fae823dc81f0440f28f71225f5248"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/assets/index-BaCG7ya-.css",
+      "bytes": 200543,
+      "sha256": "15e54fcac4ebbef56c5b7770a90ce4dfdeed2449273c0dec4f240634c57c040c"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/assets/index-CBBLUqwt.js",
+      "bytes": 61833,
+      "sha256": "8f647fcf25e055245e7196ff0b883a06c35b1a665a716c83c9208f104d7d6317"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/assets/index-Csmv4Fkv.js",
+      "bytes": 369623,
+      "sha256": "6f90cca0357c6dc1a1b99d6e874c75dd3ee12f27504dd63f4f91b36c977cdf90"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/assets/index-DIwJcTz_.js",
+      "bytes": 471668,
+      "sha256": "b81892451d1c9b6e3fea18ea47e4d29e93af7e26d03ceb1589a2142b669dfe94"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/assets/index-M06kPDrB.css",
+      "bytes": 127382,
+      "sha256": "04632d723a8276308f4a6c14ab7d0c24a1fd877d0b37b40368b3981aa6cb00ea"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/assets/lib-BxRDUvxo.js",
+      "bytes": 56701,
+      "sha256": "e7236bb5edf87059fa63710ebe293da479c5491be3e5158101b5b7be3d0ab04c"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/assets/Logs-DcK4Yp9Y.js",
+      "bytes": 3107,
+      "sha256": "d704ceff1d649dc53576a81e4a580f2cb9e83c3c6de839a05aeda7b4029adabe"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/assets/Logs-uIQcQmXC.js",
+      "bytes": 4596,
+      "sha256": "43550ccbb08c94a725243a9a1edd6cf709a335ae4727907584fcd2ab8f61969d"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/assets/Overview-B99qGorf.js",
+      "bytes": 572419,
+      "sha256": "38a58e58e308c8f9fb78314198f60ff147955b00082fd68a4eaabcd052f3c0a2"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/assets/Overview-BP3yBMkt.js",
+      "bytes": 4349,
+      "sha256": "fead35de9e8bccc881f9061d7a933b37ed1ad0630d2b542c8240618b1c72efce"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/assets/Proxies-BRo6NEi-.js",
+      "bytes": 8078,
+      "sha256": "0486071686c07241ec5d1e3c5a9343f7dfec138a460d2aaf12e0da79b6081856"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/assets/Proxies-Lk5uJ4LX.js",
+      "bytes": 16271,
+      "sha256": "23c3c603cd4121fb32cc1c53e13639b31280769eaa8d97af546e89fe9d01cb6c"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/assets/Rules-B-8TizmP.js",
+      "bytes": 24458,
+      "sha256": "758d3fc8bcbec5122d98ba0e1c74d935ac477506cf9a81e0bb63295ba43ff775"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/assets/Rules-C4_l0aqo.js",
+      "bytes": 24939,
+      "sha256": "d24d7c5fb8b5ef88d87330dbd635b86e5e14aeb2e75796cee91badde99f1fa5e"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/assets/Setup-10EXNRX9.js",
+      "bytes": 3841,
+      "sha256": "c70b270f684b29dbdc51b828ab488db5239e1c204708d72bd0b57310bf965c31"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/assets/Setup-CdphtcBj.js",
+      "bytes": 3746,
+      "sha256": "79fb40e4efab912b8460c2545b7f892de6fe0a29fcebae6de46960bb4118fa7e"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/assets/time-CHbJgbks.js",
+      "bytes": 102,
+      "sha256": "24cc28b4f2e4e5d35e38b512709a2219f37b81da7ce11d39880f8424da3c4ed4"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/assets/TwemojiMozilla-flags-B12sb_Bp.woff2",
+      "bytes": 78308,
+      "sha256": "c030920068cc493d59cc8c21ff29000b7a3676c40414cba7e7a5780d02f41cbf"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/CNAME",
+      "bytes": 16,
+      "sha256": "7cd5cdd52f74a25cc34cf6f7ca9c3f7d566a41a2a616d33eb878a007ceac3c59"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/favicon.ico",
+      "bytes": 900,
+      "sha256": "311cd1c7f9cf4e64f27fe1269a2661f8db5ad745807106ceede3d86cf2a205df"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/favicon.svg",
+      "bytes": 8067,
+      "sha256": "ca85e0c5bf0c74f00f04946ab8b2e61621836c4b2659ea370104f2ee9d2f5371"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/index.html",
+      "bytes": 859,
+      "sha256": "7e887459bf4dd70fe17283236d982cf756cca0dde991835914eebb01a04eef08"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/manifest.webmanifest",
+      "bytes": 446,
+      "sha256": "6c2012ae704e5a4f2e8efeea3ad6437dcd9de7b325ab553f42a0f179dd8e1edb"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/maskable-icon-512x512.png",
+      "bytes": 3523,
+      "sha256": "a39792d445dd419b1834e577577f19a2098a712b79e2a99fb8d00b2ede8f25ae"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/pwa-192x192.png",
+      "bytes": 1620,
+      "sha256": "184c61ca19ce32d5a66a24e633764ffbc65478eb105136e10433b4e096c35938"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/pwa-512x512.png",
+      "bytes": 4307,
+      "sha256": "e0693d58b85c645480b5d32d7e1c4fba5a72ff2adeb04bfd7be332cf3cbee5db"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/pwa-64x64.png",
+      "bytes": 622,
+      "sha256": "700aba166f9a611ca32cbf6391e6ed14a19ec9d3c0c157bbcc4abb972b3479e2"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/registerSW.js",
+      "bytes": 136,
+      "sha256": "e12c8db54e3cc247034427f2b661b305a78fea7e7cdec1eac179fecec3da0fc7"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/sw.js",
+      "bytes": 1844,
+      "sha256": "6839a3ae9a213b6721f7dec5aecbb85f47a2e84ca4ed954fd21591ae76c6477b"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/metacubexd/workbox-3e8df8c8.js",
+      "bytes": 15030,
+      "sha256": "5d6d993b663efd8a90b17a86aba1a2addea4bb20a682f8f8de97ac57b7bd28c7"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/zashboard/apple-touch-icon.png",
+      "bytes": 1556,
+      "sha256": "1eb59e46390931b43abdb0746de0cc497f0022ec667dc513ef49a0c5f1bea228"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/zashboard/assets/index-B-U6Un3o.css",
+      "bytes": 561765,
+      "sha256": "a73631359b9f5dbf4ee8af4e4bfbd04bd3d7bf006464c38a7d22ec744c6793ba"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/zashboard/assets/index-CcFj958A.js",
+      "bytes": 1484388,
+      "sha256": "843a62e2aaf312b82eda133d367754e1ba7015a59e03af2b53e3b488fd534f45"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/zashboard/assets/index-DnsHUhFc.js",
+      "bytes": 1286271,
+      "sha256": "074a65bd9491ac007e9dabfc2e6f942a0b568983021f40bea4fae730eeac770f"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/zashboard/assets/index-DrFVUP5k.css",
+      "bytes": 176466,
+      "sha256": "0e372bea62ed0f276b614d4fb65a79ec720ef63b0ea37ce8f4f72756415408bf"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/zashboard/assets/metacubex-BlQkOUXT.jpg",
+      "bytes": 14267,
+      "sha256": "93c2062fb4b5047a40d23696e4a21b123fde84a00c733c3b6a9ce813a3442983"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/zashboard/assets/NotoColorEmoji-flagsonly-CWWDk9km.ttf",
+      "bytes": 913564,
+      "sha256": "bccb829e97ca446771231993cf5bff3449974851201c497be6d6d52e906aae7b"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/zashboard/assets/TwemojiMozilla-flags-B12sb_Bp.woff2",
+      "bytes": 78308,
+      "sha256": "c030920068cc493d59cc8c21ff29000b7a3676c40414cba7e7a5780d02f41cbf"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/zashboard/CNAME",
+      "bytes": 20,
+      "sha256": "2a4c0524c1c7abd245195bba0bc98d05243737484b9f117a2a22e597f898381d"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/zashboard/favicon.ico",
+      "bytes": 1823,
+      "sha256": "492e8cf10b21b4484ad96c16285d2bf7bb8f8b372c1502878ba1b1f6c3873173"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/zashboard/favicon.svg",
+      "bytes": 1211,
+      "sha256": "303f0bf729e33967667ddcd66b718dc3ba2f54abe387fe2b6f63e806e589ec52"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/zashboard/icon.svg",
+      "bytes": 1217,
+      "sha256": "fbf65ed03158c62c2e7bfb70b875a850063786a9421915aa8bb6ad54ba70e53e"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/zashboard/index.html",
+      "bytes": 1006,
+      "sha256": "1e75bb320066f3b54dbf05c92a5a14cf22880a150ea72d15e546f5e00fcdfc26"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/zashboard/manifest.webmanifest",
+      "bytes": 570,
+      "sha256": "e63808fecedb0b1787ac6103ba24c16cccc57a774e060d9517e4447ba9237a82"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/zashboard/pwa-192x192.png",
+      "bytes": 2580,
+      "sha256": "7ab62d63f1a033733f81ff5f5ef0fc12a694a566623e8060d2107bcc561441f6"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/zashboard/pwa-512x512.png",
+      "bytes": 7404,
+      "sha256": "ceb00eb50e8bf9bb3d23826f69f8f937ed8f7eaec6ca2ee67cc1d9f04d03422e"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/zashboard/pwa-maskable-192x192.png",
+      "bytes": 1451,
+      "sha256": "09faa994a626e9b1c42f6c05001f1e0bf8c083f90f77ca6e2a9e03a4861e21b2"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/zashboard/pwa-maskable-512x512.png",
+      "bytes": 4711,
+      "sha256": "44517d6237a7cb80664b4d8b9f7ba6d9333e1a1a987f7ceb99f58634d9218e31"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/zashboard/registerSW.js",
+      "bytes": 136,
+      "sha256": "e12c8db54e3cc247034427f2b661b305a78fea7e7cdec1eac179fecec3da0fc7"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/zashboard/sw.js",
+      "bytes": 1458,
+      "sha256": "309826e18aa712dcf28ce55a17ef081798c2f1eae9703ee285934c707869a384"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/ui/zashboard/workbox-3e8df8c8.js",
+      "bytes": 15074,
+      "sha256": "a6d8881682a3c0ed9dc6d7e4d590e20e244f1800d35048938f250eb82f1608e6"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/YAML.rb",
+      "bytes": 42278,
+      "sha256": "1249abf411e1df9e8fe542fb3584f34a27e6e3a587942e5d9f759a32b1bd8261"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/yml_change.sh",
+      "bytes": 41240,
+      "sha256": "963fed9a0b571513c8eb8da1fb38f394d1b19438957e5daede851709cd38c18d"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/yml_groups_get.sh",
+      "bytes": 1716,
+      "sha256": "c69310d3863333b69cce89e5f457aa1b377cd2803438ed90648e2a45a89f5678"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/yml_groups_set.sh",
+      "bytes": 1796,
+      "sha256": "e521be246c409e2c89664bbe92a3bb1c2dd3871100a1d6dabe92f03ef17e6ae1"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/yml_proxys_get.sh",
+      "bytes": 1626,
+      "sha256": "0785c498531f9287e349c410321cf3cce3b58673d0de8593a15b062344188059"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/yml_proxys_set.sh",
+      "bytes": 1784,
+      "sha256": "16605051fe94e3d8ea7f820e95166a6b50ef1e37b2ffdea9152267554184ef58"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/yml_rules_change.sh",
+      "bytes": 21914,
+      "sha256": "8f6db5260934e980f3b244fee79e5e871e7dcc2bd839a4d1651b206cc63bd6b9"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/openclash/yml_stats_get.sh",
+      "bytes": 6201,
+      "sha256": "7349bf63c6bc1135e191c2098a068d5c63c07add392cbd4bd966e2959e73e018"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/rpcd/acl.d/luci-app-openclash.json",
+      "bytes": 177,
+      "sha256": "9ace321c68aa74eb8c2c66f494b0f60c7ec15f8927ef9fd590f337b456652714"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/share/ucitrack/luci-app-openclash.json",
+      "bytes": 49,
+      "sha256": "0096861814711e2e9e5d2159e259a395ef1169eb22d40b7fc430e331a56ca70b"
+    }
+  ]
+}

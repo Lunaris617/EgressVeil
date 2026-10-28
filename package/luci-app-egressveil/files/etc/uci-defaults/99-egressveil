@@ -1,0 +1,21 @@
+#!/bin/sh
+# No authentication, subscription fetch, firewall mutation or service start.
+for svc in egressveil ua3f ua3f-early-guard ua3f-ttl-policy ua3f-bridge-policy; do
+ [ ! -x /etc/init.d/$svc ] || /etc/init.d/$svc enable
+done
+uci -q set firewall.egressveil=include
+uci -q set firewall.egressveil.type=script
+uci -q set firewall.egressveil.path=/usr/libexec/ua3f-integration/firewall-reload-hook
+uci -q set firewall.egressveil.fw4_compatible=1
+uci -q commit firewall
+if [ -f /etc/config/ucitrack ]; then
+ uci -q delete ucitrack.@ua3f[-1]
+ id=$(uci -q add ucitrack ua3f)
+ uci -q set "ucitrack.$id.init=ua3f"
+ uci -q commit ucitrack
+fi
+[ -f /etc/egressveil/activated ] && exit 0
+uci -q set openclash.config.enable=0
+uci -q set openclash.config.proxy_mode=rule
+uci -q commit openclash
+exit 0
