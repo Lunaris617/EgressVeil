@@ -454,13 +454,13 @@
     },
     {
       "path": "package/luci-app-egressveil/files/usr/libexec/egressveil/config.rb",
-      "bytes": 9439,
-      "sha256": "3be5141868b8d4f23eda4c3cc37c304ae416a4d527f30376f10d56a6af16a654"
+      "bytes": 10478,
+      "sha256": "2112601f0c9f2233d26cfad78dcedd5cc8252c67408fc522bdb26a3d824a093a"
     },
     {
       "path": "package/luci-app-egressveil/files/usr/libexec/egressveil/controller",
-      "bytes": 6443156,
-      "sha256": "d328f8e53d121c2c1fb9f99b0f29d61f75c4bd524f6c40a8bffae99e9bf35914"
+      "bytes": 6447252,
+      "sha256": "6d98fac3339d4ce787281894d61f0a710a91afe170215c0b851de2c66b234fd2"
     },
     {
       "path": "package/luci-app-egressveil/files/usr/libexec/egressveil/docker-init.rb",
@@ -504,8 +504,8 @@
     },
     {
       "path": "package/luci-app-egressveil/files/usr/libexec/ua3f-integration/compat-delivery",
-      "bytes": 3209,
-      "sha256": "383658b052f311d6261eae8a9213f73387cc816a71198c55f368988640bc9895"
+      "bytes": 3654,
+      "sha256": "507560440faed520664858e80b48e93ba5a5d7f19651e3bab6aa5960d8719b14"
     },
     {
       "path": "package/luci-app-egressveil/files/usr/libexec/ua3f-integration/dns-nat-guard",
@@ -524,8 +524,8 @@
     },
     {
       "path": "package/luci-app-egressveil/files/usr/libexec/ua3f-integration/firewall",
-      "bytes": 12482,
-      "sha256": "fc84a894a76d08dd998dae81e63fd75ad564374121b2546f08bfc8038ca62a78"
+      "bytes": 12687,
+      "sha256": "5984b173a414f3543564b6b1d6933d372514e46e0ac915a4ce8765da865d155f"
     },
     {
       "path": "package/luci-app-egressveil/files/usr/libexec/ua3f-integration/firewall-reload-hook",
@@ -538,9 +538,14 @@
       "sha256": "861b33ab11de331f55c13b3321cc6d3e5d31b589870c57636e85252d142db82b"
     },
     {
+      "path": "package/luci-app-egressveil/files/usr/libexec/ua3f-integration/pre-clash",
+      "bytes": 4065,
+      "sha256": "76ec5cd308f7954723ded4a91b3519618f9f3fc8c7a4fdc451d87a35495cf9b7"
+    },
+    {
       "path": "package/luci-app-egressveil/files/usr/libexec/ua3f-integration/runtime",
-      "bytes": 5537,
-      "sha256": "3ad99aa2870b0033cf2efb3144c86cc0b16a2dc72c2f5d5cfc363111a4fa18c0"
+      "bytes": 5543,
+      "sha256": "7b15a9aeff49fdd91305e1c92a22625d28258b798dbda887752ad1ff5ad1f407"
     },
     {
       "path": "package/luci-app-egressveil/files/usr/libexec/ua3f-integration/ttl-policy",
@@ -554,8 +559,8 @@
     },
     {
       "path": "package/luci-app-egressveil/files/usr/libexec/ua3f-integration/wait-ready",
-      "bytes": 2842,
-      "sha256": "dda288accd3c6ed9d7c41d35fbd679782dcce7449d7f3ce1addc8a9fc61c4940"
+      "bytes": 2931,
+      "sha256": "14df6c8ef8ed8d22935275c100ec3e6488a97f16239a96de51bd32da14f49b95"
     },
     {
       "path": "package/luci-app-egressveil/files/usr/share/egressveil/LICENSES/dependencies/01-LICENSE",

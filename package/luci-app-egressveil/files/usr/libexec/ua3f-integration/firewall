@@ -54,6 +54,7 @@ if [ "$off" = 1 ] || [ "$STAGE" = management-only ]; then
     fi
     nft -c -f "$tmp"
     [ "$check" = 0 ] || exit 0
+    /usr/libexec/ua3f-integration/pre-clash off
     nft -f "$tmp"
     /usr/libexec/ua3f-integration/boot-guard off
     /usr/libexec/ua3f-integration/compat-delivery off
@@ -158,7 +159,7 @@ fi
 for chain in UA3F UA3F_OUTPUT; do
     [ "$enabled" = 1 ] || continue
     iptables -t mangle -S "$chain" >/dev/null || fail "Legacy chain $chain missing"
-    for mark in 0x1cb 0x1cc; do
+    for mark in 0x1ca 0x1cb 0x1cc; do
         [ "$check" = 0 ] || continue
         iptables -t mangle -C "$chain" -m mark --mark "$mark" -j RETURN 2>/dev/null || iptables -t mangle -I "$chain" 1 -m mark --mark "$mark" -j RETURN
     done
@@ -222,7 +223,7 @@ add rule inet fw4 ua3fi_pre meta l4proto tcp return
 add chain inet fw4 ua3fi_out { type route hook output priority -149; policy accept; }
 add rule inet fw4 ua3fi_out meta nfproto != ipv4 return
 add rule inet fw4 ua3fi_out meta l4proto != tcp return
-add rule inet fw4 ua3fi_out meta mark { 0xc9, 0x1cb, 0x1cc } return
+add rule inet fw4 ua3fi_out meta mark { 0xc9, 0x1ca, 0x1cb, 0x1cc } return
 add rule inet fw4 ua3fi_out ct direction reply return
 add rule inet fw4 ua3fi_out fib daddr type { local, broadcast, multicast } return
 add rule inet fw4 ua3fi_out ip daddr { 0.0.0.0/8, 127.0.0.0/8, 169.254.0.0/16, 224.0.0.0/4, 240.0.0.0/4 } return
@@ -242,6 +243,11 @@ if [ "$STAGE" = final-egress ]; then
     /usr/libexec/ua3f-integration/dns-nat-guard ensure
 fi
 nft -f "$tmp"
+if [ "$STAGE" = final-egress ]; then
+    /usr/libexec/ua3f-integration/pre-clash ensure
+else
+    /usr/libexec/ua3f-integration/pre-clash off
+fi
 /usr/libexec/ua3f-integration/boot-guard off
 if [ "$STAGE" != final-egress ]; then
     /usr/libexec/ua3f-integration/dns-nat-guard off

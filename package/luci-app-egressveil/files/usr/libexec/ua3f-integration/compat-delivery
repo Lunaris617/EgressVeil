@@ -25,10 +25,11 @@ check|ready)
         hook_rules=$(nft list chain ip mangle "$hook")
         printf '%s\n' "$hook_rules" | grep -Eq 'hook prerouting priority (-148|mangle[[:space:]]*\+[[:space:]]*2); policy accept;'
         printf '%s\n' "$hook_rules" | grep -Eq '^[[:space:]]*jump UA3FI_TARGET([[:space:]]|$)'
-        printf '%s\n' "$hook_rules" | grep -Eq 'meta mark.*0x0*1cc.*0x0*1cd.*drop'
-        [ "$(iptables -t mangle -S "$target" | awk '/^-A / {n++} END {print n+0}')" = 2 ]
+        printf '%s\n' "$hook_rules" | grep -Eq 'meta mark.*0x0*1ca.*0x0*1cc.*0x0*1cd.*drop'
+        [ "$(iptables -t mangle -S "$target" | awk '/^-A / {n++} END {print n+0}')" = 3 ]
     fi
     if has_target; then
+        iptables -t mangle -C "$target" -p tcp -m mark --mark 0x1ca -j TPROXY --on-port 1080 --on-ip 127.0.0.1 --tproxy-mark 0x1ca/0xffffffff
         iptables -t mangle -C "$target" -p tcp -m mark --mark 0x1cc -j TPROXY --on-port 1081 --on-ip 127.0.0.1 --tproxy-mark 0x1cc/0xffffffff
         iptables -t mangle -C "$target" -p udp -m mark --mark 0x1cd -j TPROXY --on-port 7895 --on-ip 127.0.0.1 --tproxy-mark 0x1cd/0xffffffff
     fi
@@ -38,6 +39,7 @@ ensure)
     mkdir -p "$root"
     : > "$marker"
     has_target || iptables -t mangle -N "$target"
+    iptables -t mangle -C "$target" -p tcp -m mark --mark 0x1ca -j TPROXY --on-port 1080 --on-ip 127.0.0.1 --tproxy-mark 0x1ca/0xffffffff 2>/dev/null || iptables -t mangle -A "$target" -p tcp -m mark --mark 0x1ca -j TPROXY --on-port 1080 --on-ip 127.0.0.1 --tproxy-mark 0x1ca/0xffffffff
     iptables -t mangle -C "$target" -p tcp -m mark --mark 0x1cc -j TPROXY --on-port 1081 --on-ip 127.0.0.1 --tproxy-mark 0x1cc/0xffffffff 2>/dev/null || iptables -t mangle -A "$target" -p tcp -m mark --mark 0x1cc -j TPROXY --on-port 1081 --on-ip 127.0.0.1 --tproxy-mark 0x1cc/0xffffffff
     iptables -t mangle -C "$target" -p udp -m mark --mark 0x1cd -j TPROXY --on-port 7895 --on-ip 127.0.0.1 --tproxy-mark 0x1cd/0xffffffff 2>/dev/null || iptables -t mangle -A "$target" -p udp -m mark --mark 0x1cd -j TPROXY --on-port 7895 --on-ip 127.0.0.1 --tproxy-mark 0x1cd/0xffffffff
     tmp=$(mktemp /tmp/ua3fi-compat.XXXXXX)
@@ -48,7 +50,7 @@ ensure)
     cat >> "$tmp" <<EOF
 add chain ip mangle $hook { type filter hook prerouting priority -148; policy accept; }
 add rule ip mangle $hook jump $target
-add rule ip mangle $hook meta mark { 0x1cc, 0x1cd } counter drop
+add rule ip mangle $hook meta mark { 0x1ca, 0x1cc, 0x1cd } counter drop
 EOF
     nft -c -f "$tmp"
     nft -f "$tmp"

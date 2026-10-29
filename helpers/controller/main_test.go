@@ -47,3 +47,16 @@ func TestBoundary(t *testing.T) {
 		t.Fatal("cross-origin request accepted")
 	}
 }
+
+func TestLuCIOrigin(t *testing.T) {
+ g := gateway{proxy: http.HandlerFunc(func(w http.ResponseWriter,r *http.Request){w.WriteHeader(202)}), key:func()(string,error){return "test-key",nil}}
+ for _, c := range []struct{origin string;code int}{
+  {"http://192.168.91.91",202},{"https://192.168.91.91",202},{"http://192.168.91.91:9090",202},
+  {"http://192.168.91.91:8888",403},{"http://evil.invalid",403},{"http://192.168.91.91.evil.invalid",403},
+ } {
+  r:=httptest.NewRequest("GET","http://192.168.91.91:9090/traffic",nil)
+  r.Header.Set("Origin",c.origin);r.Header.Set("Authorization","Bearer test-key")
+  w:=httptest.NewRecorder();g.ServeHTTP(w,r)
+  if w.Code!=c.code{t.Errorf("origin %s: %d",c.origin,w.Code)}
+ }
+}

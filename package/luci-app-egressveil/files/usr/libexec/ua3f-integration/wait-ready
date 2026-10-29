@@ -30,6 +30,7 @@ while [ "$attempt" -lt "$limit" ]; do
                 nft list table inet ua3fi_guard >/dev/null 2>&1 || ready=0
             ;; esac
             if [ "$STAGE" = final-egress ]; then
+                /usr/libexec/ua3f-integration/pre-clash ready >/dev/null 2>&1 || ready=0
                 /usr/libexec/ua3f-integration/dns-nat-guard ready >/dev/null 2>&1 || ready=0
                 nft list chain inet fw4 ua3fi_out >/dev/null 2>&1 || ready=0
                 nft list chain inet fw4 openclash | grep -q 'ua3fi:mark-guard' || ready=0

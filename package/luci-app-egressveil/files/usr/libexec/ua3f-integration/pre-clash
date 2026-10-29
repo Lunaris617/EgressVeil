@@ -1,0 +1,84 @@
+#!/bin/sh
+# Rewrite cleartext TCP before Mihomo encapsulation. Final egress remains in place.
+set -eu
+. /etc/ua3f-integration.conf
+root=/etc/ua3f-integration
+table=ua3fi_first
+marker=$root/pre-clash-owned
+exists() { nft list table inet "$table" >/dev/null 2>&1; }
+ownership() { ! exists || [ -f "$marker" ]; }
+case "${1:-}" in
+off)
+    ownership || exit 1
+    if exists; then nft delete table inet "$table"; fi
+    exit 0
+    ;;
+check|ensure|ready) ;;
+*) exit 2;;
+esac
+ownership || { echo PRECLASH_OWNERSHIP_CONFLICT >&2; exit 1; }
+case "$LAN_IFACE:$WAN_IFACE" in *[!a-zA-Z0-9_.:-]*) exit 2;; esac
+# Explicit socket marks identify only the two engines; other local processes
+# must not inherit a blanket GID bypass. Mihomo's selected transports still
+# traverse final egress, while its own dials must not recurse into itself.
+ruby -ryaml -e 'p=IO.popen(["uci","-q","get","openclash.config.config_path"]){|i|i.read.strip}; c=YAML.load_file("/etc/openclash/"+File.basename(p),aliases:true);exit(c["routing-mark"].to_i==463 ? 0 : 1)' || {
+    echo MIHOMO_SOCKET_MARK_REQUIRED >&2; exit 1;
+}
+if [ "$1" = ready ]; then
+    [ -f "$marker" ] && exists
+    nft list chain inet "$table" pre | grep -q 'ua3fi:before-clash'
+    nft list chain inet "$table" out | grep -q 'ua3fi:local-before-clash'
+    exit 0
+fi
+tmp=$(mktemp /tmp/ua3fi-first.XXXXXX)
+trap 'rm -f "$tmp"' EXIT HUP INT TERM
+if exists; then printf 'delete table inet %s\n' "$table" >"$tmp"; fi
+cat >>"$tmp" <<EOF
+add table inet $table { comment "ua3fi:before-clash"; }
+add chain inet $table pre { type filter hook prerouting priority -151; policy accept; }
+add rule inet $table pre meta nfproto != ipv4 return
+add rule inet $table pre meta l4proto != tcp return
+add rule inet $table pre meta mark { 0xc9, 0x1ca, 0x1cb, 0x1cc, 0x1cd, 0x1cf } return
+add rule inet $table pre iifname != "$LAN_IFACE" return
+add rule inet $table pre ct direction reply return
+add rule inet $table pre fib daddr type { local, broadcast, multicast } return
+add rule inet $table pre ip daddr { 0.0.0.0/8, 127.0.0.0/8, 169.254.0.0/16, 224.0.0.0/4, 240.0.0.0/4 } return
+EOF
+cidrs=$(ip -4 route show dev "$LAN_IFACE" scope link | awk '$1 ~ /^[0-9]/ {print $1}')
+for cidr in $cidrs $MANAGEMENT_CIDRS; do
+    case "$cidr" in *[!0-9./]*) exit 2;; esac
+    printf 'add rule inet %s pre ip daddr %s return\n' "$table" "$cidr" >>"$tmp"
+done
+cat >>"$tmp" <<EOF
+add rule inet $table pre tcp dport 53 return
+add rule inet $table pre ip daddr != $FAKEIP_CIDR tcp dport { 22, 51080, 51090 } return
+EOF
+if [ -n "${PRECLASH_TEST_SOURCE:-}" ]; then
+    case "$PRECLASH_TEST_SOURCE" in *[!0-9.]*) exit 2;; esac
+    printf 'add rule inet %s pre ip saddr != %s return\n' "$table" "$PRECLASH_TEST_SOURCE" >>"$tmp"
+fi
+cat >>"$tmp" <<EOF
+add rule inet $table pre meta mark set 0x1ca counter comment "ua3fi:before-clash"
+add chain inet $table out { type route hook output priority -151; policy accept; }
+add rule inet $table out meta nfproto != ipv4 return
+add rule inet $table out meta l4proto != tcp return
+add rule inet $table out meta mark { 0xc9, 0x1ca, 0x1cb, 0x1cc, 0x1cd, 0x1cf } return
+add rule inet $table out ct direction reply return
+add rule inet $table out fib daddr type { local, broadcast, multicast } return
+EOF
+if [ -n "${PRECLASH_TEST_SOURCE:-}" ]; then
+    printf 'add rule inet %s out return\n' "$table" >>"$tmp"
+fi
+# Router-originated campus authentication remains on its established DIRECT
+# path; final UA, TTL and campus WAN identity checks still apply on that path.
+cat >>"$tmp" <<EOF
+add rule inet $table out ip daddr { 0.0.0.0/8, 10.0.0.0/8, 127.0.0.0/8, 169.254.0.0/16, 172.16.0.0/12, 192.168.0.0/16, 224.0.0.0/4, 240.0.0.0/4 } return
+add rule inet $table out tcp dport { 22, 53, 51080, 51090 } ip daddr != $FAKEIP_CIDR return
+add rule inet $table out oifname "$WAN_IFACE" meta mark set 0x1ca counter comment "ua3fi:local-before-clash"
+add rule inet $table out ip daddr $FAKEIP_CIDR meta mark set 0x1ca counter comment "ua3fi:local-before-clash"
+EOF
+nft -c -f "$tmp"
+[ "$1" = ensure ] || exit 0
+umask 077
+: >"$marker"
+nft -f "$tmp"

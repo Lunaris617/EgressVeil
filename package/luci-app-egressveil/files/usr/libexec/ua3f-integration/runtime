@@ -43,7 +43,7 @@ restore)
         iptables-restore -n < "$LEGACY_DIR/mangle.restore"
     fi
     for chain in UA3F UA3F_OUTPUT; do
-        for mark in 0x1cb 0x1cc; do
+        for mark in 0x1ca 0x1cb 0x1cc; do
             iptables -t mangle -C "$chain" -m mark --mark "$mark" -j RETURN 2>/dev/null || iptables -t mangle -I "$chain" 1 -m mark --mark "$mark" -j RETURN
         done
     done

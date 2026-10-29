@@ -48,7 +48,7 @@ end
 def base
  {'mixed-port'=>7893,'port'=>7890,'socks-port'=>7891,'redir-port'=>7892,'tproxy-port'=>7895,
  'allow-lan'=>true,'bind-address'=>'*','mode'=>'rule','log-level'=>'warning','ipv6'=>false,
- 'external-controller'=>'127.0.0.1:9091','secret'=>secret('controller.key'),
+ 'external-controller'=>'127.0.0.1:9091','routing-mark'=>463,'secret'=>secret('controller.key'),
  'external-ui'=>'/usr/share/openclash/ui',
  'authentication'=>['egressveil:'+secret('proxy.key')], 'profile'=>{'store-selected'=>true},'geodata-mode'=>false,
  'dns'=>{'enable'=>true,'listen'=>'0.0.0.0:7874','ipv6'=>false,'enhanced-mode'=>'fake-ip',
@@ -60,7 +60,7 @@ def managed_dns(c, direct=false)
  d=c.fetch('dns');bootstrap=['udp://223.5.5.5#DIRECT','udp://119.29.29.29#DIRECT']
  foreign=direct ? bootstrap : ['https://1.1.1.1/dns-query#自动选择','https://8.8.8.8/dns-query#自动选择']
  d.merge!('nameserver'=>foreign,'default-nameserver'=>bootstrap,'proxy-server-nameserver'=>bootstrap,
- 'nameserver-policy'=>{'geosite:cn'=>bootstrap},'direct-nameserver'=>foreign,
+ 'nameserver-policy'=>{'geosite:cn'=>bootstrap},'direct-nameserver'=>bootstrap,
  'direct-nameserver-follow-policy'=>true,'respect-rules'=>false,'prefer-h3'=>false)
 end
 begin
@@ -88,6 +88,20 @@ begin
   direct=base;direct['mode']='direct';direct['proxies']=[];direct['proxy-groups']=[];direct['rules']=['MATCH,DIRECT'];managed_dns(direct,true)
   atomic(DIRECT,YAML.dump(direct))
   feed=value('feed')
+  # Providers own this generated profile; prevent a second configuration writer.
+  unless feed.empty?
+   changed=false
+   IO.popen(['uci','-q','show','openclash']){|io|io.read}.lines.each do |line|
+    m=line.match(/\Aopenclash\.([^.=]+)=config_subscribe\s*\z/)
+    next unless m
+    section=m[1]
+    name=IO.popen(['uci','-q','get',"openclash.#{section}.name"]){|io|io.read.strip}
+    next unless name=='ua3fi'
+    system('uci','-q','set',"openclash.#{section}.enabled=0") or raise 'SUBSCRIPTION_OWNERSHIP_FAILED'
+    changed=true
+   end
+   system('uci','-q','commit','openclash') if changed
+  end
   if !feed.empty? && (!File.file?(SOURCE) || !File.file?(ROOT+'/last-feed') || File.read(ROOT+'/last-feed').strip!=feed)
    raise 'FEED_INVALID' unless valid_feed?(feed)
    c=base
@@ -103,6 +117,10 @@ begin
   if File.file?(SOURCE)
    c=YAML.load_file(SOURCE,aliases:true);before=Marshal.load(Marshal.dump(c))
    provider=(c['proxy-providers']||{})['Global-ISP']
+   if provider.is_a?(Hash)
+    provider['header']||={}
+    provider['header']['User-Agent']=['curl']
+   end
    provider['health-check']['interval']=value('interval','30').to_i if provider.is_a?(Hash) && provider['health-check'].is_a?(Hash)
    Array(c['proxy-groups']).each{|g|g['interval']=value('interval','30').to_i if g['name']=='自动选择' && g['type']=='url-test'}
    atomic(SOURCE,YAML.dump(c)) unless c==before
@@ -116,7 +134,7 @@ begin
   c=YAML.load_file(target, aliases: true);original=YAML.load_file(source, aliases: true)
   raise 'CONFIG_MAPPING_REQUIRED' unless c.is_a?(Hash) && original.is_a?(Hash)
   c.merge!('port'=>7890,'socks-port'=>7891,'mixed-port'=>7893,'redir-port'=>7892,'tproxy-port'=>7895,
-   'external-controller'=>'127.0.0.1:9091','secret'=>secret('controller.key'),'external-ui'=>'/usr/share/openclash/ui',
+   'external-controller'=>'127.0.0.1:9091','routing-mark'=>463,'secret'=>secret('controller.key'),'external-ui'=>'/usr/share/openclash/ui',
    'ipv6'=>false,'mode'=>value('proxy_enabled')=='1' ? value('proxy_mode','rule') : 'direct')
   %w[external-ui-name external-ui-url external-controller-tls external-controller-unix external-controller-pipe external-doh-server].each{|k|c.delete(k)}
   c['tun']={'enable'=>false}
@@ -149,7 +167,14 @@ begin
   raise 'BACKEND_EXPOSED' unless c['external-controller']=='127.0.0.1:9091'
   expected=value('proxy_enabled')=='1' ? value('proxy_mode','rule') : 'direct'
   raise 'MODE_MISMATCH' unless api('/configs')['mode']==expected
-  api('/version');puts 'CORE_READY'
+  api('/version')
+  if value('proxy_enabled')=='1' && File.expand_path(selected_source)==SOURCE
+   providers=api('/providers/proxies')['providers']||{}
+   if (c['proxy-providers']||{}).key?('Global-ISP')
+    raise 'SUBSCRIPTION_EMPTY' if Array((providers['Global-ISP']||{})['proxies']).empty?
+   end
+  end
+  puts 'CORE_READY'
  when 'refresh'
   api('/providers/proxies/Global-ISP','PUT');puts 'SUBSCRIPTION_REFRESHED'
  when 'selectors'

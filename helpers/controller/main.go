@@ -49,7 +49,8 @@ func (g gateway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// Only the bundled same-origin dashboard is supported; do not grant wildcard CORS.
 	if origin := r.Header.Get("Origin"); origin != "" {
 		u, e := url.Parse(origin)
-		if e != nil || u.Host != r.Host {
+		target, _ := url.Parse("http://" + r.Host)
+		if e != nil || target == nil || u.User != nil || (u.Scheme != "http" && u.Scheme != "https") || !strings.EqualFold(u.Hostname(), target.Hostname()) || (u.Host != r.Host && u.Port() != "" && u.Port() != "80" && u.Port() != "443") {
 			http.Error(w, "Origin rejected", http.StatusForbidden)
 			return
 		}
