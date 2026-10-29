@@ -1,0 +1,20 @@
+<script>
+(function () {
+ 'use strict';
+ var timer;
+ function update() {
+  var field=document.getElementById('egressveil-live-health');
+  if (!field) return;
+  fetch('<%=luci.dispatcher.build_url("admin","services","openclash","egressveil_ui_status")%>',{credentials:'same-origin',cache:'no-store'})
+   .then(function(r){if(!r.ok)throw new Error('status');return r.json();})
+   .then(function(s){
+    if(!field.isConnected)return;
+    field.textContent=s.health||'正在检查状态…';
+    field.title=s.checked_at?'检查时间：'+new Date(s.checked_at*1000).toLocaleTimeString():'';
+    timer=setTimeout(update,s.checked_at?15000:2000);
+   }).catch(function(){if(field.isConnected){field.textContent='状态暂不可用，请稍后重试';timer=setTimeout(update,5000);}});
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',update,{once:true});else update();
+ window.addEventListener('pagehide',function(){clearTimeout(timer);},{once:true});
+})();
+</script>

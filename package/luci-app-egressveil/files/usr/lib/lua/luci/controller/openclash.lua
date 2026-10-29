@@ -11,6 +11,7 @@ function index()
 	page.dependent = false
 	page.acl_depends = { "luci-app-openclash" }
  entry({"admin","services","openclash","setup"}, cbi("egressveil"), "配置引导 / UA / TTL", 10).leaf=true
+ entry({"admin","services","openclash","egressveil_ui_status"},call("action_egressveil_ui_status")).leaf=true
 	entry({"admin", "services", "openclash", "client"},form("openclash/client"),_("Overviews"), 20).leaf = true
 	entry({"admin", "services", "openclash", "conn_status"},call("action_conn_status")).leaf=true
 	entry({"admin", "services", "openclash", "status"},call("action_status")).leaf=true
@@ -7088,4 +7089,19 @@ function action_switch_oc_setting()
  local owned={china_ip_route=true,china_ip6_route=true,router_self_proxy=true,enable_udp_proxy=true,disable_udp_quic=true,ipv6_enable=true}
  if owned[HTTP.formvalue("setting")] then suite_reject();return end
  return upstream_switch_setting()
+end
+
+function action_egressveil_ui_status()
+ local http=require "luci.http"
+ local fs=require "nixio.fs"
+ local json=require "luci.jsonc"
+ local previous=json.parse(fs.readfile("/var/run/egressveil/ui-status.json") or "{}") or {}
+ local result=fs.stat("/var/run/egressveil/result") or {}
+ if previous.checked_at and (result.mtime or 0)>previous.checked_at then fs.unlink("/var/run/egressveil/ui-status.json") end
+ require("luci.sys").call("/usr/libexec/egressveil/ui-status >/dev/null 2>&1")
+ local snapshot=json.parse(fs.readfile("/var/run/egressveil/ui-status.json") or "{}") or {}
+ if not snapshot.checked_at or os.time()-snapshot.checked_at>60 then snapshot={health="正在检查状态…"} end
+ http.header("Cache-Control","no-store")
+ http.prepare_content("application/json")
+ http.write_json(snapshot)
 end

@@ -1,0 +1,29 @@
+#!/bin/sh
+# Read-only health checks run outside the page-rendering request.
+set -eu
+root=/var/run/egressveil
+mkdir -p "$root"
+chmod 700 "$root"
+cache=$root/ui-status.json
+lock=$root/ui-status.lock
+now=$(date +%s)
+if [ -f "$cache" ]; then
+    stamp=$(stat -c %Y "$cache")
+    [ "$((now-stamp))" -ge 30 ] || exit 0
+fi
+if ! mkdir "$lock" 2>/dev/null; then
+    stamp=$(stat -c %Y "$lock" 2>/dev/null || echo "$now")
+    [ "$((now-stamp))" -gt 20 ] || exit 0
+    rmdir "$lock" 2>/dev/null || exit 0
+    mkdir "$lock" 2>/dev/null || exit 0
+fi
+(
+    trap '' HUP
+    trap 'rmdir "$lock" 2>/dev/null || :' EXIT
+    if ! timeout -k 2 15 ruby /usr/libexec/egressveil/ui-status.rb; then
+        umask 077
+        printf '{"health":"状态检查超时或失败，请查看日志","checked_at":%s}\n' "$(date +%s)" >"$cache.failed"
+        mv "$cache.failed" "$cache"
+    fi
+) </dev/null >/dev/null 2>&1 &
+exit 0

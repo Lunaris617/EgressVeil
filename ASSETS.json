@@ -209,8 +209,8 @@
     },
     {
       "path": "package/luci-app-egressveil/files/usr/lib/lua/luci/controller/openclash.lua",
-      "bytes": 219132,
-      "sha256": "5707700c9483742586a07953e05fade5723e20eae3670a8dff2f710839501cf0"
+      "bytes": 220051,
+      "sha256": "7d3a89ea30e8696a9beaa395c90feb115502f390468a756a311c878ac661cbaf"
     },
     {
       "path": "package/luci-app-egressveil/files/usr/lib/lua/luci/egressveil.lua",
@@ -219,8 +219,8 @@
     },
     {
       "path": "package/luci-app-egressveil/files/usr/lib/lua/luci/model/cbi/egressveil.lua",
-      "bytes": 6173,
-      "sha256": "02e31197f3723f065b3871816df32e4b1be94ad0303c04d1fd7793c20b758614"
+      "bytes": 6277,
+      "sha256": "ffac993fd9cff0a10f45a37f7f3df0ef2d2bed5a4aa6b6009c081f628289442a"
     },
     {
       "path": "package/luci-app-egressveil/files/usr/lib/lua/luci/model/cbi/openclash/client.lua",
@@ -301,6 +301,11 @@
       "path": "package/luci-app-egressveil/files/usr/lib/lua/luci/openclash.lua",
       "bytes": 26029,
       "sha256": "b3460931a788b597ca6b7a422837a1f88364d6490a4c3da0ab39936db8f46918"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/lib/lua/luci/view/egressveil/status.htm",
+      "bytes": 996,
+      "sha256": "a7e0f934d665259e8e2273ac47d3375e4620ec6118f6ebeb19d890b7075d824d"
     },
     {
       "path": "package/luci-app-egressveil/files/usr/lib/lua/luci/view/egressveil/style.htm",
@@ -476,6 +481,16 @@
       "path": "package/luci-app-egressveil/files/usr/libexec/egressveil/ui-apply",
       "bytes": 549,
       "sha256": "f2d322b268242889368e97dd564de5b378a9c87a189a3d9e8218c177b07d069d"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/libexec/egressveil/ui-status",
+      "bytes": 899,
+      "sha256": "656ec9123691ffd51633ba8948ebd8aff27bdfcd243faba6a29a18a9731584f1"
+    },
+    {
+      "path": "package/luci-app-egressveil/files/usr/libexec/egressveil/ui-status.rb",
+      "bytes": 945,
+      "sha256": "cd168be564ae1a080f5179a5084a76b47e87392018c4c7d971402bdc00694a34"
     },
     {
       "path": "package/luci-app-egressveil/files/usr/libexec/ua3f-bridge-policy/bridge-audit",

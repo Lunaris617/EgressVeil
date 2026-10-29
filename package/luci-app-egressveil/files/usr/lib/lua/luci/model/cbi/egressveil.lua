@@ -5,6 +5,7 @@ local util=require "luci.util"
 local uci=require("luci.model.uci").cursor()
 local m=Map("egressveil","EgressVeil","按需选择代理、明文 HTTP UA 和 IPv4 TTL。流量接管由 EgressVeil 自动配置。首次使用请完成三项选择；没有订阅也可使用。")
 m:append(Template("egressveil/style"))
+m:append(Template("egressveil/status"))
 local s=m:section(NamedSection,"main","suite","配置引导与出口设置")
 local enabled=s:option(Flag,"enabled","运行 EgressVeil")
 enabled.rmempty=false
@@ -59,21 +60,30 @@ wan.default="wan";wan.datatype="uciname";wan.rmempty=false
 local level=s:option(ListValue,"log_level","UA3F 日志级别")
 for _,v in ipairs({"ERROR","WARN","INFO","DEBUG"}) do level:value(v) end
 level.default="WARN";level.rmempty=false
+local service_cache
 local function running(name)
- local services=util.ubus("service","list",{name=name}) or {}
+ if not service_cache then service_cache=util.ubus("service","list",{}) or {} end
+ local services=service_cache
  for _,instance in pairs((services[name] or {}).instances or {}) do if instance.running==true and tonumber(instance.pid) then return true end end
  return false
 end
 local state=s:option(DummyValue,"_state","应用结果")
 function state.cfgvalue() return fs.readfile("/var/run/egressveil/result") or "尚未应用" end
 local health=s:option(DummyValue,"_health","当前就绪状态")
+health.rawhtml=true
 function health.cfgvalue()
- if uci:get("egressveil","main","enabled")~="1" then return "已暂停" end
- if sys.call("ruby /usr/libexec/egressveil/config.rb health --quick >/dev/null 2>&1")~=0 then return "核心未就绪，请检查应用结果与日志" end
- if uci:get("egressveil","main","ua_enabled")=="1" and sys.call("/usr/libexec/ua3f-integration/wait-ready --check >/dev/null 2>&1")~=0 then return "UA 接管未就绪，保护保留" end
- if uci:get("egressveil","main","ttl_enabled")=="1" and sys.call("/usr/libexec/ua3f-integration/ttl-policy check >/dev/null 2>&1")~=0 then return "TTL 保护未就绪" end
- return "接管已就绪"
+ local text="正在检查状态…"
+ if uci:get("egressveil","main","enabled")~="1" then
+  text="已暂停"
+ else
+  local json=require "luci.jsonc"
+  local snapshot=json.parse(fs.readfile("/var/run/egressveil/ui-status.json") or "{}") or {}
+  local result=fs.stat("/var/run/egressveil/result") or {}
+  if snapshot.checked_at and os.time()-snapshot.checked_at<=60 and (result.mtime or 0)<=snapshot.checked_at then text=snapshot.health or text end
+ end
+ return '<span id="egressveil-live-health">'..require("luci.xml").pcdata(text)..'</span>'
 end
+
 local live=s:option(DummyValue,"_runtime","实际进程")
 function live.cfgvalue() return "Mihomo："..(running("openclash") and "运行中" or "未运行").."；UA3F："..(running("ua3f") and "运行中" or "未运行").."；控制入口："..(running("egressveil-controller") and "运行中" or "未运行") end
 local rule=s:option(DummyValue,"_ttl_runtime","实际 TTL 规则")
@@ -90,6 +100,7 @@ function m.on_before_commit(self)
 end
 function m.on_after_commit()
  if not apply_generation then return end
+ fs.unlink("/var/run/egressveil/ui-status.json")
  sys.call("umask 077; mkdir -p /var/run/egressveil; chmod 700 /var/run/egressveil; (/usr/libexec/egressveil/ui-apply "..apply_generation.." >/var/run/egressveil/setup.log 2>&1) </dev/null &")
 end
 return m
