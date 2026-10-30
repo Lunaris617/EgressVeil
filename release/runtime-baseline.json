@@ -1,0 +1,1868 @@
+{
+  "release": "1.0.0",
+  "date": "2026-10-30",
+  "compared_deployed_files": 372,
+  "all_compared_files_match": true,
+  "files": [
+    {
+      "path": "/etc/hotplug.d/iface/95-egressveil",
+      "sha256": "3c8ae272decccbc5e9f7448c1992db1817bb18a99dd957d8a31fefc69c2aa532",
+      "bytes": 297
+    },
+    {
+      "path": "/etc/init.d/egressveil",
+      "sha256": "7063c47b6b4586dcfae0b804ab741d966cc7a589c5e16936a4ddc178bfa321bb",
+      "bytes": 883
+    },
+    {
+      "path": "/etc/init.d/egressveil-controller",
+      "sha256": "c5723e0096727097b8dcc3eb1b4ca3f6c557a1e11543b2c560093c64fba75b25",
+      "bytes": 595
+    },
+    {
+      "path": "/etc/init.d/openclash",
+      "sha256": "fbd92c94f792c50efdfa3e7617675969e79e61b05d7aa1ddc317174511ac6db1",
+      "bytes": 195666
+    },
+    {
+      "path": "/etc/init.d/ua3f",
+      "sha256": "0645313a519bfb68bf195bba486909638b7b8c3e1ea8cdb23082d497afa2c327",
+      "bytes": 2773
+    },
+    {
+      "path": "/etc/init.d/ua3f-bridge-policy",
+      "sha256": "7a2af8d8ab76333a8cb876749d067298ddfe0f2e2a841c26a4fc40bd7d88bc99",
+      "bytes": 870
+    },
+    {
+      "path": "/etc/init.d/ua3f-early-guard",
+      "sha256": "9041d42da808652f17ffec69a4923f7db7533a86fdc5dbc9435ae3691d28fa6e",
+      "bytes": 275
+    },
+    {
+      "path": "/etc/init.d/ua3f-ttl-policy",
+      "sha256": "3e98b203074d546733d54a46cc8e353c9e5cfdab064fd1df47d7d30803acf92e",
+      "bytes": 705
+    },
+    {
+      "path": "/etc/openclash/china_ip6_route.ipset",
+      "sha256": "9846c4fb6e0197a4fb17e358e34c3668f4ac072389b7a4484df7d1a5d96d7262",
+      "bytes": 40517
+    },
+    {
+      "path": "/etc/openclash/china_ip_route.ipset",
+      "sha256": "a448d8770ac1298fd832135ac093e040293ce528498eedd08a036cfe4be9263a",
+      "bytes": 93290
+    },
+    {
+      "path": "/etc/openclash/core/clash_meta",
+      "sha256": "7a0d59da2e678d56c899a3db996a2ad8963286c4f3634b0451435db248f13fa1",
+      "bytes": 62054526
+    },
+    {
+      "path": "/etc/openclash/Country.mmdb",
+      "sha256": "96bfcc3fb18011217abf2c9f47b64641db3c40101c7bc79a1e0f3856e7da2f32",
+      "bytes": 266001
+    },
+    {
+      "path": "/etc/openclash/custom/openclash_custom_chnroute6_pass.list",
+      "sha256": "5834a85d556c407e8015f28a04dd2c42f093d4768e99aea2463ad77e6453de22",
+      "bytes": 32
+    },
+    {
+      "path": "/etc/openclash/custom/openclash_custom_chnroute_pass.list",
+      "sha256": "a219cbb16abd550dd639c71264d76be538377c4370b41d749761c6e4035d7f8e",
+      "bytes": 27
+    },
+    {
+      "path": "/etc/openclash/custom/openclash_custom_domain_dns.list",
+      "sha256": "4ed36b219ed7b0b408e15454ac8e5b5536738673608a0c563e58318728e920d2",
+      "bytes": 10
+    },
+    {
+      "path": "/etc/openclash/custom/openclash_custom_domain_dns_policy.list",
+      "sha256": "0cf8de5e9b1b7fb814d553b988a1164ad6665f367ed1e219955d147e187542a3",
+      "bytes": 324
+    },
+    {
+      "path": "/etc/openclash/custom/openclash_custom_fake_filter.list",
+      "sha256": "399b911ba83af5fe68c5abd95598cf575cbd8a769de686d423de4bdbefa60f04",
+      "bytes": 2812
+    },
+    {
+      "path": "/etc/openclash/custom/openclash_custom_fallback_filter.yaml",
+      "sha256": "be4aa1539424b70afaa32639528560bd4209724bd06ba385f93a668a3e739861",
+      "bytes": 1122
+    },
+    {
+      "path": "/etc/openclash/custom/openclash_custom_firewall_rules.sh",
+      "sha256": "d0a2bda67a866a08aa85f6f457951d82b952607ecaa22762bad37e7441aa013c",
+      "bytes": 132
+    },
+    {
+      "path": "/etc/openclash/custom/openclash_custom_hosts.list",
+      "sha256": "5655bec76618474cc4149ac7f2769f1b30f06f282458125183b9f6602268704b",
+      "bytes": 412
+    },
+    {
+      "path": "/etc/openclash/custom/openclash_custom_localnetwork_ipv4.list",
+      "sha256": "5cfd703c4a23c7108da5fc0c47b58dae021611ee5b6fadef7aacb61a48570dd4",
+      "bytes": 443
+    },
+    {
+      "path": "/etc/openclash/custom/openclash_custom_localnetwork_ipv6.list",
+      "sha256": "87fd7f0bfd6d4add44c6d68fd473156b295417a0d071869d85a584cb89a7a1d8",
+      "bytes": 696
+    },
+    {
+      "path": "/etc/openclash/custom/openclash_custom_overwrite.sh",
+      "sha256": "553952a9eb2b3cde580e523f1c3cc18f7b0dfc72e5ceea49d0117b834f521cf3",
+      "bytes": 154
+    },
+    {
+      "path": "/etc/openclash/custom/openclash_custom_proxy_server_dns_policy.list",
+      "sha256": "9819c9aaf5ffcd65e36b7e6baf58ea73ca4fcd616c2943acde05285e1ce68a48",
+      "bytes": 344
+    },
+    {
+      "path": "/etc/openclash/custom/openclash_custom_rules.list",
+      "sha256": "dde584b2b5ff4cafe12b87aef50b56dbf58362601afc8cfee246a4927bcdb907",
+      "bytes": 3338
+    },
+    {
+      "path": "/etc/openclash/custom/openclash_custom_rules_2.list",
+      "sha256": "ba01a3351d67737475a215f1a8cb094884c41cf6d53fd1cc3a4c861a5ce31d19",
+      "bytes": 954
+    },
+    {
+      "path": "/etc/openclash/custom/openclash_custom_sniffer.yaml",
+      "sha256": "c186251735e05c74abf472c97d63b1e5ef71cbf14199e3778b532e681998ae6a",
+      "bytes": 1157
+    },
+    {
+      "path": "/etc/openclash/GeoSite.dat",
+      "sha256": "e5d2232b6b0fe8eb8f4e7ebe3964fe13e5ff3d4f39065b97d77523eb376b4af9",
+      "bytes": 11147460
+    },
+    {
+      "path": "/etc/openclash/overwrite/default",
+      "sha256": "0ea7ea35399c8b23790edcc833e22b6d6e95214ee1cea1ddf471d8ea90d33fb2",
+      "bytes": 20623
+    },
+    {
+      "path": "/etc/openclash/overwrite/Google_Play",
+      "sha256": "1bf3e94036be0479fd6cf2a4258b128332fedf31cd31c1fd660a20110728b39a",
+      "bytes": 794
+    },
+    {
+      "path": "/etc/openclash/overwrite/Tailscale",
+      "sha256": "e5b8300bdb6ba1c74427f04535bf887c10fd0ceb27d80e5977bd29b2f2e98e83",
+      "bytes": 228
+    },
+    {
+      "path": "/etc/openclash/overwrite/WiFi_Calling",
+      "sha256": "7ecd4d96ff1fef18a50b9af42d9eebaff1c83f2dbd9c85c2902bb94209e645dd",
+      "bytes": 910
+    },
+    {
+      "path": "/lib/upgrade/keep.d/egressveil",
+      "sha256": "81c7afd3c63e7e0142cce8dafa9876f4e0dcecac3e71a633d75e5b08c9549e4d",
+      "bytes": 67
+    },
+    {
+      "path": "/usr/bin/ua3f",
+      "sha256": "406113bc8b9e865e338eeb6d9784acb9713a6f7e744da159c62d368c8f8d5ac6",
+      "bytes": 4219028
+    },
+    {
+      "path": "/usr/lib/lua/luci/controller/egressveil.lua",
+      "sha256": "74bc044740d428b655ee549bb623336868d2c90e931abe6c378e90e16c139076",
+      "bytes": 223
+    },
+    {
+      "path": "/usr/lib/lua/luci/controller/openclash.lua",
+      "sha256": "7d3a89ea30e8696a9beaa395c90feb115502f390468a756a311c878ac661cbaf",
+      "bytes": 220051
+    },
+    {
+      "path": "/usr/lib/lua/luci/egressveil.lua",
+      "sha256": "92cc13a6594f763e7f1df98cf214ae0546dddb5bc0de2030b5951789aba2ac45",
+      "bytes": 1572
+    },
+    {
+      "path": "/usr/lib/lua/luci/model/cbi/egressveil.lua",
+      "sha256": "ffac993fd9cff0a10f45a37f7f3df0ef2d2bed5a4aa6b6009c081f628289442a",
+      "bytes": 6277
+    },
+    {
+      "path": "/usr/lib/lua/luci/model/cbi/openclash/client.lua",
+      "sha256": "4aa60bd85e9b3615d4ffe5d6814f9a38cd024cb60442bf4b5817319bb657bbfe",
+      "bytes": 888
+    },
+    {
+      "path": "/usr/lib/lua/luci/model/cbi/openclash/config-overwrite.lua",
+      "sha256": "7613cd39d716ce42fad0b60fd9d90a49d773b13f35db8ad23f8686d5ef82bf6a",
+      "bytes": 25274
+    },
+    {
+      "path": "/usr/lib/lua/luci/model/cbi/openclash/config-subscribe-edit.lua",
+      "sha256": "8bd2a9c43668ed03f2c380000de661de4a2bd8962d1309b99ff60ed69655ed85",
+      "bytes": 13907
+    },
+    {
+      "path": "/usr/lib/lua/luci/model/cbi/openclash/config-subscribe.lua",
+      "sha256": "20e319ff21df0d4d62d6b33a17f0d5ca3d64a08ff0e15275398eda8c89aa2c15",
+      "bytes": 3987
+    },
+    {
+      "path": "/usr/lib/lua/luci/model/cbi/openclash/config.lua",
+      "sha256": "0bcc20431e7a50dfa4c7a1a9eb3381690a212a57b55432c89aff03fadc888be2",
+      "bytes": 14576
+    },
+    {
+      "path": "/usr/lib/lua/luci/model/cbi/openclash/custom-dns-edit.lua",
+      "sha256": "8f3cb5b3cb1d98913baaf3b867c3a771452c1a3ecd00251a29383b51f09fdda9",
+      "bytes": 5655
+    },
+    {
+      "path": "/usr/lib/lua/luci/model/cbi/openclash/log.lua",
+      "sha256": "256e496d33a138455b62019f53ff3d5b8822e47ab1b98d15adbb39612cce5c8a",
+      "bytes": 449
+    },
+    {
+      "path": "/usr/lib/lua/luci/model/cbi/openclash/other-file-edit.lua",
+      "sha256": "faf1cd85b7138c454f2e4e29feafddfb77360712ebdc22dc7928d40a4300e5e5",
+      "bytes": 1851
+    },
+    {
+      "path": "/usr/lib/lua/luci/model/cbi/openclash/proxies-config.lua",
+      "sha256": "459d3ca519356e5a02b4746bad28a34c90fb9aaae847c8442bff7b80705a46a4",
+      "bytes": 57045
+    },
+    {
+      "path": "/usr/lib/lua/luci/model/cbi/openclash/proxy-groups-config.lua",
+      "sha256": "273c7c97897323c5c705fb52df9c1b5e6e4124763e2d6b835d6e162952e27367",
+      "bytes": 9641
+    },
+    {
+      "path": "/usr/lib/lua/luci/model/cbi/openclash/proxy-providers-config.lua",
+      "sha256": "2cb0716c367461c2a6ba4b965bff41e4247508613cb313807f6b23fa44c1eff3",
+      "bytes": 5336
+    },
+    {
+      "path": "/usr/lib/lua/luci/model/cbi/openclash/proxy-providers-file-manage.lua",
+      "sha256": "adddae155fa16642c80d4cc28adfaecca7dd895c1392459b68b716ec8a89f1a7",
+      "bytes": 3561
+    },
+    {
+      "path": "/usr/lib/lua/luci/model/cbi/openclash/rule-providers-file-manage.lua",
+      "sha256": "bb4353c3324fa51dded4d85b67907dd11a3deac2eae515bddf3fb0350e79a5f0",
+      "bytes": 3542
+    },
+    {
+      "path": "/usr/lib/lua/luci/model/cbi/openclash/servers.lua",
+      "sha256": "6e7e9606fc09d671c1994a9a537a901e6ac4d4c36d3e8dabbb71c10e1ebbc955",
+      "bytes": 7902
+    },
+    {
+      "path": "/usr/lib/lua/luci/model/cbi/openclash/settings.lua",
+      "sha256": "aba1cf01b85e357047d63d3317574531ea03568eafb43005ebb93c6a4f288022",
+      "bytes": 70409
+    },
+    {
+      "path": "/usr/lib/lua/luci/openclash.lua",
+      "sha256": "b3460931a788b597ca6b7a422837a1f88364d6490a4c3da0ab39936db8f46918",
+      "bytes": 26029
+    },
+    {
+      "path": "/usr/lib/lua/luci/view/egressveil/status.htm",
+      "sha256": "a7e0f934d665259e8e2273ac47d3375e4620ec6118f6ebeb19d890b7075d824d",
+      "bytes": 996
+    },
+    {
+      "path": "/usr/lib/lua/luci/view/egressveil/style.htm",
+      "sha256": "1a9e834679d61c28dd28cf5452f49a37ca1c0911a2d5868d33c1f8d0552b0ac3",
+      "bytes": 174
+    },
+    {
+      "path": "/usr/lib/lua/luci/view/openclash/cfg_check.htm",
+      "sha256": "d1e9bdc4a798e207a0139f8f9ee52a85c874e9a730f1a0287dbef4b566109c0b",
+      "bytes": 262
+    },
+    {
+      "path": "/usr/lib/lua/luci/view/openclash/config_edit.htm",
+      "sha256": "97d60b6c8ede21cdd010942b5ae891c43b1be56755b0c615025bf6ebfd245711",
+      "bytes": 4792
+    },
+    {
+      "path": "/usr/lib/lua/luci/view/openclash/config_editor.htm",
+      "sha256": "b7db4b3a9cc6295a7969d6f60238806f9803133ca81f19657439c6e953ae20c1",
+      "bytes": 3710
+    },
+    {
+      "path": "/usr/lib/lua/luci/view/openclash/config_merge_editor.htm",
+      "sha256": "41ca6ff6e640a4ee18fbcb94db7bb75cd2ee705d1375344361f95b4021c76634",
+      "bytes": 2547
+    },
+    {
+      "path": "/usr/lib/lua/luci/view/openclash/config_upload.htm",
+      "sha256": "239f5954995587afa3e36ef4ce993444c370d0d27a87df5643f6fda796738d1b",
+      "bytes": 35672
+    },
+    {
+      "path": "/usr/lib/lua/luci/view/openclash/debug.htm",
+      "sha256": "8edda3b541876f80b04f93d3d9f786dc04a8f82d9f795e5c39b84a395386c74b",
+      "bytes": 5806
+    },
+    {
+      "path": "/usr/lib/lua/luci/view/openclash/developer.htm",
+      "sha256": "b1f423c6020cab5be19c6f8988fef8aa51e0e2014e0134ad9eccf0121c29498e",
+      "bytes": 8422
+    },
+    {
+      "path": "/usr/lib/lua/luci/view/openclash/flush_dns_cache.htm",
+      "sha256": "b49c5b941c130e2b9dbe4be944f69bf4f6d9a3b0e636f07af0160a914f6af0ce",
+      "bytes": 1147
+    },
+    {
+      "path": "/usr/lib/lua/luci/view/openclash/flush_smart_cache.htm",
+      "sha256": "244b20059cb6ddf4beba15ac19f3c0ec27ef640d7345fa712b93d67d4b837454",
+      "bytes": 1130
+    },
+    {
+      "path": "/usr/lib/lua/luci/view/openclash/generate_age.htm",
+      "sha256": "ac8ab7ba9a819a459a73793147b06a863cfef8116bbff693d555c923be352624",
+      "bytes": 3314
+    },
+    {
+      "path": "/usr/lib/lua/luci/view/openclash/guide.htm",
+      "sha256": "8c156648016cd38ac8c91617d24f74e17fadcc87a624db81c74897270cae9c2d",
+      "bytes": 430
+    },
+    {
+      "path": "/usr/lib/lua/luci/view/openclash/input_file_name.htm",
+      "sha256": "84082d86a0089147e32e2ea16b2bdc95c300209e93c791cdca2e8321f388384e",
+      "bytes": 781
+    },
+    {
+      "path": "/usr/lib/lua/luci/view/openclash/input_rename.htm",
+      "sha256": "1f288a4159f277fea6444424673929a51e1344ce25074639632908b5fa32f6bd",
+      "bytes": 1003
+    },
+    {
+      "path": "/usr/lib/lua/luci/view/openclash/log.htm",
+      "sha256": "7570aa51a9576c2565fe2c9132a3b93d6e0e1cd5e1c770f94b80147a632ab34a",
+      "bytes": 4410
+    },
+    {
+      "path": "/usr/lib/lua/luci/view/openclash/myip.htm",
+      "sha256": "59b25385aa8817aba8e5051fb7f37221db02fcdb391d92adf165b72bfefba1d6",
+      "bytes": 11774
+    },
+    {
+      "path": "/usr/lib/lua/luci/view/openclash/oix_login.htm",
+      "sha256": "66fe356eeebc373267bf659c97e7eac7c2033797493781179f083f88b24c09f5",
+      "bytes": 11754
+    },
+    {
+      "path": "/usr/lib/lua/luci/view/openclash/oixcloud.htm",
+      "sha256": "f17a66a708b02ad922346f33c892b7407c5e3e5b98bd5cf0190085944daafb1b",
+      "bytes": 12585
+    },
+    {
+      "path": "/usr/lib/lua/luci/view/openclash/other_stream_option.htm",
+      "sha256": "fe139086b75e927c49e85c38af0b8adf1e72c04b8bc1d5e2e83ee17d55ec2d50",
+      "bytes": 1240
+    },
+    {
+      "path": "/usr/lib/lua/luci/view/openclash/server_url.htm",
+      "sha256": "60db4c562960457c34dd379bc29bd2d042febafe4dd81084fbbeffdaa37d90a3",
+      "bytes": 513
+    },
+    {
+      "path": "/usr/lib/lua/luci/view/openclash/status.htm",
+      "sha256": "5d222f62a7ee2234ffdb3e5649f4dedf8fce5baa9d574d6368ddff77ed1f0def",
+      "bytes": 36530
+    },
+    {
+      "path": "/usr/lib/lua/luci/view/openclash/sub_info_show.htm",
+      "sha256": "5ee62a77012ab6b60043e928f237ec0aa2b7f8b41fe5899773bc4917397c4535",
+      "bytes": 14001
+    },
+    {
+      "path": "/usr/lib/lua/luci/view/openclash/subconverter_version.htm",
+      "sha256": "e3dfb26b2607e7b3df1422f3309d9dd12cb023c55d51e6d85d7c2b801b9cd39e",
+      "bytes": 1492
+    },
+    {
+      "path": "/usr/lib/lua/luci/view/openclash/switch_dashboard.htm",
+      "sha256": "16a70b598a6ab599b5928be51bfae0f17b1ff1795e77265e876b458a8ed96ae1",
+      "bytes": 6688
+    },
+    {
+      "path": "/usr/lib/lua/luci/view/openclash/switch_mode.htm",
+      "sha256": "e24b32a3ce80e56072f5f024599e8e5358160add14048b45e71f01b8c3586f0d",
+      "bytes": 2000
+    },
+    {
+      "path": "/usr/lib/lua/luci/view/openclash/tblsection.htm",
+      "sha256": "87ae417a43ae7bb60284f3493bf2c3f15ec741c459c3cf8bd17b890105596f6f",
+      "bytes": 23273
+    },
+    {
+      "path": "/usr/lib/lua/luci/view/openclash/update.htm",
+      "sha256": "a4d7eba7a9af302861c980f717b309b879e775972117f821323227eed22c1c0b",
+      "bytes": 15106
+    },
+    {
+      "path": "/usr/lib/lua/luci/view/openclash/update_config.htm",
+      "sha256": "00222ab00a788ec94494a77700d7c2fe45acfe42b2699688a0e2bf1c9cc0fa76",
+      "bytes": 1080
+    },
+    {
+      "path": "/usr/lib/lua/luci/view/openclash/upload.htm",
+      "sha256": "33fac10927836545e8631e0c0e654413ede39ef149376b5c1df0118b3b630d23",
+      "bytes": 6114
+    },
+    {
+      "path": "/usr/libexec/egressveil/boot-retry",
+      "sha256": "68f52d8a3d7ffeacdfd8c44f0accd9d94c708deff9c90c74474ae9948d4f217c",
+      "bytes": 1640
+    },
+    {
+      "path": "/usr/libexec/egressveil/config.rb",
+      "sha256": "2112601f0c9f2233d26cfad78dcedd5cc8252c67408fc522bdb26a3d824a093a",
+      "bytes": 10478
+    },
+    {
+      "path": "/usr/libexec/egressveil/controller",
+      "sha256": "6d98fac3339d4ce787281894d61f0a710a91afe170215c0b851de2c66b234fd2",
+      "bytes": 6447252
+    },
+    {
+      "path": "/usr/libexec/egressveil/docker-init.rb",
+      "sha256": "8d5c0050b3e2015c3fe8fda275a3c8a9d9bbfa076daa17be6789b2cceb43fbc8",
+      "bytes": 2196
+    },
+    {
+      "path": "/usr/libexec/egressveil/setup",
+      "sha256": "e4a2ca22caa6f20aef54f0b94c646a375da6b31f50e062edc901d302c794085c",
+      "bytes": 13782
+    },
+    {
+      "path": "/usr/libexec/egressveil/ui-apply",
+      "sha256": "f2d322b268242889368e97dd564de5b378a9c87a189a3d9e8218c177b07d069d",
+      "bytes": 549
+    },
+    {
+      "path": "/usr/libexec/egressveil/ui-status",
+      "sha256": "656ec9123691ffd51633ba8948ebd8aff27bdfcd243faba6a29a18a9731584f1",
+      "bytes": 899
+    },
+    {
+      "path": "/usr/libexec/egressveil/ui-status.rb",
+      "sha256": "cd168be564ae1a080f5179a5084a76b47e87392018c4c7d971402bdc00694a34",
+      "bytes": 945
+    },
+    {
+      "path": "/usr/libexec/ua3f-bridge-policy/bridge-audit",
+      "sha256": "65286eff0e19db3b380c83f778e2dad90a4725ec57d412c1deb14a1f00357690",
+      "bytes": 6328468
+    },
+    {
+      "path": "/usr/libexec/ua3f-bridge-policy/bridge-policy",
+      "sha256": "d61038f52f845682893d1d17521637712a391006893a82dd8d03ccf506ed7bb8",
+      "bytes": 5302
+    },
+    {
+      "path": "/usr/libexec/ua3f-bridge-policy/dockerd-launch",
+      "sha256": "894b2f16ba366352a04b40e13c6c6971409ea4e18d6f3d46b3ab3f3d6500cc72",
+      "bytes": 256
+    },
+    {
+      "path": "/usr/libexec/ua3f-integration/boot-guard",
+      "sha256": "c356802c3a9975716c041d9056849f36f7fb82b041b740a54106935ecd912930",
+      "bytes": 4653
+    },
+    {
+      "path": "/usr/libexec/ua3f-integration/clash-hook",
+      "sha256": "d502200ef0b7bed16cafd498d15baf55fcf64ab5ba58b84a927f9c180062a029",
+      "bytes": 1924
+    },
+    {
+      "path": "/usr/libexec/ua3f-integration/compat-delivery",
+      "sha256": "507560440faed520664858e80b48e93ba5a5d7f19651e3bab6aa5960d8719b14",
+      "bytes": 3654
+    },
+    {
+      "path": "/usr/libexec/ua3f-integration/dns-nat-guard",
+      "sha256": "f17a97eb020fba54778475d1aa0aaa0bed14fb2d125c84f96acc3577d378bf1a",
+      "bytes": 4813
+    },
+    {
+      "path": "/usr/libexec/ua3f-integration/dns-policy.rb",
+      "sha256": "4e1a2d356befb366539b43d513c88e25c6d535099ac0b0da2fcca226c61078e6",
+      "bytes": 3371
+    },
+    {
+      "path": "/usr/libexec/ua3f-integration/ethtool-feature",
+      "sha256": "f65ba4069f40542d00a9c942cb8bbe85d1a8cc9e0baa18fce93c23e8215e0895",
+      "bytes": 1843384
+    },
+    {
+      "path": "/usr/libexec/ua3f-integration/firewall",
+      "sha256": "5984b173a414f3543564b6b1d6933d372514e46e0ac915a4ce8765da865d155f",
+      "bytes": 12687
+    },
+    {
+      "path": "/usr/libexec/ua3f-integration/firewall-reload-hook",
+      "sha256": "196b2c6197b7c2bf5ec6db64f748a90e7e1cacb26e74be42a50547f29c233bc8",
+      "bytes": 634
+    },
+    {
+      "path": "/usr/libexec/ua3f-integration/launch",
+      "sha256": "861b33ab11de331f55c13b3321cc6d3e5d31b589870c57636e85252d142db82b",
+      "bytes": 176
+    },
+    {
+      "path": "/usr/libexec/ua3f-integration/pre-clash",
+      "sha256": "76ec5cd308f7954723ded4a91b3519618f9f3fc8c7a4fdc451d87a35495cf9b7",
+      "bytes": 4065
+    },
+    {
+      "path": "/usr/libexec/ua3f-integration/runtime",
+      "sha256": "7b15a9aeff49fdd91305e1c92a22625d28258b798dbda887752ad1ff5ad1f407",
+      "bytes": 5543
+    },
+    {
+      "path": "/usr/libexec/ua3f-integration/ttl-policy",
+      "sha256": "cad886404ba8fc3d5624d08ee5ea0839cf7c76751431de56d1a68de4d47c1005",
+      "bytes": 3285140
+    },
+    {
+      "path": "/usr/libexec/ua3f-integration/udp-target-policy.rb",
+      "sha256": "7032765d0fd9f1fde72792145c68a46bc2cdcfa7f31400499de5ce4cff1f532a",
+      "bytes": 522
+    },
+    {
+      "path": "/usr/libexec/ua3f-integration/wait-ready",
+      "sha256": "14df6c8ef8ed8d22935275c100ec3e6488a97f16239a96de51bd32da14f49b95",
+      "bytes": 2931
+    },
+    {
+      "path": "/usr/share/egressveil/LICENSES/dependencies/01-LICENSE",
+      "sha256": "911f8f5782931320f5b8d1160a76365b83aea6447ee6c04fa6d5591467db9dad",
+      "bytes": 1453
+    },
+    {
+      "path": "/usr/share/egressveil/LICENSES/dependencies/02-LICENSE",
+      "sha256": "04cf148229e562c643203d1ee8c43aae2022e5130e95ceb8ba8357a27c1a9abe",
+      "bytes": 10796
+    },
+    {
+      "path": "/usr/share/egressveil/LICENSES/EgressVeil-GPL-3.0.txt",
+      "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
+      "bytes": 35149
+    },
+    {
+      "path": "/usr/share/egressveil/LICENSES/Metacubexd-MIT.txt",
+      "sha256": "cd0735ba06f26a0008bbca399890c7ca87fe129aacc302c2e33fb03e60a4e8c3",
+      "bytes": 1096
+    },
+    {
+      "path": "/usr/share/egressveil/LICENSES/Mihomo-GPL-3.0.txt",
+      "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
+      "bytes": 35149
+    },
+    {
+      "path": "/usr/share/egressveil/LICENSES/OpenClash-MIT.txt",
+      "sha256": "bf598f1d704d1a9adbef8eb382b63aee036b500ad11e673f6e5f9e15dda7885d",
+      "bytes": 1071
+    },
+    {
+      "path": "/usr/share/egressveil/LICENSES/UA3F-GPL-3.0.txt",
+      "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
+      "bytes": 35149
+    },
+    {
+      "path": "/usr/share/egressveil/LICENSES/Zashboard-MIT.txt",
+      "sha256": "ffc390eec51f16b58506b1a42c99fe0cd9ffea1e3081aab443100fd8c20182d9",
+      "bytes": 1058
+    },
+    {
+      "path": "/usr/share/egressveil/NOTICE",
+      "sha256": "7a6197d98571e31c343d5c60ddc06ab46b8c7033b749b387d27e7516172bea03",
+      "bytes": 2154
+    },
+    {
+      "path": "/usr/share/egressveil/VERSION",
+      "sha256": "4db65c5d397274b0b65bb5efc18793d9c556d0dbc4b94b5c35aecfa6f7abd0bc",
+      "bytes": 63
+    },
+    {
+      "path": "/usr/share/openclash/log.sh",
+      "sha256": "b59f3a673c0922c666d00d94eb7962c86ee1138ad22e47538facc6cdf885b5c2",
+      "bytes": 1115
+    },
+    {
+      "path": "/usr/share/openclash/openclash.sh",
+      "sha256": "64214ab550a69345323fc91a924ed99f9e35c4a658c72dcb862ae1ed17867082",
+      "bytes": 16282
+    },
+    {
+      "path": "/usr/share/openclash/openclash_chnroute.sh",
+      "sha256": "ba7c171c7a30f2ef776727f536995a833c67ab1e5ea97ad15b3537e3fbdd343d",
+      "bytes": 4813
+    },
+    {
+      "path": "/usr/share/openclash/openclash_core.sh",
+      "sha256": "66d7130b23947a23d255ed2d57f2da0bb3feabbae1fd88af4f81d3de746e6189",
+      "bytes": 9315
+    },
+    {
+      "path": "/usr/share/openclash/openclash_curl.sh",
+      "sha256": "f8cfe5f4a5d97d0d40ffbb64373a7c048894653206084297f8fcc0204ac25ddb",
+      "bytes": 11319
+    },
+    {
+      "path": "/usr/share/openclash/openclash_custom_domain_dns.sh",
+      "sha256": "4bbc7cd3fcdde20f598495264f6db9c6007b5acb7b760e9d99c03ae8d64323cf",
+      "bytes": 1571
+    },
+    {
+      "path": "/usr/share/openclash/openclash_debug.sh",
+      "sha256": "2d23deb1c500a4e53f87f6b8c552f177eac9d336b0a3f9d68e5c9bc9955211d4",
+      "bytes": 22511
+    },
+    {
+      "path": "/usr/share/openclash/openclash_debug_dns.lua",
+      "sha256": "4ae0ffd56d8eca72ce2d022d37c9e583da3c4090aed22605ebf5a131faf2bdf9",
+      "bytes": 2603
+    },
+    {
+      "path": "/usr/share/openclash/openclash_debug_getcon.lua",
+      "sha256": "006abebb90884c436d6723d5a7914a356fd37ea717ec4cb10105e9ddf9c7010b",
+      "bytes": 3598
+    },
+    {
+      "path": "/usr/share/openclash/openclash_download_dashboard.sh",
+      "sha256": "64b87c1172d09c125ab0f12057f0ce698f694931142beeacd80923fcfde2f25f",
+      "bytes": 5428
+    },
+    {
+      "path": "/usr/share/openclash/openclash_etag.sh",
+      "sha256": "e939a8f3005877f08b575f1a8b334e4cf117a50c8c53f5be6bbb8c492ea496f7",
+      "bytes": 2360
+    },
+    {
+      "path": "/usr/share/openclash/openclash_geo.sh",
+      "sha256": "b0eb374c8868ef06b0673eb14f349dd19dc39fb07228968a3b53bf264e261bdd",
+      "bytes": 6998
+    },
+    {
+      "path": "/usr/share/openclash/openclash_get_network.lua",
+      "sha256": "4ef4075c8e02f8f2f9581ab345195cd373e0e0191d013366224ea208df588e0e",
+      "bytes": 4709
+    },
+    {
+      "path": "/usr/share/openclash/openclash_history_get.sh",
+      "sha256": "7674a60f78d3b8a91ef81eb3e72e444caf2989732fbf908d325339060a97122d",
+      "bytes": 2927
+    },
+    {
+      "path": "/usr/share/openclash/openclash_lgbm.sh",
+      "sha256": "91c169b0d73a918ec6743c681350ef997313bf8b43bfbc46b81680dd416c962f",
+      "bytes": 1777
+    },
+    {
+      "path": "/usr/share/openclash/openclash_nginx.sh",
+      "sha256": "60ee071c7a1b6ab7ea34d64825eeb9fadab1ba37e76bb04a0b16cd0523011608",
+      "bytes": 1080
+    },
+    {
+      "path": "/usr/share/openclash/openclash_oix_checkin.lua",
+      "sha256": "198990e2c1b4b074027a109fc301523f69b3f8349af42d1980d27c3759e0c6da",
+      "bytes": 1793
+    },
+    {
+      "path": "/usr/share/openclash/openclash_ps.sh",
+      "sha256": "9730659a54f097a2c5f2aacf64ddd8f0e7399a6f520cd84ac057b232f6c4427f",
+      "bytes": 2125
+    },
+    {
+      "path": "/usr/share/openclash/openclash_streaming_unlock.lua",
+      "sha256": "19b3b4783d0721802ceac83ec22910b82e981ccefbd4a25c6a19b817529f43cf",
+      "bytes": 69386
+    },
+    {
+      "path": "/usr/share/openclash/openclash_sub_parser.lua",
+      "sha256": "a9eacd9d75ff15cc81c66d33c3899ad69bf892dc2258b948110819a1de6e7ba1",
+      "bytes": 6373
+    },
+    {
+      "path": "/usr/share/openclash/openclash_update.sh",
+      "sha256": "391f14bd749062975a98a10fb7aea3b843cad3544a7b52313ed9d846463dca6c",
+      "bytes": 18527
+    },
+    {
+      "path": "/usr/share/openclash/openclash_urlencode.lua",
+      "sha256": "5cfd9423778cdfdc9dc9ad292642ef5bdab64710bbcd7f9a1bd51549582a9bba",
+      "bytes": 201
+    },
+    {
+      "path": "/usr/share/openclash/openclash_version.lua",
+      "sha256": "c7da7f4978ea144609b279e54ebb2b5b230c6e895fab3a1ca6e04e5d3e98a738",
+      "bytes": 17470
+    },
+    {
+      "path": "/usr/share/openclash/openclash_watchdog.sh",
+      "sha256": "43eb4949cb6ebeaa4a02bdc43a1320f9a6ec19f7a441133e84506d37f6634582",
+      "bytes": 25676
+    },
+    {
+      "path": "/usr/share/openclash/res/cdn.list",
+      "sha256": "98f0831ec98641b0190ad78a31462b62ed04b937678d87b58c55a0a0b64b2b9e",
+      "bytes": 564
+    },
+    {
+      "path": "/usr/share/openclash/res/default.yaml",
+      "sha256": "ead88b1776a06af9330d6078412c6a51a41aac51a3e47f84985d48ad0027802e",
+      "bytes": 108758
+    },
+    {
+      "path": "/usr/share/openclash/res/sub_ini.list",
+      "sha256": "22dfd72b51cb17fba89d8b742b0b286d259ee653628228addccd6d46a2fbfe05",
+      "bytes": 6829
+    },
+    {
+      "path": "/usr/share/openclash/ruby.sh",
+      "sha256": "a96a71acb02b204801cbdc1547272b6c5ce97f0204ea8c0632f2cc72e4e1d40e",
+      "bytes": 2667
+    },
+    {
+      "path": "/usr/share/openclash/uci.rb",
+      "sha256": "b343bf5718604e77388eef1e8946c685ca23288e9777f90a7b71d7db35ea22ed",
+      "bytes": 75766
+    },
+    {
+      "path": "/usr/share/openclash/uci.sh",
+      "sha256": "5808e5b56f742362b939b2ad4986c1b92ff529afaf5c0c3495d4ce32e8966852",
+      "bytes": 5113
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/200.html",
+      "sha256": "527141f9146557a6f074406f5743d9bc2fa1705e2bc1b34f2716a5e3944e90f5",
+      "bytes": 5359
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/404.html",
+      "sha256": "a36465d52fa4101101e7e78997f71d1400fb6b3e4c12a5d43eb8556abf3ffef3",
+      "bytes": 5359
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_fonts/0BHDupFl2CWCe8Ht57JjRElqtRm4w3OaWdbdbcYNe7M-_Zv4nKkXFw7udPt2Y9VUPPAAPn5xlSz7-MFfN2mU3Lw.woff2",
+      "sha256": "55c1583c7c6b02dac0b6c4bbd7306471fa508708fe4ff80bbb480a415fed6261",
+      "bytes": 8496
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_fonts/2jtKtjn0jVUoC-Z7Cf8SbbyAq7lWLO_YmjHrE0jt6os-s_gu8XvkQiqM_341oryL2NWuuio3LSudT9bWkGkZuLQ.woff2",
+      "sha256": "1765c67da4a24fc6d9dc3cd16484fe694106495423e45412dc6a986cc6928fd5",
+      "bytes": 14088
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_fonts/2uj_NkgfcQ3iYnC8ta4ZjyGs0SQG5G8mTV9oTj2xhdk-OwpznulC9p3zW2ObRx0B51k6g1pPy2dUscCCpm_AchI.woff2",
+      "sha256": "9793934b327d48e4c2f206d37f50bea50de1bce47d6ad98d94276101054b0743",
+      "bytes": 14264
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_fonts/4LCKN0m2mWPjCD0Vg9ZxJ8hmIpE4ZUvT6wD610sQ3xQ-Tvw7sjBhFGZ6EWRXywmjm7BQjP55tT_R9T6v5YfzwGo.woff2",
+      "sha256": "c0a43c2ed13c456b3a4afa5db09b77403855dd3359576daf453674af5e766fea",
+      "bytes": 17752
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_fonts/5Uc1gNFjdWhvWuSCZAsc_KC7PRQ8dSy-6_2-9J2yfkk-j1Y4C4rMRleKY2joVhkot9UpPmfABEsrsuDfKG3QJIE.woff2",
+      "sha256": "ba727f8f8dd358cad58f6bb04a6f871c923cdd1028bf30f174cb87aa61f0a1ec",
+      "bytes": 15428
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_fonts/7w4X4tGJFS7OWo1GoNl6cvsXligoB8Z-xWbQFrYWGQE-8h5xTfzAA_h9VIWTxNB67Ucry5cQRTjJhoZaHShhl5M.woff2",
+      "sha256": "e7470f55e2d3ae3338429b3932033b812d131a1e0474984db1b813a93b1bb521",
+      "bytes": 19840
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_fonts/8jC3-1nM22MOOOUOpFvcJfCmHgDwWxJS8N7UggifZYY-asoANahgLf4q1qOPyngavpeqon9_izlETTXfe5Ithr8.woff2",
+      "sha256": "4205f8597b13d869b9418ecac1d9f3621dcd196285d729c51cb34ff5099cba0d",
+      "bytes": 16892
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_fonts/8ttekgdTgvCkovyeTQZqskfy0dYRy5afQbIR-nG3XpQ-jRXYNQM2VwQOkADB_pwchHeF2Q0ISvsVs_wFd6FiS6k.woff2",
+      "sha256": "ca540bebea0f1d4865e53fb24cc277f27b1431f35e49cab2431f15e1bf0e3ce8",
+      "bytes": 9716
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_fonts/94jBSMN2q8k-mwt9PC-tVG5Xs5k1rEBNDrP9eoW_4DA-j1W30ucBnsJtpkDfRSNomos9AEfcvtgDfyyX4SKhBDE.woff2",
+      "sha256": "69592fce9d29a2002cc7f248916c4c75f0dc386bd61b553cec68b021d0dcaa7a",
+      "bytes": 14776
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_fonts/9ZFRJH8Df7SbrP8j5KgC-ZLn9gb1pCWo8G9nFtxgcMQ-EyGwRsKbziIn3DnympkstqXjIDKYICanPtmtVOnxkSA.woff2",
+      "sha256": "39dd78306b58e45cd666ea75964f405fa5957b53af75c024f8adc1f3fe1e6a48",
+      "bytes": 14920
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_fonts/asDbZN4mAiciWG8XORT25XqmGyK-zogmTYnblp3pVF4-FGfuoN0TSZzxs0_GHKLx4D-M9Hqhp_fbCODfd4SlMpo.woff2",
+      "sha256": "53bb1d8e5d2a0fc7342b7ec6e818441ffd3a432ae6afb410ff5f745695dfd148",
+      "bytes": 19444
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_fonts/AsEJQEfkU0qunVYWAPueu8RGAg5hTo3kNzUt6XTw0zM-IOANSBgts8tg6KjK82QaqLoQyM_hFwYy9TaiQ_I2uRc.woff2",
+      "sha256": "056bae6211b7538a4950b91d8d7b6e3cfee1e2059379d35866f89031af612afc",
+      "bytes": 9080
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_fonts/AsIupFAeXnc8EeKJ3Bzhy5tKUlFo3vxm7xHaubFA08A-YrRsOOt3iKCLcm2Pu5fqAAkM_bVZsGPdTiJpxDjXDoc.woff2",
+      "sha256": "13e12b77e81c756c20023df4e9c2e499b7ec1f26cf5f9c8a0e9a7adca7ec202f",
+      "bytes": 8760
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_fonts/cG9bT2Rs2wiXiudTcBbVHAP8NMYWSL32yGVzrjFKb4M-8cAYaNW_GKa8bPWNt62mbVYKHutBAOOXFILll_PsRU0.woff2",
+      "sha256": "da658f691d64db3f9e8270481f579505df47fa462b79cfe7d17b0355ae0ab226",
+      "bytes": 8824
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_fonts/CkxZ8SnY8ZppZqgQG8swA5c-q9nVbv-9vyoUoPla7JI-RdFZKpBPbhkz_K7cepi8LXb_TOmZ5GL0GmK_cjXd1qo.woff2",
+      "sha256": "479634ac3002e7ecff71d50d716e674338e04b5a5c54504b09af298e3ce74224",
+      "bytes": 8504
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_fonts/dSpBk9EdNZcjl8BVvxvaTZugpF82DPW56k94wdlcmEc-O8K0fmcIPYdTe6plKwcD69_SoxqvChiImre8p6VPPKk.woff2",
+      "sha256": "e8f6e58243e162464daa2326059b8772fea0f2d0ef8c4abd0d36ce3be829ae63",
+      "bytes": 7828
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_fonts/DzszzorZ5O_YqWq6oS8V82335SNybMUhSCcSYa40KQM-jnTR4jvLVmdaih6m51J9wjp8ghB9NSpItDVLjTnoTO8.woff2",
+      "sha256": "1c002267d38bdd3b63df918e184809395cb9b81323604843828a061e6c3c4f80",
+      "bytes": 18760
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_fonts/FgiUOrCnyqHgSsiMw3bPlXJv0qHxBYl0440tdW9jAwM-R9dtGSBkuEEiILTacQhp8WyE02txSq3B7JfOfXDW_uY.woff2",
+      "sha256": "28e7b686ca1d904569df2ba4fd088b35d548c6ac92412e29e8a8c9d002fe3d64",
+      "bytes": 15268
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_fonts/g7BqkA7uFNDI7eI1pzx_5kzyxVueaAPKInjDHKnyCVE-rhGg5KPGrwlT4UBKeLa0Nc37lA7xFq5WcK5PZmLJfWQ.woff2",
+      "sha256": "36f40e6f1911bd47ee8a0a3eb0ee900a90ea630c46af014c0d7bb4ec14ae222a",
+      "bytes": 9228
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_fonts/HHVyYFetjSnAMoAsHyG7VlXWlW9HR9skWh_RgpLlAk4-yHQGjuyu1IMhLHv6ZZLXBV2M_ez3NlJHg7ho0MHGhhc.woff2",
+      "sha256": "d4e15efbf856de4a38411398f91c48e233589c2a711bc5da3979baa418756abc",
+      "bytes": 8888
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_fonts/icpQ3IFJA0mIrVln0qyi-EvCdm5pv5oS__KZwBVcj2o-3UqbZ1wQb8y3GLqtWlf20RgFLj861gtVRD9IWIxUygk.woff2",
+      "sha256": "a0978eaed1743c057effc36acc44e2cc30461be267c8bba5fd370e02861650c8",
+      "bytes": 14708
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_fonts/jyn5EWxbXux8roFTYzZO9pZ0sYE58a7qdf4QyvFsFHc-vDZ7Zk0QlPIOPQcacDE30IaDsklbi0tTxrsa_V_OVjg.woff2",
+      "sha256": "6a8caadf9c9202af350bc97e2062fa01035ac5f520848804c5ae564c06137431",
+      "bytes": 17420
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_fonts/KMzk6ptaouoRl0pusYNLIoZ27ufg20n7FjJ0r-jWX24-evmKS3cTd7KDwv5oVFiF4mwiN1qzHIYcMr18MtkX_YU.woff2",
+      "sha256": "43f3f6be6257ac876893185876536f5540f98e50b2238417ac9f7a44deb37f91",
+      "bytes": 8004
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_fonts/LOyDiycmdc284_x2PD8CKYz5cDiR1bvb6TdlwA0zW0s-ap4WMcTz1MBJHpMZlE5MzrbWeElXKfB4EeQJuwR793A.woff2",
+      "sha256": "96a4c8f5874f09ed2845a4c1d9caa0fbb082c004e666560f7566cdb7da397a64",
+      "bytes": 8648
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_fonts/mUm0eTfamh3-N48vpdGRyU1-8P_4QNM1H-GR9VkmaVo-E21d7LMNlUytZ2o2uaz6GXP771FCmWYkyio2ejxryFg.woff2",
+      "sha256": "71d8784956df557797413e953f79e9c3762e0ac2b52a2d22af9cf9cc1d52a2a1",
+      "bytes": 7816
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_fonts/nArJRSx2Q24CGpdJJWGwkxKDhHq0xGvqfIamLxzjDjo-Mltmvj57qb9_unPzZYqCLr-qzIs90nwFqUYE1Tl0eYw.woff2",
+      "sha256": "29378bb033f20552b17f3ffd9362e124ccbb35ee22408f52a8eaa389fddfafe9",
+      "bytes": 14040
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_fonts/OfcLxPoYN4z-8y8M9zu0Lgp54b5Y92RcBeUfxpfwMDY-0y0pF9QqHnKQaabEVfxS1MzVRmO0Jc_zlIZi74obv3Y.woff2",
+      "sha256": "e0f6ff05b117cda53a69c0e23427b65a664a17a3758655046168af1c14490a3d",
+      "bytes": 18296
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_fonts/ofWS0IfeK_KhqRnikx2Co7qe5YKZmoqGqoP4DSYij1U-_ofRanqowt6OGJBwb7qtGvU6ktG24_LiXZazouoWpDY.woff2",
+      "sha256": "d8f4fd071ae2e182b45a1c7f521bf99ba1792af3f532148b537a93a19431984a",
+      "bytes": 8844
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_fonts/Uq9LPEX26JTSK0gaNQn_6Z3pVOPFb1aIFVxuUFAjYBE-TDIVAiZtfw7lleo9WReLlozuDd68_MbAu2ZRGoMRkdc.woff2",
+      "sha256": "09193112c3fc60c972c90a14becd364a3ff44c1c751360e840e5648cf0ebc99e",
+      "bytes": 8116
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_fonts/vFJFVYMeF4SNq9_9jbsFgjkWqsj7xU4tgEc8hk6bKvA-uG8FVyK2fumEENugz2bwVrLqwY7YVP0g_t2oyGuwO9Q.woff2",
+      "sha256": "8180624765f9f5aa064eea8e23b36d81ab786f8d008c1e850cc83d2b942a2184",
+      "bytes": 9524
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_fonts/xFR3Nl6fsInXTackRCpfgVTJKL8DQxw-1oEkWSe9Y5I-e_L9Ue7eE-1gHzR0pCgXjLetn5FMSaElSfnTCnuDUnw.woff2",
+      "sha256": "c0733b07d87df6e8f9348757160bb7d0fedb119ed988497b355e26d6efbf24fa",
+      "bytes": 9676
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_fonts/yZXiTO8lc29KbhbsIOqgeKiLjnNedg-HOtkV0o7UtWU-nPJL30mZaI72Qy1WDkWplqib3zQz3yFnnLwvRgeFKDU.woff2",
+      "sha256": "24234b83a7def2d36b4eda9c2351d6c3d342295611c4ff5a35e40ab3841d3380",
+      "bytes": 19776
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/-gffx_nJ.js",
+      "sha256": "1a37fd27451fa0a1b741314ff937ef651c81bd328464e9fe0df076add8b9dfb6",
+      "bytes": 137
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/2sPhP1uy.js",
+      "sha256": "275dc5cff1de5796fc83101f09d9bd2562e132408354825e0ddb8e5ebf232104",
+      "bytes": 5650
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/4qo_TJow.js",
+      "sha256": "4df9fe34554bcbd7967c373c287cd4293a579386b5abf818e6b99c84667a6e32",
+      "bytes": 605
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/6NHKHhdR.js",
+      "sha256": "812454481f7029414d9f653e82ede05f1ed2da6f93fde684217a5f01c6573b4f",
+      "bytes": 41399
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/9VDUcqlT.js",
+      "sha256": "5916b0b5e1c2d57423267a2c10b3d341a81e10f537c59d43b6f1044ab9af6336",
+      "bytes": 722
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/B2CAxdfu.js",
+      "sha256": "937ebd171c09d4c41512780a9845eebd6e7d1b54eb89e0499f2c16dd87abcd2d",
+      "bytes": 699
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/B2RwuQ_Y.js",
+      "sha256": "c39501ad689cba17bada4e8e6416d1363105b6025fe3ef665b026b50d3b8b029",
+      "bytes": 1603
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/B6QmXETh.js",
+      "sha256": "a103f3ba8812c040325d44d36010b95925e86e72bfa5b87a8b471f61fd7a17fb",
+      "bytes": 203
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/B7KlE-hj.js",
+      "sha256": "486aa597b5390052e8a19b16b76728e3a2674ac1741fa1ab5b4135ce81b56d38",
+      "bytes": 187
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/B7XokPgu.js",
+      "sha256": "5b3a57c28ab50c91f8729c66023f6346f27ae51736d7f2a97cd81defe61b22de",
+      "bytes": 3898
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/B81JHF0y.js",
+      "sha256": "63fe0c2363ebf12bd90f5ae7159549b2de109912e3fba5e153d7fd9dc4e674ae",
+      "bytes": 30293
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/B_Uqu7KV.js",
+      "sha256": "e83a96022f7f5f24676cf877a74ef631eab9d238353e335e6433c6f551c149a9",
+      "bytes": 307
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/Bblt4sWU.js",
+      "sha256": "d5bf0148f463237dc3599c911d843dd1b9d675f509ddc08c1bd5dbd67decc5d1",
+      "bytes": 41856
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/BBWL5ylc.js",
+      "sha256": "35d795002f7bc909e3f052efb1e416bf67aef59bef71d49a3dd4a94f05655063",
+      "bytes": 140
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/BcyQas2p.js",
+      "sha256": "d9df57866dc202aca3ec84937b4aa684a35b076ea7d9a02d0ae39e06e1a560b5",
+      "bytes": 288
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/Bd3BWBbf.js",
+      "sha256": "407af8a0e61dbe24b20bd2c2b3f7b26dbc00952485bd881987ae8acae759a24b",
+      "bytes": 368
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/BeLoErbe.js",
+      "sha256": "b3fc060c80e87b9e078dfaad072b8b95227215af3b106f1fbd505158e2242921",
+      "bytes": 207
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/BFQOL4Dk.js",
+      "sha256": "8ca3816cd4bfc508fde476bc9b11919816c0a7cc43b4dadbb4225591f35a54e2",
+      "bytes": 45973
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/BgFH2HuY.js",
+      "sha256": "ddda9384a3ce173f907065e27941417beeab314c0214d27c75156eb2e98f5b7f",
+      "bytes": 304
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/Bi_avzX3.js",
+      "sha256": "b03d44a8c9d27436a730ebdb391a92613c70ae950c72af0d198bd5cb6b6e231d",
+      "bytes": 48796
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/BKfc0fFV.js",
+      "sha256": "f2432fe7be91c768f1c8dedc2b31f1feb3e46f9a257b78f430c836943fafd498",
+      "bytes": 53250
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/BnzenBa1.js",
+      "sha256": "44619bf3a4bf286b0eeb1592e46485e48ad395d902f6bbcb4f621514aa1810f4",
+      "bytes": 2464
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/Bo2WL74_.js",
+      "sha256": "11f79c19075cb35b07427a71dd537e49c94105631143267420487ce4be6dcd48",
+      "bytes": 1659
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/BO3rEkig.js",
+      "sha256": "be42032fce142d876d2a048311fd9eccf85d698a563c2032bb87b3af67241405",
+      "bytes": 237
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/BOuC2ZS2.js",
+      "sha256": "c9c62c9b2a9f35d86c5dd2bdb6819eae128920f727dca7aa56c3288700815e76",
+      "bytes": 1327
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/BQDPwKZT.js",
+      "sha256": "be6f8c1596eaa513ee13f430ad3686368bc2042322968f5feb6625e6db2964b1",
+      "bytes": 278223
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/bTUPykUw.js",
+      "sha256": "50513f41e02ffb3a934ce1faf5267d9b4ba4dd8b598f153691a04961843da114",
+      "bytes": 2968
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/Button.D9vsIAbY.css",
+      "sha256": "a1ba143fa344e1b5eb871b46750c06e8fdcf442de40427d115e50e6fecd1fdd7",
+      "bytes": 630
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/C-1o3f6S.js",
+      "sha256": "bca58060aca9c7d4b6f9cff1a279fb11fe4c40bb692541fdbaa34b2dc4ea8303",
+      "bytes": 220
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/C1hicTaW.js",
+      "sha256": "06887b1d49370e3c417ba19aae720c2582c49138976651552d6bf1b2a796c1e2",
+      "bytes": 37378
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/C1OqGxPv.js",
+      "sha256": "7c3c2313399c355480bc2b8ff2ccf219f9a95cc8810dc02af96a7ebf0c6de74f",
+      "bytes": 126633
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/C62kyCLo.js",
+      "sha256": "00dcbc661eb8cdb9e1aa71ec37b8699845c9e988bae585d6563202d2bef2234e",
+      "bytes": 928
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/C9JB5ckZ.js",
+      "sha256": "ea688a04abccafa06213414df0a61b2b9592243eff6a5a0d3a067ba276f6154d",
+      "bytes": 1008
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/C9XSDi89.js",
+      "sha256": "ce780cf966152023051e1b802c39fc184e875e15fd95ed2ee009a4427ba31177",
+      "bytes": 18794
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/Cb77PmyL.js",
+      "sha256": "7d534ee0cd310a9daabbbd2e777cfdcd45b92729227e8b987ec9406166006156",
+      "bytes": 27176
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/Ccqxoc3l.js",
+      "sha256": "3e4fe5920532fd5a4dadb9df88897f93094ba216d1c5bb2f948a5bec5b864079",
+      "bytes": 51689
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/CfeO-LkQ.js",
+      "sha256": "e80b60e199514927a0642d4f303048ef34fe28257f6ccc62fdef70174dcd318c",
+      "bytes": 566
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/CFNiPofZ.js",
+      "sha256": "5ae91135f21f704504c080f73d8a69a4cd1c991a2626d3816be2ec98a018699a",
+      "bytes": 536
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/CH4rSyzB.js",
+      "sha256": "3f7dbf9f9f11500e560063563b6b313fe0c1a01ae2656baf94d1c4a3d977dd84",
+      "bytes": 233
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/Ciqi3uZL.js",
+      "sha256": "51c0e39723ff207aba1ea19aac3649be8eb6259e04e638caeae705ef142c2dd5",
+      "bytes": 325
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/CJVTGQb5.js",
+      "sha256": "e6fe92893868eb0716b19180c9febc8ccfd3c422dab9d37046d1e951747b401b",
+      "bytes": 1214
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/ClokyNUc.js",
+      "sha256": "db271cd13588cf78e5a440bffdbb1196628ebf2e2f40619e7db76261db65505a",
+      "bytes": 46189
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/CN_Nghz4.js",
+      "sha256": "f622c2b8e396d30f4cd0aa9f4e23f03f01630771d44cab35d6534de33f370fbd",
+      "bytes": 331
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/CO4wOTTu.js",
+      "sha256": "f38e6d397dbcd0280b30cb3631673e8c7995239cc39af2746bf75e2efc1f2d52",
+      "bytes": 469
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/codicon.DCmgc-ay.ttf",
+      "sha256": "0f1d5219934e96e83b8db162d60b4d8c09b5de1e7d38031cbafe4a3c0f2889c9",
+      "bytes": 80340
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/config.oXQmXwUK.css",
+      "sha256": "4e4395bbda6bafb69ad4b7490f287f1ff8c0372fbf03e4f80863d0fc20ca3236",
+      "bytes": 2127
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/connections.Cd5OCWAM.css",
+      "sha256": "7be63faa38ac61aa8ec6839022bb29434ee6ca1a500645dc42ceac635e2bce1f",
+      "bytes": 8048
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/control.D0LwdCdp.css",
+      "sha256": "ff84202050aa90e442f3743dda3a50730c7bfc869dd0c37197a37ec1ae8ede53",
+      "bytes": 448
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/CQ1kTK2S.js",
+      "sha256": "ef03c80c88a53870fb4450a47b7523081f80fb89784c04f4cff4760a5a01d707",
+      "bytes": 371
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/CqySFKrx.js",
+      "sha256": "bb4af76e2a6ceb3dce0c20d2b81483b5bcebcd6ba0ef787cdea85873d6238959",
+      "bytes": 49572
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/CR7PbbFE.js",
+      "sha256": "2df55f49925b75d93f8a0c47e8b380b20df603e8e5e116b1769e5e55cfec109c",
+      "bytes": 688
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/CraUWTpL.js",
+      "sha256": "ef5af71f33817875c0e48a774c21cec9472f0a02401fc42065f68c3e95a8de39",
+      "bytes": 386
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/Crr3u_DA.js",
+      "sha256": "79cc4df476022543c3c5f5800b4e434e1ccbbbbf320926bd22282e523ab36f53",
+      "bytes": 388
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/Cs7ANLT1.js",
+      "sha256": "3e5f9a88151bf3a400b8fffaf7ccb6cc2b11c7d8857a5e94eca7ed4135910d3e",
+      "bytes": 2295120
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/CsoAJYCJ.js",
+      "sha256": "bd28dfc128c6da7141825316f4c010a52556ca6c611b2d0f1c14569489c25c37",
+      "bytes": 489426
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/Ctgsf8FI.js",
+      "sha256": "fe11f8a563b3315d73ec424dc53058f02a236752f522d55df57424c1a0068f10",
+      "bytes": 311
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/CUvzJNAt.js",
+      "sha256": "21eaa8baba1445ca910b9cce7cf52199b14765b53a787457fd6fd8f6dd6c91e2",
+      "bytes": 980198
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/CxS9iUrV.js",
+      "sha256": "74cdae433a48d26bb79f200b299417b28eebf85b889b7dd791b36ecd45e97411",
+      "bytes": 92004
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/CYxgMHVy.js",
+      "sha256": "c963ab44d43d2d4d92fa55b0e83f99d787126c7dee2551e7ae3b10c83e233d64",
+      "bytes": 4390
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/D32eau90.js",
+      "sha256": "f8fad6c5830f132403ae3a4316bff56213a620e48fd59b743dea3f63880a2246",
+      "bytes": 23328
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/D4igTEfk.js",
+      "sha256": "2b9d6b68cbf68b464859980dbac9f5b5b5b450589655bb7446d5f04e020956f7",
+      "bytes": 500
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/D4Mckzq6.js",
+      "sha256": "9cbcb8fcbf386bcde42293b333652d38298d6a01a5f90cfda2d1157d921bc177",
+      "bytes": 3362
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/D5ekGe-U.js",
+      "sha256": "ebb1805c386a13d7daeb1f78ceb115eb3ceede275c957238003f0f757f86dc10",
+      "bytes": 3095
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/D8a5xtGw.js",
+      "sha256": "0f306aa90fb6b7085c12e965272d2559a502700fc2394f9c7da1689b8a07cf28",
+      "bytes": 125
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/D9Hoqlnw.js",
+      "sha256": "c9ae7f3d2704f4bb45d63d8686a63379a58dfe68e4f36b4d5730f5049bbcfa50",
+      "bytes": 543
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/D_AIrrR1.js",
+      "sha256": "bc278c962f02621cbeca8e8e70c19c7de4f48e530d14c72923d10d9612991767",
+      "bytes": 866
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/DcZ6ca2v.js",
+      "sha256": "bf765e114c88a26f9ba48e9f12f7c9c79fd53aabf05fb21d922d7175bc94680c",
+      "bytes": 2954
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/DEAcrcR5.js",
+      "sha256": "ac7687ee9a7dacec4185fac59d98635cc356e08ded1e658400b70c2792794800",
+      "bytes": 213
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/default.5A1GF4GB.css",
+      "sha256": "3f706f74d2b2a27521546cc994ea8db7b1006b69b71fcd2943d5ca0e3ae3745c",
+      "bytes": 3904
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/DEvTTd4d.js",
+      "sha256": "58d83c76bd1671d5cdd2ad5eb852d43fd10d09ceb44ff3c67cc702053479f7ed",
+      "bytes": 3687
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/DFKg64Ya.js",
+      "sha256": "15f1dad4004b1542f3237f324d7dd40bf90581d6f454a94595205599a30491e2",
+      "bytes": 47148
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/DFKJeFsr.js",
+      "sha256": "2427b29e819bcc537950ecb5d6e63d0a230009f1b272d21d16b837d99ec2796c",
+      "bytes": 272
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/DHkWfWu6.js",
+      "sha256": "7ea96184e5f1689425a72634bb993d1e9be50ed16196f9bc370e519ba700537c",
+      "bytes": 3871
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/Dhm-f3w4.js",
+      "sha256": "5afd17f505b8e4a5fa60be768ebbf096915d05973ae88b4dc5a4866681c4e6e2",
+      "bytes": 438091
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/DoK9qmu2.js",
+      "sha256": "4374da44f32ae36e0038db584794d12a77eb4517387aa2392c18a811e4f575d9",
+      "bytes": 55250
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/DPhPUZnp.js",
+      "sha256": "4e0c8f97273b82a59e07edbff8553c77f0fc858d70ead58490fce7ecf00c0014",
+      "bytes": 5653
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/DQmlqnM8.js",
+      "sha256": "41b6d3bbfcf4421722df1b7df6f4138f271b37926af653d5cc89c8fd37bcec17",
+      "bytes": 1607
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/DQzhxSoY.js",
+      "sha256": "6742a5d460063b9f680841fb1f6b5a0a3370e344334e72f7268d26a57dfc429a",
+      "bytes": 2664
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/DRW-0Lhn.js",
+      "sha256": "e3cfc92efa28cec474b83e21c301f8fab8b2d5062cb55eebb4c209aac18dd614",
+      "bytes": 1228
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/Due_hCGt.js",
+      "sha256": "90cd1ec8c4c8ffd93fa9183efa0582140448e3c3f1c01c99c781bedda171597a",
+      "bytes": 328
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/DuZXMLJE.js",
+      "sha256": "49b4009389b0d43cc7e115d65f3c2c3392ddfb7f2b7fa6d927d7780036f4384d",
+      "bytes": 336
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/DY6xjcCU.js",
+      "sha256": "07443698dbaf391363bcaaadbea347900405716f22d940bd630e20c5d32b46fb",
+      "bytes": 517
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/DyFRmneU.js",
+      "sha256": "5d354c2044a3850d63dadaf0acb61402be2a8c1a8b27dd156cefce8909425e4d",
+      "bytes": 229
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/DZnzKxHn.js",
+      "sha256": "1e7ee1abd72be7ce2b1da8adba653c49961c012f7ccaaa6daa205125a598f6b8",
+      "bytes": 9930
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/editor.d-_yvVgq.css",
+      "sha256": "9ce6fa9a58356a1f6fc245684628e72580aaced31b56ad58a050e9de6023542c",
+      "bytes": 68044
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/editor.worker-hV6wJDRp.js",
+      "sha256": "6bf8ffe24ba46dd51b822838260eafafc2ad910849e0954d61a59a44035140e7",
+      "bytes": 259794
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/entry.CBixxIW8.css",
+      "sha256": "66569a92bfca9fba550b684e3c1651258f28b64b59b4d2d22febf5c40250693b",
+      "bytes": 321207
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/error-404.B2f2yOK1.css",
+      "sha256": "33eb81c14028257060e4a3f7f525ee6e118d895552bb3625594014c0169bedef",
+      "bytes": 2432
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/error-500.BzL8eALg.css",
+      "sha256": "55e1521c3bec12f457269c0a4533d9c56af614de80272aa59b96f085cf0b68cc",
+      "bytes": 1909
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/logs.Q2SQK0Af.css",
+      "sha256": "0a14269d87428fec99707b675906cf09ae404e8e91ffcde8800d1d71ba625b9f",
+      "bytes": 140
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/Modal.DKesUzzi.css",
+      "sha256": "6f8d6a8b4bcb6e86cac3c8cf9bafe447309ac3391085e56a156f760bbd360f73",
+      "bytes": 1166
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/monaco-setup.COQM9i0P.css",
+      "sha256": "a73df65ba46a15e9632f579350c12fef77a149e9c0313e411cd1f73ce7f7ed3f",
+      "bytes": 63182
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/o_2HIVhZ.js",
+      "sha256": "37e580ee810ef72a830a9ca5b25c39e7e67b4b956e2daa08011938b8f18704f1",
+      "bytes": 9759
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/OnboardingEmptyState.Ct6zLkIm.css",
+      "sha256": "ede09a02dd6848b0ee7ced8003a8e13000d264f2c847ec806c9ecc0c5c9f62e8",
+      "bytes": 218
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/overview.CTR8EHmD.css",
+      "sha256": "c4006549b04c0f24685eab8dcc87bfedda5d929bc265a8eb1d52cac31075cb2a",
+      "bytes": 840
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/proxies.BLVKTTG3.css",
+      "sha256": "cfdb6aac99d81eff70e9b77a5b16280b7fddd0b0961b556cc5e5a45724416e10",
+      "bytes": 2798
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/Pzt4ggdk.js",
+      "sha256": "30fffb3d9f78ff06d31a0f2d98b6eaa8cdd620ae47400532833c9cd02ec62ddd",
+      "bytes": 944
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/qJWlEoPG.js",
+      "sha256": "af2103fa3ec178e6366d6cd47458f9a506e8cf69eb8f017e1aafa5ccc455d2bd",
+      "bytes": 135
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/R_csuFHy.js",
+      "sha256": "7d92944015ce4e423fb021be422581dcb887d6936f3a7fce5cb459aa44a6adfd",
+      "bytes": 6218
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/Rrl1Mf6E.js",
+      "sha256": "568d67939d5fba7231a8e4a26e55600f750dc833b4a3e3b4ea5b27593638cba5",
+      "bytes": 108448
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/rules.B5NWNgq3.css",
+      "sha256": "ea1683e5bfe5006e212ab60bcd7ee8adc11388973a6abb4fd492b657be9226e0",
+      "bytes": 337
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/TMkXfW8G.js",
+      "sha256": "775b5eb154387faf3e4b95db5741a67734854194e8e74fbd59b172000dd4ec9e",
+      "bytes": 83180
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/traffic.BZwB8MEO.css",
+      "sha256": "17e7bd860d8d8a7979534cefffc34cdca9fee0e331f7dcef95c3bc1fe00b6e45",
+      "bytes": 174
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/TwemojiMozilla-flags.B12sb_Bp.woff2",
+      "sha256": "c030920068cc493d59cc8c21ff29000b7a3676c40414cba7e7a5780d02f41cbf",
+      "bytes": 78308
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/useAppearance.hvmSNszs.css",
+      "sha256": "5fcfbba25f8985379701e474a02eebd7f4d909992d8b04f9ebf6f0f15ef8c931",
+      "bytes": 1591
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/VLvKerys.js",
+      "sha256": "4bc3e490ac6eb50c1270c4f01e55a57fb3439a72cf3da37baf4e7b34f24b62a9",
+      "bytes": 49891
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/VtE2iZDn.js",
+      "sha256": "dd9212cf7e08c136d0eff41af0ad4ff1b17f51105810ef139f2d9f1423383e42",
+      "bytes": 31561
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/wENznhKU.js",
+      "sha256": "698790aedd954dd1189015790e4c59c6c03842600b0f74fbc46dc07442de5498",
+      "bytes": 2770
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/x6FEGU3C.js",
+      "sha256": "43a16848caf86fd77070eae890a66e5a75278c69d0667d65bf4926d478fcd15b",
+      "bytes": 538
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/yaml.worker-DGKmOKaI.js",
+      "sha256": "711cd1e3086ed0a440ef82b16c73f7e4f74c47af92ee62eb704d01e5c9a47fbb",
+      "bytes": 1002092
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/Ycp8ahFk.js",
+      "sha256": "ed99d388ed128321e3b77f3459464c58d8771c238da2a12b88138d9c59cd905a",
+      "bytes": 2451
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/_nuxt/zCo8YTa5.js",
+      "sha256": "df2ea88c39922dc2742990812a2905161a306b540e9ab767ea7231a9044303ae",
+      "bytes": 864
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/apple-touch-icon-180x180.png",
+      "sha256": "51c6c0136cc74c59df203f2ef4c70f9074945599a1800ff2dfb07b9a3cc545a3",
+      "bytes": 1188
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/config.js",
+      "sha256": "a9218a2496b1eb935cf24f5446fd01f9118b86614e09081be16629372580d7f0",
+      "bytes": 79
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/favicon.ico",
+      "sha256": "311cd1c7f9cf4e64f27fe1269a2661f8db5ad745807106ceede3d86cf2a205df",
+      "bytes": 900
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/favicon.svg",
+      "sha256": "ca85e0c5bf0c74f00f04946ab8b2e61621836c4b2659ea370104f2ee9d2f5371",
+      "bytes": 8067
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/index.html",
+      "sha256": "a36465d52fa4101101e7e78997f71d1400fb6b3e4c12a5d43eb8556abf3ffef3",
+      "bytes": 5359
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/manifest.webmanifest",
+      "sha256": "800b9d5b8f8f38394ec618693619fbea0cf3d70edfb51c46226cbb1c768bbc6b",
+      "bytes": 445
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/maskable-icon-512x512.png",
+      "sha256": "a39792d445dd419b1834e577577f19a2098a712b79e2a99fb8d00b2ede8f25ae",
+      "bytes": 3523
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/pwa-192x192.png",
+      "sha256": "184c61ca19ce32d5a66a24e633764ffbc65478eb105136e10433b4e096c35938",
+      "bytes": 1620
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/pwa-512x512.png",
+      "sha256": "e0693d58b85c645480b5d32d7e1c4fba5a72ff2adeb04bfd7be332cf3cbee5db",
+      "bytes": 4307
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/pwa-64x64.png",
+      "sha256": "700aba166f9a611ca32cbf6391e6ed14a19ec9d3c0c157bbcc4abb972b3479e2",
+      "bytes": 622
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/sw.js",
+      "sha256": "ee76d8634b9dbe96de26e1bc041552651f83398f813880a275d37da6fd5bc834",
+      "bytes": 10928
+    },
+    {
+      "path": "/usr/share/openclash/ui/metacubexd/workbox-2fbc6a65.js",
+      "sha256": "39c2e6ae44c3f29666f6a328b6523bf13a053a1d95c74af8ddea82b1045b0b6e",
+      "bytes": 15026
+    },
+    {
+      "path": "/usr/share/openclash/ui/zashboard/apple-touch-icon.png",
+      "sha256": "1eb59e46390931b43abdb0746de0cc497f0022ec667dc513ef49a0c5f1bea228",
+      "bytes": 1556
+    },
+    {
+      "path": "/usr/share/openclash/ui/zashboard/assets/index-B-U6Un3o.css",
+      "sha256": "a73631359b9f5dbf4ee8af4e4bfbd04bd3d7bf006464c38a7d22ec744c6793ba",
+      "bytes": 561765
+    },
+    {
+      "path": "/usr/share/openclash/ui/zashboard/assets/index-CcFj958A.js",
+      "sha256": "843a62e2aaf312b82eda133d367754e1ba7015a59e03af2b53e3b488fd534f45",
+      "bytes": 1484388
+    },
+    {
+      "path": "/usr/share/openclash/ui/zashboard/assets/index-DnsHUhFc.js",
+      "sha256": "074a65bd9491ac007e9dabfc2e6f942a0b568983021f40bea4fae730eeac770f",
+      "bytes": 1286271
+    },
+    {
+      "path": "/usr/share/openclash/ui/zashboard/assets/index-DrFVUP5k.css",
+      "sha256": "0e372bea62ed0f276b614d4fb65a79ec720ef63b0ea37ce8f4f72756415408bf",
+      "bytes": 176466
+    },
+    {
+      "path": "/usr/share/openclash/ui/zashboard/assets/metacubex-BlQkOUXT.jpg",
+      "sha256": "93c2062fb4b5047a40d23696e4a21b123fde84a00c733c3b6a9ce813a3442983",
+      "bytes": 14267
+    },
+    {
+      "path": "/usr/share/openclash/ui/zashboard/assets/NotoColorEmoji-flagsonly-CWWDk9km.ttf",
+      "sha256": "bccb829e97ca446771231993cf5bff3449974851201c497be6d6d52e906aae7b",
+      "bytes": 913564
+    },
+    {
+      "path": "/usr/share/openclash/ui/zashboard/assets/TwemojiMozilla-flags-B12sb_Bp.woff2",
+      "sha256": "c030920068cc493d59cc8c21ff29000b7a3676c40414cba7e7a5780d02f41cbf",
+      "bytes": 78308
+    },
+    {
+      "path": "/usr/share/openclash/ui/zashboard/CNAME",
+      "sha256": "2a4c0524c1c7abd245195bba0bc98d05243737484b9f117a2a22e597f898381d",
+      "bytes": 20
+    },
+    {
+      "path": "/usr/share/openclash/ui/zashboard/favicon.ico",
+      "sha256": "492e8cf10b21b4484ad96c16285d2bf7bb8f8b372c1502878ba1b1f6c3873173",
+      "bytes": 1823
+    },
+    {
+      "path": "/usr/share/openclash/ui/zashboard/favicon.svg",
+      "sha256": "303f0bf729e33967667ddcd66b718dc3ba2f54abe387fe2b6f63e806e589ec52",
+      "bytes": 1211
+    },
+    {
+      "path": "/usr/share/openclash/ui/zashboard/icon.svg",
+      "sha256": "fbf65ed03158c62c2e7bfb70b875a850063786a9421915aa8bb6ad54ba70e53e",
+      "bytes": 1217
+    },
+    {
+      "path": "/usr/share/openclash/ui/zashboard/index.html",
+      "sha256": "1e75bb320066f3b54dbf05c92a5a14cf22880a150ea72d15e546f5e00fcdfc26",
+      "bytes": 1006
+    },
+    {
+      "path": "/usr/share/openclash/ui/zashboard/manifest.webmanifest",
+      "sha256": "e63808fecedb0b1787ac6103ba24c16cccc57a774e060d9517e4447ba9237a82",
+      "bytes": 570
+    },
+    {
+      "path": "/usr/share/openclash/ui/zashboard/pwa-192x192.png",
+      "sha256": "7ab62d63f1a033733f81ff5f5ef0fc12a694a566623e8060d2107bcc561441f6",
+      "bytes": 2580
+    },
+    {
+      "path": "/usr/share/openclash/ui/zashboard/pwa-512x512.png",
+      "sha256": "ceb00eb50e8bf9bb3d23826f69f8f937ed8f7eaec6ca2ee67cc1d9f04d03422e",
+      "bytes": 7404
+    },
+    {
+      "path": "/usr/share/openclash/ui/zashboard/pwa-maskable-192x192.png",
+      "sha256": "09faa994a626e9b1c42f6c05001f1e0bf8c083f90f77ca6e2a9e03a4861e21b2",
+      "bytes": 1451
+    },
+    {
+      "path": "/usr/share/openclash/ui/zashboard/pwa-maskable-512x512.png",
+      "sha256": "44517d6237a7cb80664b4d8b9f7ba6d9333e1a1a987f7ceb99f58634d9218e31",
+      "bytes": 4711
+    },
+    {
+      "path": "/usr/share/openclash/ui/zashboard/registerSW.js",
+      "sha256": "e12c8db54e3cc247034427f2b661b305a78fea7e7cdec1eac179fecec3da0fc7",
+      "bytes": 136
+    },
+    {
+      "path": "/usr/share/openclash/ui/zashboard/sw.js",
+      "sha256": "309826e18aa712dcf28ce55a17ef081798c2f1eae9703ee285934c707869a384",
+      "bytes": 1458
+    },
+    {
+      "path": "/usr/share/openclash/ui/zashboard/workbox-3e8df8c8.js",
+      "sha256": "a6d8881682a3c0ed9dc6d7e4d590e20e244f1800d35048938f250eb82f1608e6",
+      "bytes": 15074
+    },
+    {
+      "path": "/usr/share/openclash/YAML.rb",
+      "sha256": "1249abf411e1df9e8fe542fb3584f34a27e6e3a587942e5d9f759a32b1bd8261",
+      "bytes": 42278
+    },
+    {
+      "path": "/usr/share/openclash/yml_change.sh",
+      "sha256": "a80cba89bcd043a99720ea293e732d02ec8a82f2d2c8116f8a9288397d7b001c",
+      "bytes": 41193
+    },
+    {
+      "path": "/usr/share/openclash/yml_groups_get.sh",
+      "sha256": "c69310d3863333b69cce89e5f457aa1b377cd2803438ed90648e2a45a89f5678",
+      "bytes": 1716
+    },
+    {
+      "path": "/usr/share/openclash/yml_groups_set.sh",
+      "sha256": "e521be246c409e2c89664bbe92a3bb1c2dd3871100a1d6dabe92f03ef17e6ae1",
+      "bytes": 1796
+    },
+    {
+      "path": "/usr/share/openclash/yml_proxys_get.sh",
+      "sha256": "0785c498531f9287e349c410321cf3cce3b58673d0de8593a15b062344188059",
+      "bytes": 1626
+    },
+    {
+      "path": "/usr/share/openclash/yml_proxys_set.sh",
+      "sha256": "16605051fe94e3d8ea7f820e95166a6b50ef1e37b2ffdea9152267554184ef58",
+      "bytes": 1784
+    },
+    {
+      "path": "/usr/share/openclash/yml_rules_change.sh",
+      "sha256": "8f6db5260934e980f3b244fee79e5e871e7dcc2bd839a4d1651b206cc63bd6b9",
+      "bytes": 21914
+    },
+    {
+      "path": "/usr/share/openclash/yml_stats_get.sh",
+      "sha256": "7349bf63c6bc1135e191c2098a068d5c63c07add392cbd4bd966e2959e73e018",
+      "bytes": 6201
+    },
+    {
+      "path": "/usr/share/rpcd/acl.d/luci-app-openclash.json",
+      "sha256": "a08a650015f226a917d85f7d3625669808741ec636efed68dc521eaa2dabcbb3",
+      "bytes": 300
+    },
+    {
+      "path": "/usr/share/ucitrack/luci-app-openclash.json",
+      "sha256": "0096861814711e2e9e5d2159e259a395ef1169eb22d40b7fc430e331a56ca70b",
+      "bytes": 49
+    },
+    {
+      "path": "/www/luci-static/resources/egressveil/egressveil.css",
+      "sha256": "f64979ccf212611953d404cd0b695f0658e84af12f249466e043c94a34c704b0",
+      "bytes": 6202
+    },
+    {
+      "path": "/www/luci-static/resources/egressveil/egressveil.js",
+      "sha256": "44b01477c6bdbb2f0724d36bd1953c8813ec6aba7def916d72d6804516725712",
+      "bytes": 5121
+    },
+    {
+      "path": "/www/luci-static/resources/openclash/css/oc-client.css",
+      "sha256": "610956837530650e5b63bdaa0ef29a3512bfb67a3c6d69477c8f6069a8578bff",
+      "bytes": 91475
+    },
+    {
+      "path": "/www/luci-static/resources/openclash/css/oc-cm6.css",
+      "sha256": "95d756544878c250e82bfc4215a72895ec12b2554a0f51ae0b30be2a9f0e8d9b",
+      "bytes": 5395
+    },
+    {
+      "path": "/www/luci-static/resources/openclash/css/oc-common.css",
+      "sha256": "9e32db5e6fec211c3c2c21f9e341759e37887a224212cf575c851bc67fcfd3e1",
+      "bytes": 69273
+    },
+    {
+      "path": "/www/luci-static/resources/openclash/css/oc-config-edit.css",
+      "sha256": "a5ca0ece3c3cceaa41196048d1fcd713563d4a20d49c3000e4e671caa03f6db0",
+      "bytes": 16106
+    },
+    {
+      "path": "/www/luci-static/resources/openclash/css/oc-config.css",
+      "sha256": "7fc5e9fb0144694706cfb5940ea9a7458fe6502c602a103263c9d08fa13027e2",
+      "bytes": 14053
+    },
+    {
+      "path": "/www/luci-static/resources/openclash/css/oc-guide.css",
+      "sha256": "78f533e9a02cda088a54c077b1b6af539cef73f6a91360771fe7baf024f2f2a9",
+      "bytes": 26080
+    },
+    {
+      "path": "/www/luci-static/resources/openclash/css/oc-log.css",
+      "sha256": "8b86cc3c2a57272dd8caac50fe21c844d159bd70105c9cbf5224a91c98983c58",
+      "bytes": 16879
+    },
+    {
+      "path": "/www/luci-static/resources/openclash/css/oc-settings.css",
+      "sha256": "9ce212946c21dc79e45dc537f1e2f9c414e133637c1d6bd9771cb4cb2aa1c44b",
+      "bytes": 18164
+    },
+    {
+      "path": "/www/luci-static/resources/openclash/css/oc-update.css",
+      "sha256": "542d676161ffb5a777fbe208da99120b9e8a01c0d3f0003267e99cb46c9e46d7",
+      "bytes": 30069
+    },
+    {
+      "path": "/www/luci-static/resources/openclash/css/oc-upload.css",
+      "sha256": "994a4b3d27560f5b449bfbbe86238d5f8d012b6ea7f41eeec0795c7d0c625fe6",
+      "bytes": 34519
+    },
+    {
+      "path": "/www/luci-static/resources/openclash/fonts/TwemojiMozilla-flags.woff2",
+      "sha256": "c030920068cc493d59cc8c21ff29000b7a3676c40414cba7e7a5780d02f41cbf",
+      "bytes": 78308
+    },
+    {
+      "path": "/www/luci-static/resources/openclash/img/logo.png",
+      "sha256": "92c21625090bf6fb64b9866802b4e4c32d3aa16aca33f98469ea259afe85a7fc",
+      "bytes": 12699
+    },
+    {
+      "path": "/www/luci-static/resources/openclash/img/oixcloud.png",
+      "sha256": "247d163cc298af5f179f6d75324ab4caebd8a8d029ee8f058089ae618c496d13",
+      "bytes": 8044
+    },
+    {
+      "path": "/www/luci-static/resources/openclash/js/chart.umd.min.js",
+      "sha256": "339abfe88a7c9434c1250646e0de3824cd1ea529c0d148cd1665308f42e90381",
+      "bytes": 208521
+    },
+    {
+      "path": "/www/luci-static/resources/openclash/js/cm6.min.js",
+      "sha256": "d035bbcbf51e4f1c31f23630d5575436a583715abda0300332815570f2bf8226",
+      "bytes": 510362
+    },
+    {
+      "path": "/www/luci-static/resources/openclash/js/common.js",
+      "sha256": "b757470c71dcd3b17e40405a055658c7525780bea8e49c34b935738140b358fc",
+      "bytes": 58965
+    },
+    {
+      "path": "/www/luci-static/resources/openclash/js/config_edit.js",
+      "sha256": "4644ec75e3da4dc465a2d5fc94a696b186063ce5370e1057a30d90d5d0172570",
+      "bytes": 126764
+    },
+    {
+      "path": "/www/luci-static/resources/openclash/js/config_upload.js",
+      "sha256": "58b49f3985ee42e20371be78cc87f2c38606d292f4ca0a78f7d3b9bd94553682",
+      "bytes": 181466
+    },
+    {
+      "path": "/www/luci-static/resources/openclash/js/editors.js",
+      "sha256": "a8bde317bc1a5bb00c4a420e4c54dbce4a9d30e14222de86c2ee9dca5b9f391e",
+      "bytes": 10798
+    },
+    {
+      "path": "/www/luci-static/resources/openclash/js/guide.js",
+      "sha256": "8408fb2d5c35a78f36a45912147dd8920e72c001cdcf92ca99a2ddba7ea57dfb",
+      "bytes": 123260
+    },
+    {
+      "path": "/www/luci-static/resources/openclash/js/lint-worker.min.js",
+      "sha256": "f9fa285ce91ef78b5db2b519a12f30c86427f2e1e80fd6528a54f319b92046b3",
+      "bytes": 42712
+    },
+    {
+      "path": "/www/luci-static/resources/openclash/js/log.js",
+      "sha256": "9db16a4226f4296c8622121395813fe42fc86b98ab56c94ea63bf119b02b835b",
+      "bytes": 34880
+    },
+    {
+      "path": "/www/luci-static/resources/openclash/js/md-render.min.js",
+      "sha256": "fb251a2d856e65a9935887265ebfb61906a56fbef1ae725164ad357b801e47c8",
+      "bytes": 74754
+    },
+    {
+      "path": "/www/luci-static/resources/openclash/js/merge_editor.js",
+      "sha256": "5af330b0d672a9c39debae30333fcef089b7417a08a1a21ebef62f8370655475",
+      "bytes": 15894
+    },
+    {
+      "path": "/www/luci-static/resources/openclash/js/myip.js",
+      "sha256": "34fc515406b2b573486e88dca70e59750745c4e6425aed9c01c0684d67d06be2",
+      "bytes": 78755
+    },
+    {
+      "path": "/www/luci-static/resources/openclash/js/oc-icons.js",
+      "sha256": "4efd06c9d9e9948199b9f58925d2691e273375be3679f4eea99bf16becaeecda",
+      "bytes": 60176
+    },
+    {
+      "path": "/www/luci-static/resources/openclash/js/oix_login.js",
+      "sha256": "8f8d519819de6f5398fe5076ced334d2977716ff89a3d45878215d0112ca21ab",
+      "bytes": 24858
+    },
+    {
+      "path": "/www/luci-static/resources/openclash/js/other_stream_option.js",
+      "sha256": "d128cf03fd2c7b6a1eb08521069f4586b78314212843c42d2ab1eb01bb8dba5d",
+      "bytes": 3673
+    },
+    {
+      "path": "/www/luci-static/resources/openclash/js/server_url.js",
+      "sha256": "421ccaf2f2b15120af2c67833cd1a8eda22f5bce2df9b6d7fc291564ef61f9e4",
+      "bytes": 87741
+    },
+    {
+      "path": "/www/luci-static/resources/openclash/js/status.js",
+      "sha256": "682fe2017fb7d8e1a7a3be3d588a21ceffe11599d7cdc704703e76f8f1dc12ff",
+      "bytes": 206529
+    },
+    {
+      "path": "/www/luci-static/resources/openclash/js/subconverter-version.js",
+      "sha256": "f82a19bf4c5f0819cc51c8cdd9cfeade5cd293b128e11901a17a428ad0ce4a10",
+      "bytes": 11672
+    },
+    {
+      "path": "/www/luci-static/resources/openclash/js/update.js",
+      "sha256": "ff2a9527dda2ce434469a2aaa6903c69dd7551732bed9655f76c51c1b075371e",
+      "bytes": 63248
+    }
+  ]
+}

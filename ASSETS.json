@@ -1,5 +1,5 @@
 {
-  "version": "0.2.0-dev",
+  "version": "1.0.0",
   "target": "OpenWrt 25.12 x86/64",
   "files": [
     {
@@ -499,8 +499,8 @@
     },
     {
       "path": "package/luci-app-egressveil/files/usr/libexec/ua3f-bridge-policy/bridge-policy",
-      "bytes": 5222,
-      "sha256": "147e5fc3808ea0b3c65b03e2f05e52aee08587bb3a79637098cd8e7b827eb4d7"
+      "bytes": 5302,
+      "sha256": "d61038f52f845682893d1d17521637712a391006893a82dd8d03ccf506ed7bb8"
     },
     {
       "path": "package/luci-app-egressveil/files/usr/libexec/ua3f-bridge-policy/dockerd-launch",
@@ -749,8 +749,8 @@
     },
     {
       "path": "package/luci-app-egressveil/files/usr/share/openclash/res/cdn.list",
-      "bytes": 430,
-      "sha256": "389f4bc1836a29c526a9912b55026f29dcb9a90503e945d97a9799218965f811"
+      "bytes": 564,
+      "sha256": "98f0831ec98641b0190ad78a31462b62ed04b937678d87b58c55a0a0b64b2b9e"
     },
     {
       "path": "package/luci-app-egressveil/files/usr/share/openclash/res/default.yaml",

@@ -1,86 +1,86 @@
 # EgressVeil
 
-**UA、TTL 与 OpenClash 的统一配置入口。**
+把 UA3F、OpenClash 和 IPv4 TTL 放在同一个 LuCI 插件里。开关、接管顺序、防火墙和服务恢复由插件协调，不用再分别拼接几套规则。
 
-[GPLv3](LICENSE) · `dev` · OpenWrt 25.12 · x86/64
+[下载 1.0.0](https://github.com/Lunaris617/EgressVeil/releases/tag/v1.0.0) · [安装说明](docs/installation.md) · [工作原理](docs/architecture.md) · [验证记录](docs/validation.md) · [GPLv3](LICENSE)
 
-通过卡片和滑块按需开启代理、明文 HTTP UA 和 IPv4 TTL。接管、防环、策略路由及服务恢复由插件处理，无需分别编写 UA3F 与 OpenClash 的防火墙规则。
+## 按需要开，不用的可以关
 
-## 先选功能，再开始使用
-
-首次引导要求分别选择三项功能，不默认开启。没有代理订阅也可以完成设置，以纯直连方式运行。
-
-![首次配置：三项功能分别选择，订阅可留空](docs/images/wizard.png)
-
-| 功能 | 开启 | 关闭 |
+| 功能 | 开启后 | 关闭后 |
 |---|---|---|
-| 代理 | fake-IP 增强接管；支持规则、全局策略和手动选节点 | Mihomo 保留运行，业务流量全部 DIRECT |
-| HTTP UA | HTTP/1 与明文 HTTP/2 / h2c 使用指定 UA，建议 `FFF` | 停止 UA3F，撤销 UA 接管，保留正常转发 |
-| IPv4 TTL | WAN 出站统一为指定值，默认 64，范围 1–255 | 撤销插件的 TTL 改写及相关保护 |
+| 代理 | fake-IP 接管，按规则或全局策略选择出口 | Mihomo 继续运行，业务流量全部直连 |
+| UA 改写 | 明文 HTTP 使用填写的 UA，默认建议 `FFF` | 撤销 UA 接管，保留正常转发和分流 |
+| IPv4 TTL | WAN 发出前改为指定值，默认 `64` | 撤销本插件的 TTL 修改 |
 
-三个开关互相独立，八种组合均可使用。fake-IP 用于地址映射和域名恢复，与是否建立代理连接是两件事。
+没有订阅也能用。首次引导可以跳过代理，之后再添加；UA 和 TTL 都不是必选项。**关闭代理与停止 Mihomo 核心是两回事**，UA 桥接和 fake-IP 地址还原仍需要核心运行。
 
-![出口设置与实际就绪状态](docs/images/controls.png)
+![配置界面：代理、UA 和 TTL 分别设置](docs/images/controls.png)
 
-明文 HTTP 在 Clash 加密前改写，覆盖 fake-IP 客户端及路由器本机公网请求；最终出口处理仍保留。HTTPS/TLS 不解密，浏览器在 HTTPS 内发送的 UA 不改写。TTL 关闭后，用户态代理新建连接仍可能自然使用系统默认 TTL；关闭表示不再强制改写，并不表示代理保留客户端原始 IP 报文。
+图为隔离环境中的界面，订阅和地址已隐藏。安装后在「服务 → EgressVeil → 配置引导 / UA / TTL」完成设置。
 
-## 保留熟悉的 OpenClash
+## 明文先改，再交给 Clash
 
-原有概览、插件设置、订阅管理、配置导入编辑、日志、IP 查询和访问检查保留在同一入口。Metacubexd 随包提供，无需首次联网下载；可手动选择策略组、节点或自动选择。
+```text
+LAN 客户端 / 路由器本机公网 TCP
+  → UA3F 前置改写（开启时）
+  → Mihomo 还原 fake-IP、匹配规则
+  → 直连，或封装到代理节点
+  → TCP 最终出口处理
+  → IPv4 TTL 改写（开启时）
+  → WAN
+```
 
-![原 OpenClash 概览，地址信息已遮蔽](docs/images/openclash.png)
+代理目标里的明文 HTTP 也在封装前处理。支持 HTTP/1.0、HTTP/1.1，以及明文 HTTP/2／h2c。HTTPS 不解密，不安装中间人证书；HTTPS 内的浏览器 UA 不改写。UDP 由 Mihomo 按规则和节点能力处理，不经过 UA3F 的 TCP 引擎。
 
-![Metacubexd 实际运行界面，地址信息已遮蔽](docs/images/metacubexd.png)
+管理连接、LAN 内部通信、本机回复和必要本地服务保留各自的路径。NTP、TCP 时间戳、SIP 和 STUN 等协议标识不属于 HTTP UA 改写功能。
 
-- **快速订阅**：引导页添加或更换链接；每小时刷新，提供“立即更新”。默认自动探测 30 秒，支持 15–300 秒。
-- **完整配置订阅**：使用 OpenClash 订阅管理，保留手动和定时更新；也可导入自己的 YAML。
-- **配置保留**：修改 UA 或 TTL 不覆盖节点、策略组和用户规则；关闭代理保留此前代理配置，后续可恢复。
-- **高级设置**：保留兼容选项。接管端口、桥接、防环及相关标记统一管理；TUN、混合接管、IPv6 和独立核心替换不开放。
-- **统一升级**：更新完整 EgressVeil 包；订阅、规则数据更新与整包升级分开管理。
+## OpenClash 的日常功能还在
 
-默认快速配置保留国内 DIRECT、其他流量进入可选策略组的规则；实际出口由命中规则、代理模式和节点能力决定。导入配置沿用用户规则。公网 TCP 先按开关完成 UA 处理，再交给 Mihomo 判定出口，并保留最终 UA 出口检查；不再通过独立的内核地理旁路覆盖用户规则。
+保留概览、配置与订阅管理、规则和策略组、节点选择、日志、IP 查询及访问检查。Metacubexd 已随包提供，不需要第一次打开时再下载。
+
+![OpenClash 概览](docs/images/openclash.png)
+
+- 快速订阅可在引导页添加、更换和手动刷新；也可导入完整 YAML。
+- 修改 UA 或 TTL，不覆盖已有节点和用户规则。切到直连会保留此前的代理配置。
+- 自签证书订阅保留原始链接中的 `pinSHA256`，不把某一次指纹写死在插件里。
+- 配置页先显示表单，后台再读取就绪状态；保存应用仍执行完整检查和回退流程。
+- 与接管冲突的 TUN、混合模式、独立核心替换和部分更新操作受限制。升级时更新完整 EgressVeil 包。
+
+## 安装
+
+Release 提供 x86_64 APK、发行公钥、SHA256 和可直接放入 OpenWrt 源码的 package 压缩包。
+
+已有独立 UA3F、OpenClash 或旧整合包时，先备份并按[安装说明](docs/installation.md)处理冲突，不要强制覆盖文件。APK 包含核心、面板和规则资源；Ruby、内核模块等系统依赖仍由固件或软件源提供。内核模块必须匹配正在运行的内核，不能跳过 ABI 检查。
+
+1. 确认路由器基础联网正常，并保留独立管理通道。
+2. 校验下载文件，安装发行公钥和 APK。
+3. 打开配置引导，分别选择代理、UA、TTL，填写逻辑接口名称；通常是 `lan`、`wan`。
+4. 保存并应用，检查应用结果与实际就绪状态，再测试自己的常用业务。
+
+订阅、代理节点、系统密码和校园网账号由使用者配置，发行包不附带这些数据。
 
 ## 编译进固件
 
-1. 准备 OpenWrt 25.12 源码，更新并安装官方 feeds。
-2. 将本仓库 `package/luci-app-egressveil` 复制到源码的 `package/`。不要同时选入独立 UA3F、OpenClash 或旧整合包。
-3. 在 `make menuconfig` 选择 **x86 → x86_64**，然后在 **LuCI → Applications** 将 **luci-app-egressveil** 选为 `<*>`。
-4. 选择 `dnsmasq-full`，取消普通 `dnsmasq`；根文件系统建议至少 512 MiB。
-5. 保留标准内核 IPv6 编译支持以满足系统依赖；本版运行于没有可用 IPv6 路由的网络。
+将 package 压缩包内的 `luci-app-egressveil` 放进 OpenWrt 的 `package/`，在 **LuCI → Applications** 选中。使用 `dnsmasq-full`，取消普通 `dnsmasq`；不要同时选入独立 UA3F 或 OpenClash。
 
 ```sh
 make defconfig
 make download -j8
 make -j$(nproc)
-# 构建失败时定位错误
-make -j1 V=s
 ```
 
-UA3F、Mihomo、OpenClash 界面、仪表盘和公开规则数据已包含在包内。Go 不参与普通固件打包。工具链、LuCI、Ruby、内核模块等系统依赖仍须提前下载；Makefile 会选择依赖，但不会提供整套 OpenWrt 构建环境。
+包内带有固定版本的预构建核心。只打固件包不需要再编译 Go；修改核心时，源码、依赖和构建脚本也在仓库中。离线构建仍需提前准备 OpenWrt 工具链和系统依赖源码。
 
-## 刷机后使用
+## 首版支持范围
 
-1. 配置基础 LAN/WAN、DHCP、系统登录及所需上网认证，确认基础网络正常。
-2. 打开 **服务 → EgressVeil → 配置引导 / UA / TTL**。
-3. 分别选择代理、UA、TTL。没有订阅时选择“暂不配置，全部直连”。需要代理时填写快速订阅，或先在配置管理导入完整配置。
-4. 启用 EgressVeil，保存并应用。完成后刷新本页，核对“接管已就绪”、实际进程和 TTL 规则。
-5. 需要选择节点时，从概览打开 Metacubexd。整体暂停会撤销接管并保留功能选择，再次启动按原选择恢复。
+1.0.0 以实际部署后修正、验证过的运行方案为基线，包含前置 UA、本机公网接管、订阅启动、桥接恢复、统计连接和配置页响应修复。现机程序与发行源的比对记录见 [runtime-baseline.json](release/runtime-baseline.json)。
 
-应用配置和切换代理模式会重载服务，现有连接可能重连。节点选择使用面板原生接口，不要求重新生成整份订阅配置。
+目前支持 **OpenWrt 25.12、x86/64、firewall4/nftables、IPv4**。已用的拓扑为独立以太网 WAN、只有一个物理成员的 LAN 网桥；r8169 为实体设备基线，virtio_net 用于隔离验证。**PPPoE、VLAN、多物理 LAN、其他网卡及可用 IPv6 路由尚未适配。** 不满足条件时会拒绝启用，不会自动放宽保护。
 
-## 支持范围
+统一 UA 和 TTL 不等于上游无法识别路由器。内核、网络和节点条件不同，安装后仍应自行验收；不要把某次测试结果当作所有硬件与业务的保证。
 
-| 项目 | 当前范围 |
-|---|---|
-| 系统 | OpenWrt 25.12，x86/64，firewall4/nftables |
-| 基线拓扑 | 独立物理 WAN；LAN 桥只有一个物理成员；默认逻辑接口 `lan` / `wan` |
-| 网卡 | `eth0` / `eth1`；LAN 驱动 r8169，virtio_net 用于隔离测试 |
-| WAN | 普通以太网 DHCP / 静态 IPv4 |
-| 配置文件 | 普通 YAML；加密配置先解密为 YAML 后导入 |
-| 尚待适配 | 多物理 LAN、VLAN、PPPoE、其他网卡和可用 IPv6 路由 |
+## 版权与源码
 
-`dev` 已完成实际 APK 构建、八种功能组合、协议回归、面板与生命周期验证。实体 r8169 新固件长测、独立跨网 P2P、真实 HY2/QUIC 完整矩阵及更多硬件兼容性仍待验收，当前不作为商业生产认证版本。
+EgressVeil 使用 GPLv3。UA3F、OpenClash、Mihomo、Metacubexd 等上游项目的版权和原许可证均保留，具体版本、修改范围和源码位置见 [NOTICE](NOTICE) 与 [LICENSES](LICENSES)。
 
-本包不附带上网账号、系统密码、订阅凭据、租约、客户端名单或业务日志。校园网认证、打印服务和 Docker 不在本包内。统一 UA 与 TTL 也不代表上游无法识别网络设备。
-
-[验证记录](docs/validation.md) · [工作原理](docs/architecture.md) · [维护与回滚](docs/maintenance.md) · [版权与固定版本](NOTICE)
+校园网认证插件、打印扫描服务、主题及设备私人配置不在本包内。

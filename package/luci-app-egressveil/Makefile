@@ -1,9 +1,10 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=luci-app-egressveil
-PKG_VERSION:=0.2.0
-PKG_RELEASE:=4
+PKG_VERSION:=1.0.0
+PKG_RELEASE:=1
 PKG_BUILD_DEPENDS:=lua/host
+PKG_MAINTAINER:=Lunaris617
 PKG_LICENSE:=GPL-3.0-only
 PKG_LICENSE_FILES:=LICENSE
 include $(INCLUDE_DIR)/package.mk
@@ -15,7 +16,8 @@ define Package/luci-app-egressveil
  SECTION:=luci
  CATEGORY:=LuCI
  SUBMENU:=3. Applications
- TITLE:=EgressVeil - unified WAN egress policy
+ TITLE:=EgressVeil - UA3F, OpenClash and TTL
+ URL:=https://github.com/Lunaris617/EgressVeil
  DEPENDS:=@TARGET_x86_64 +luci +luci-compat +ruby +ruby-yaml +ruby-digest +ruby-json +bash +unzip +ip-full +jsonfilter +nftables-json +firewall4 +dnsmasq-full +iptables-nft +iptables-mod-tproxy +iptables-mod-extra +iptables-mod-ipopt +iptables-mod-conntrack-extra +ipset +kmod-br-netfilter +kmod-ipt-nat +kmod-ipt-tproxy +kmod-nf-tproxy +kmod-nft-netdev +kmod-nft-compat +kmod-nft-fib +kmod-nft-tproxy +kmod-nf-conntrack-netlink +kmod-veth +kmod-tun +curl +ca-bundle +coreutils-timeout
  CONFLICTS:=ua3f luci-app-openclash mihomo-ua3fi luci-app-ua3f-suite
 endef
@@ -45,6 +47,8 @@ endef
 
 define Package/luci-app-egressveil/install
 	$(CP) ./files/* $(1)/
+	find $(1) -type d -exec chmod 0755 {} +
+	find $(1) -type f -exec chmod 0644 {} +
 	$(INSTALL_DIR) $(1)/usr/lib/lua/luci/i18n
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/*.lmo $(1)/usr/lib/lua/luci/i18n/
 	find $(1)/etc/init.d $(1)/usr/libexec $(1)/etc/uci-defaults $(1)/etc/hotplug.d -type f -exec chmod 0755 {} +

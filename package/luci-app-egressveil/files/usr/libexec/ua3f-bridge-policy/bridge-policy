@@ -106,7 +106,7 @@ monitor)
             logger -t ua3f-bridge-policy 'Topology or Docker policy changed; UA bridge path blocked pending revalidation'
         fi
         if [ ! -f "$STATE/ready" ] &&
-           [ "$(cat "$STATE/reason" 2>/dev/null || :)" = unknown ] &&
+           { [ "$(cat "$STATE/reason" 2>/dev/null || :)" = unknown ] || [ "$(cat "$STATE/reason" 2>/dev/null || :)" = post-apply-audit-failed ]; } &&
            "$ROOT/bridge-audit" --mode known >/dev/null 2>&1; then
             # Worker repeats the complete audit under its lock before changing
             # Docker's per-bridge flag and then the global flag. Synchronous
